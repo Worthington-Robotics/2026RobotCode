@@ -2,12 +2,16 @@ package frc.WorBots.subsystems.drive;
 
 import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
+import com.ctre.phoenix6.swerve.jni.SwerveJNI.ModuleState;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -23,6 +27,8 @@ import frc.WorBots.subsystems.drive.Module;
 import frc.WorBots.subsystems.drive.ModuleIO;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.control.DriveFilter;
+import frc.WorBots.util.debug.Logger;
+import frc.WorBots.util.math.GeomUtil;
 
 public class Drive extends SubsystemBase{
   private final Module[] modules = new Module[4];
@@ -79,7 +85,7 @@ public class Drive extends SubsystemBase{
       a.periodic();
     }
 
-    //Update Odometry Here
+    //TODO add update Odometry Here
 
     speedSetpointPublisher.set(setpointSpeeds);
     gyroPublisher.set(gyroIOInputs.yawPositionRad);
@@ -91,6 +97,9 @@ public class Drive extends SubsystemBase{
   }
 
   private void drive(){
+    SwerveModuleState[] setpointStates;
+    boolean forceModules = false;
+
     final ChassisSpeeds filteredFieldRelative = filter.calculate();
     setpointSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(filteredFieldRelative, getYaw());
 
@@ -101,30 +110,67 @@ public class Drive extends SubsystemBase{
       stop();
       filter.reset();
     } else{
-      //TODO rest of drive code here
+      if(isStopped()){
+          setpointStates = stop();
+          forceModules = true;
+      } else {
+        setpointStates = kinematics.toSwerveModuleStates(setpointSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.DRIVE_MAX_VELOCITY);
+      }
+
+      moduleSetpointPublisher.set(Logger.statesToArray(setpointStates));
+
+      for(int i = 0; i < 4; i++){
+        setpointStates[i].optimize(modules[i].getAngle());
+      }
+
+      moduleOptimizedPublisher.set(Logger.statesToArray(setpointStates));
+
+      for(int i = 0; i < 4; i++){
+        modules[i].runState(setpointStates[i], forceModules);
+      }
     }
 
   }
 
   private Translation2d[] getModuleTranslations(){
     return new Translation2d[] {
-      new Translation2d(Constants.ROBOT_WHEELBASE, Constants.ROBOT_WHEELBASE),
-      new Translation2d(Constants.ROBOT_WHEELBASE, -Constants.ROBOT_WHEELBASE),
-      new Translation2d(-Constants.ROBOT_WHEELBASE, Constants.ROBOT_WHEELBASE),
-      new Translation2d(-Constants.ROBOT_WHEELBASE, -Constants.ROBOT_WHEELBASE)
+      new Translation2d(Constants.ROBOT_WHEELBASE / 2, Constants.ROBOT_WHEELBASE / 2),
+      new Translation2d(Constants.ROBOT_WHEELBASE / 2, -Constants.ROBOT_WHEELBASE / 2),
+      new Translation2d(-Constants.ROBOT_WHEELBASE / 2, Constants.ROBOT_WHEELBASE / 2),
+      new Translation2d(-Constants.ROBOT_WHEELBASE / 2, -Constants.ROBOT_WHEELBASE / 2)
     };
   }
 
-  public void stop(){
-    //TODO make this
+  public SwerveModuleState[] stop(){
+    SwerveModuleState[] setpointStates = new SwerveModuleState[4];
+    
+    for(int i = 0; i < 4; i++){
+      setpointStates[i] = new SwerveModuleState(0.0, new Rotation2d(StopMode.BlockAll.moduleAngles[i]));
+    }
+    return setpointStates;
+  }
+
+  public void runVelocity(ChassisSpeeds speeds){
+    ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DRIVE_DRIFT_RATE);
+    goalSetpointPublisher.set(ajusted);
+
+    ChassisSpeeds fieldRel = ChassisSpeeds.fromRobotRelativeSpeeds(speeds, getYaw());
+    filter.setGoal(fieldRel);
   }
 
   public boolean isStopped(){
-    //TODO Make this as well, should use actual math not just that we said to stop
-    return false;
+    double magnitude = Math.hypot(setpointSpeeds.vxMetersPerSecond, setpointSpeeds.vyMetersPerSecond);
+    return magnitude < Constants.DRIVE_STOP_XY_THRESHOLD && Math.abs(setpointSpeeds.omegaRadiansPerSecond) < Constants.DRIVE_THETA_THRESHOLD;
   }
+
+  //TODO add pose getters
 
   public Rotation2d getYaw(){
     return new Rotation2d(gyroIOInputs.yawPositionRad);
+  }
+
+  public Rotation2d getYawVelocity(){
+    return new Rotation2d(gyroIOInputs.yawVelocityRadPerSec);
   }
 }
