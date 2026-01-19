@@ -103,7 +103,7 @@ public class Drive extends SubsystemBase{
       filter.reset();
     } else{
       if(isStopped()){
-          setpointStates = stop();
+          setpointStates = setStop();
           forceModules = true;
       } else {
         setpointStates = kinematics.toSwerveModuleStates(setpointSpeeds);
@@ -134,7 +134,11 @@ public class Drive extends SubsystemBase{
     };
   }
 
-  public SwerveModuleState[] stop(){
+  public void stop(){
+    runVelocity(new ChassisSpeeds());
+  }
+
+  public SwerveModuleState[] setStop(){
     SwerveModuleState[] setpointStates = new SwerveModuleState[4];
     
     for(int i = 0; i < 4; i++){
