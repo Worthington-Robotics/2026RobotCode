@@ -21,7 +21,7 @@ public class DriveWithJoysticks extends Command {
   }
 
   @Override
-  public void initialized(){
+  public void initialize(){
     RobotContainer.driveController.reset();
   }
 
@@ -31,7 +31,7 @@ public class DriveWithJoysticks extends Command {
     final double leftY = leftYSupplier.get();
     final double rightY = rightYSupplier.get();
 
-    RobotContainer.driveController.drive(leftX, leftY, rightY);
+    RobotContainer.driveController.drive(drive, leftX, leftY, rightY);
   }
 
   @Override
