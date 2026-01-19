@@ -1,10 +1,5 @@
 package frc.WorBots.subsystems.drive;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
-
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
-import com.ctre.phoenix6.swerve.jni.SwerveJNI.ModuleState;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,9 +17,6 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
-import frc.WorBots.subsystems.drive.GyroIO;
-import frc.WorBots.subsystems.drive.Module;
-import frc.WorBots.subsystems.drive.ModuleIO;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.control.DriveFilter;
 import frc.WorBots.util.debug.Logger;
