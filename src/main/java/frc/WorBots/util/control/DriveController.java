@@ -96,8 +96,8 @@ public class DriveController {
             y,
             theta,
             drive.getYaw(),
-            drive.getMaxLinearSpeedMetersPerSec(),
-            drive.getYawVelocity());
+            Constants.DRIVE_MAX_VELOCITY,
+            drive.getYawVelocity().getRadians());
 
     drive(drive, speeds);
   }
