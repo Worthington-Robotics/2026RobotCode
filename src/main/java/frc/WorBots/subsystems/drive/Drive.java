@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -112,14 +113,15 @@ public class Drive extends SubsystemBase{
 
       moduleSetpointPublisher.set(Logger.statesToArray(setpointStates));
 
+      SwerveModuleState[] optimizedStates = new SwerveModuleState[4];
       for(int i = 0; i < 4; i++){
-        setpointStates[i].optimize(modules[i].getAngle());
+        optimizedStates[i] = modules[i].optimizeState(setpointStates[i]);
       }
 
-      moduleOptimizedPublisher.set(Logger.statesToArray(setpointStates));
+      moduleOptimizedPublisher.set(Logger.statesToArray(optimizedStates));
 
       for(int i = 0; i < 4; i++){
-        modules[i].runState(setpointStates[i], forceModules);
+        modules[i].runState(optimizedStates[i], forceModules);
       }
     }
 

@@ -1,5 +1,6 @@
 package frc.WorBots.subsystems.drive;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -10,6 +11,7 @@ import frc.WorBots.Constants;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.math.GeneralMath;
+import frc.WorBots.util.math.GeomUtil;
 
 public class ModuleIOSim implements ModuleIO {
   private ModuleIOInputs inputs;
@@ -60,12 +62,7 @@ public class ModuleIOSim implements ModuleIO {
     turnRelativePositionRad += angleDiffRad;
     turnAbsolutePositionRad += angleDiffRad;
     inputs.turnAbsoluteVelocityRadsPerSec = angleVelocityRadsPerSec;
-    while (turnAbsolutePositionRad < 0) {
-      turnAbsolutePositionRad += 2.0 * Math.PI;
-    }
-    while (turnAbsolutePositionRad > 2.0 * Math.PI) {
-      turnAbsolutePositionRad -= 2.0 * Math.PI;
-    }
+    turnAbsolutePositionRad = MathUtil.angleModulus(turnAbsolutePositionRad);
 
     inputs.turnPositionErrorRad = turnFeedback.pid.getError();
 
@@ -103,16 +100,17 @@ public class ModuleIOSim implements ModuleIO {
   }
 
   public void setAngle(double angleRadians) {
-    final double setpoint =
-        GeneralMath.getOptimalRotationalPIDGoal(
-            inputs.turnAbsolutePositionRad,
-            angleRadians,
-            inputs.turnAbsoluteVelocityRadsPerSec,
-            12 * Math.PI);
-    SmartDashboard.putNumber("Outputs/Setpoint", Units.radiansToDegrees(setpoint));
+    // final double setpoint =
+    //     GeneralMath.getOptimalRotationalPIDGoal(
+    //         inputs.turnAbsolutePositionRad,
+    //         angleRadians,
+    //         inputs.turnAbsoluteVelocityRadsPerSec,
+    //         12 * Math.PI);
+    // SmartDashboard.putNumber("Outputs/Setpoint", Units.radiansToDegrees(setpoint));
     SmartDashboard.putNumber(
         "Outputs/Velocity " + index, Units.radiansToDegrees(inputs.turnAbsoluteVelocityRadsPerSec));
     setTurnVoltage(turnFeedback.pid.calculate(inputs.turnAbsolutePositionRad, angleRadians));
+    // setpointAngle = angleRadians;
     // setTurnVoltage(turnFeedback.pid.getP() * setpoint);
   }
 

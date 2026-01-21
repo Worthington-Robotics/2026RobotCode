@@ -15,10 +15,10 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    this.addPeriodic(this::realRobotPeriodic, Constants.ROBOT_PERIOD);
   }
 
-  @Override
-  public void robotPeriodic() {
+  public void realRobotPeriodic() {
     CommandScheduler.getInstance().run();
   }
 
