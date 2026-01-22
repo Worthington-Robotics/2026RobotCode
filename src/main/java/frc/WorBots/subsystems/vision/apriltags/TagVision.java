@@ -122,19 +122,25 @@ public class TagVision extends SubsystemBase{
    * (half the tags)
    */
   //TODO: update/change these
+  //The higher the value, the greater the trust in them. 
   private static final double[] TAG_WEIGHTS =
       new double[] {
-        1.05, // Coral Station
-        1.05, // Coral Station
-        1.1, // Processor
-        0.9, // Barge
-        0.9, // Barge
-        1.0, // Reef
-        1.0, // Reef
-        1.0, // Reef
-        1.0, // Reef
-        1.0, // Reef
-        1.0, // Reef
+        1.05, // AprilTag 1 
+        1.05, // AprilTag 2
+        1.1, // AprilTag 3
+        0.9, // AprilTag 4
+        0.9, // AprilTag 5
+        1.0, // AprilTag 6
+        1.0, // AprilTag 7
+        0.9, // AprilTag 8
+        1.0, // AprilTag 9 
+        1.0, // AprilTag 10
+        1.0, // AprilTag 11
+        1.0, // AprilTag 12
+        1.0, // AprilTag 13
+        1.0, // AprilTag 14
+        1.0, // AprilTag 15
+        1.0, // AprilTag 16
       };
 
   /** Factor for speed compensation */
@@ -143,7 +149,7 @@ public class TagVision extends SubsystemBase{
   /** The amount of time to log tag poses for */
   private static final double TARGET_LOG_TIME_SECS = 0.1;
 
-  //TODO Change all of these to the new format that AdvantageScope will need in 2027
+
   private final NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
   private final BooleanPublisher isConnectedPublisher =
       visionTable.getBooleanTopic("Is Connected").publish();
@@ -194,7 +200,7 @@ public class TagVision extends SubsystemBase{
       }
     }
     isConnectedPublisher.set(isConnected);
-    Lights.getInstance().setNoVisionIndicator(!isConnected);
+    // put this back in after lights are done: Lights.getInstance().setNoVisionIndicator(!isConnected);
 
     // Loop over instances
     List<Pose2d> allRobotPoses = new ArrayList<>();
@@ -299,6 +305,7 @@ public class TagVision extends SubsystemBase{
         // Get tag poses and update last detection times
         List<Pose3d> tagPoses = new ArrayList<>();
         List<Integer> tagIds = new ArrayList<>();
+        //TODO: Change these numbers according to AprilTags
         for (int i = (values[0] == 1 ? 9 : 17); i < values.length; i++) {
           final int tagId = (int) values[i];
           tagIds.add(tagId);
