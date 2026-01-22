@@ -1,11 +1,15 @@
 package frc.WorBots.subsystems.drive;
 
+import java.util.ArrayList;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
@@ -15,12 +19,16 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
+import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
 import frc.WorBots.util.debug.Logger;
 import frc.WorBots.util.math.GeomUtil;
+import frc.WorBots.util.math.PoseEstimator;
 
 public class Drive extends SubsystemBase{
   private final Module[] modules = new Module[4];
@@ -34,13 +42,15 @@ public class Drive extends SubsystemBase{
 
   private Twist2d fieldVelocity = new Twist2d();
 
-  private ChassisSpeeds measurSpeeds;
+  private ChassisSpeeds measurdSpeeds;
 
   private Rotation2d lastGyroYaw = new Rotation2d();
 
   private double[] lastModulePositionMeters = new double[4];
 
   private StopMode stopMode = StopMode.None;
+
+  private PoseEstimator poseEstimator = new PoseEstimator(VecBuilder.fill(0.003, 0.003, 0.0002));
 
   private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
   private static final String TABLE_NAME = "Drive";
@@ -168,5 +178,101 @@ public class Drive extends SubsystemBase{
 
   public Rotation2d getYawVelocity(){
     return new Rotation2d(gyroIOInputs.yawVelocityRadPerSec);
+  }
+
+  public void updateOdometry(){
+    double startTime = Timer.getFPGATimestamp();
+
+    SwerveModuleState[] meauredStates = new SwerveModuleState[4];
+
+    for(int i=0; i<4; i++){
+      meauredStates[i] = modules[i].getState();
+    }
+    moduleMeasuredPublisher.set(Logger.statesToArray(meauredStates));
+
+    measurdSpeeds = kinematics.toChassisSpeeds(meauredStates);
+    final Translation2d linearFieldVelocity =
+      new Translation2d(measurdSpeeds.vxMetersPerSecond, measurdSpeeds.vyMetersPerSecond)
+      .rotateBy(getRotation());
+    
+    fieldVelocity = new Twist2d(
+      linearFieldVelocity.getX(),
+      linearFieldVelocity.getY(),
+      gyroIOInputs.connected
+        ? gyroIOInputs.yawVelocityRadPerSec : measurdSpeeds.omegaRadiansPerSecond);
+
+    OdometryThread.odometryLock.lock();
+    ArrayList<Double> timestamps = new ArrayList<>(OdometryThread.timestampQueue.size());
+    timestamps.clear();
+
+    while(OdometryThread.timestampQueue.size() > 0){
+      final double timestamp = OdometryThread.timestampQueue.poll();
+      timestamps.add(timestamp);
+    }
+    SmartDashboard.putNumberArray("timestamps", timestamps.toArray(new Double[0]));
+
+    OdometryThread.odometryLock.unlock();
+
+    int minSize = timestamps.size();
+    for(Module module : modules){
+      minSize = Math.min(minSize, module.getDrivePositionUpdates().size());
+      minSize = Math.min(minSize, module.getTurnPositionUpdates().size());
+    }
+    if(gyroIOInputs.connected){
+      minSize = Math.min(minSize, gyroIOInputs.yawPositionUpdates.size());
+    } else {
+      minSize = 0;
+    }
+
+    int modulus = 1;
+
+    if(minSize > 0){
+      if(minSize > 15){
+        modulus = 2;
+
+      } else if(minSize > 30) {
+        modulus = 3;
+      }
+    }
+
+    for(int update = 0; update < minSize / modulus; update++){
+      update = update * modulus;
+
+      SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
+      
+      for(int i = 0; i < 4; i++){
+        final Module module = modules[i];
+        final double distance = module.getDrivePositionUpdates().get(update);
+        final Rotation2d angle = new Rotation2d(module.getTurnPositionUpdates().get(update));
+
+        wheelDeltas[i] = new SwerveModulePosition((distance - lastModulePositionMeters[i]), angle);
+      }
+
+      final Twist2d twist = kinematics.toTwist2d(wheelDeltas);
+
+      final Rotation2d gyroYaw = new Rotation2d(gyroIOInputs.yawPositionUpdates.get(update));
+      if(gyroIOInputs.connected) {
+        final double dtheta = gyroYaw.minus(lastGyroYaw).getRadians();
+
+        SmartDashboard.putNumber("Odometry dTheta Error", dtheta - twist.dtheta);
+        twist.dtheta = dtheta;
+      }
+
+      lastGyroYaw = gyroYaw;
+
+      poseEstimator.addDriveDataNoUpdate(timestamps.get(update), twist);
+      posePublisher.set(getPose());
+
+      gyroIO.setExpectedYawVelocity(measurdSpeeds.omegaRadiansPerSecond);
+    }
+
+  }
+
+  public Rotation2d getRotation(){
+    return poseEstimator.getLatestPose().getRotation();
+  }
+  
+  public Pose2d getPose(){
+    return poseEstimator.getLatestPose();
   }
 }
