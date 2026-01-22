@@ -3,16 +3,18 @@ package frc.WorBots;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
-  public static final double ROBOT_PERIOD = 50.0;
+  // Robot period in seconds
+  public static final double ROBOT_PERIOD = 0.01;
+  public static final double ROBOT_FREQUENCY = 1.0 / ROBOT_PERIOD;
   public static final boolean IS_COMP = false;
   public static final boolean getSim(){
     return Robot.isSimulation();
   }
 
   //Robot Constants
-  public static final double ROBOT_LENGTH = 0.0; //m
-  public static final double ROBOT_WIDTH = 0.0; //m
-  public static final double ROBOT_WHEELBASE = 0.0; //m
+  public static final double ROBOT_LENGTH = Units.inchesToMeters(27); //m
+  public static final double ROBOT_WIDTH = Units.inchesToMeters(27); //m
+  public static final double ROBOT_WHEELBASE = Units.inchesToMeters(24); //m
 
   //Drive Constants
   public static final double DRIVE_MULTIPLIER = 1.0;
