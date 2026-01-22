@@ -58,7 +58,10 @@ public class TagVision extends SubsystemBase{
   /** Whether the vision has seen a tag very recently */
   private boolean seesTag = false;
 
-  /** Transform for the inward-facing camera on the BR module */
+  /*TODO: 
+   * Update these values
+   */
+  /** Transform for the inward-facing camera on the FL module */
   private static final Transform3d LEFT_SWERVE_MODULE_TRANSFORM =
       new Transform3d(
           new Translation3d(
@@ -69,10 +72,24 @@ public class TagVision extends SubsystemBase{
               Units.degreesToRadians(180),
               Units.degreesToRadians(-25.0),
               Units.degreesToRadians(0.0)));
-
+         
   /** The transforms for the cameras to robot center */
+  private static final Transform3d RIGHT_SWERVE_MODULE_TRANSFORM =
+    new Transform3d(
+        new Translation3d(
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0)),
+        new Rotation3d(
+            Units.degreesToRadians(0),
+            Units.degreesToRadians(0),
+            Units.degreesToRadians(0))
+    );  
+
+
+
   private static final Transform3d[] CAMERA_TRANSFORMS =
-      new Transform3d[] {LEFT_SWERVE_MODULE_TRANSFORM};
+      new Transform3d[] {LEFT_SWERVE_MODULE_TRANSFORM, RIGHT_SWERVE_MODULE_TRANSFORM};
 
   /** Latency between the camera and it being pushed to NT */
   private static final TunableDouble LATENCY =
@@ -82,6 +99,7 @@ public class TagVision extends SubsystemBase{
   private static final double[] CAMERA_WEIGHTS = new double[] {1.0};
 
   /** How much influence XY data has on the robot pose. Smaller values increase influence */
+  //TODO: decrease both of these values
   private static final double XY_STD_DEV_COEFFICIENT = 0.00025;
 
   /** How much influence theta data has on the robot pose. Smaller values increase influence */
@@ -103,6 +121,7 @@ public class TagVision extends SubsystemBase{
    * Weights for different tags on the field to be chosen. Only contains the weights for one side
    * (half the tags)
    */
+  //TODO: update/change these
   private static final double[] TAG_WEIGHTS =
       new double[] {
         1.05, // Coral Station
@@ -124,6 +143,7 @@ public class TagVision extends SubsystemBase{
   /** The amount of time to log tag poses for */
   private static final double TARGET_LOG_TIME_SECS = 0.1;
 
+  //TODO Change all of these to the new format that AdvantageScope will need in 2027
   private final NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
   private final BooleanPublisher isConnectedPublisher =
       visionTable.getBooleanTopic("Is Connected").publish();
