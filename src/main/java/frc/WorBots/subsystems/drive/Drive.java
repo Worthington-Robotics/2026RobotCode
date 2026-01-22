@@ -183,8 +183,6 @@ public class Drive extends SubsystemBase{
   }
 
   public void updateOdometry(){
-    double startTime = Timer.getFPGATimestamp();
-
     SwerveModuleState[] meauredStates = new SwerveModuleState[4];
 
     for(int i=0; i<4; i++){
