@@ -19,6 +19,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
@@ -76,7 +77,8 @@ public class Drive extends SubsystemBase{
       modules[2] = new Module(blModule, 2);
       modules[3] = new Module(brModule, 3);
 
-      
+      //TODO remove when we acually have autos to set a real start pose
+      poseEstimator.resetPose(new Pose2d(3, 3, new Rotation2d()));
   }
 
   public void periodic(){
@@ -85,6 +87,8 @@ public class Drive extends SubsystemBase{
     for(Module a : modules){
       a.periodic();
     }
+
+    updateOdometry();
 
     speedSetpointPublisher.set(setpointSpeeds);
     gyroPublisher.set(gyroIOInputs.yawPositionRad);
@@ -168,8 +172,6 @@ public class Drive extends SubsystemBase{
     return magnitude < Constants.DRIVE_STOP_XY_THRESHOLD && Math.abs(setpointSpeeds.omegaRadiansPerSecond) < Constants.DRIVE_THETA_THRESHOLD;
   }
 
-  //TODO add pose getters
-
   public Rotation2d getYaw(){
     return new Rotation2d(gyroIOInputs.yawPositionRad);
   }
@@ -179,6 +181,7 @@ public class Drive extends SubsystemBase{
   }
 
   public void updateOdometry(){
+    final double startTime = Timer.getFPGATimestamp();
     SwerveModuleState[] meauredStates = new SwerveModuleState[4];
 
     for(int i=0; i<4; i++){
@@ -230,7 +233,7 @@ public class Drive extends SubsystemBase{
         modulus = 3;
       }
     }
-
+    SmartDashboard.putNumber("minSize", minSize);
     for(int update = 0; update < minSize / modulus; update++){
       update = update * modulus;
 
@@ -262,6 +265,10 @@ public class Drive extends SubsystemBase{
       gyroIO.setExpectedYawVelocity(measurdSpeeds.omegaRadiansPerSecond);
     }
 
+    poseEstimator.update();
+
+    final double endTime = Timer.getFPGATimestamp();
+    SmartDashboard.putNumber("Odom Time", endTime - startTime);
   }
 
   public Rotation2d getRotation(){

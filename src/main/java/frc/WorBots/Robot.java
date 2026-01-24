@@ -4,9 +4,11 @@
 
 package frc.WorBots;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.WorBots.util.OdometryThread;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -15,7 +17,18 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    //Set robot period
     this.addPeriodic(this::realRobotPeriodic, Constants.ROBOT_PERIOD);
+
+    //Silences Joystick warning in SIM
+    if(Constants.getSim()){
+      DriverStation.silenceJoystickConnectionWarning(true);
+    }
+    else{
+      DriverStation.silenceJoystickConnectionWarning(false);
+    }
+
+    OdometryThread.getInstance();
   }
 
   public void realRobotPeriodic() {
