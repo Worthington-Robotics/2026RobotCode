@@ -234,7 +234,9 @@ public class Drive extends SubsystemBase{
       }
     }
     SmartDashboard.putNumber("minSize", minSize);
-    for(int update = 0; update < minSize / modulus; update++){
+    int update = 0;
+    double temp[] = new double[3];
+    for(update = 0; update < minSize / modulus; update++){
       update = update * modulus;
 
       SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
@@ -260,10 +262,16 @@ public class Drive extends SubsystemBase{
       lastGyroYaw = gyroYaw;
 
       poseEstimator.addDriveDataNoUpdate(timestamps.get(update), twist);
+      temp[0] = twist.dx;
+      temp[1] = twist.dy;
+      temp[2] = twist.dtheta;
       posePublisher.set(getPose());
 
       gyroIO.setExpectedYawVelocity(measurdSpeeds.omegaRadiansPerSecond);
     }
+
+    SmartDashboard.putNumber("odometry update", update);
+    SmartDashboard.putNumberArray("odometry update twist", temp);
 
     poseEstimator.update();
 
