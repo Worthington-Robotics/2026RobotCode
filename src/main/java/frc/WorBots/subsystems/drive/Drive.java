@@ -240,13 +240,14 @@ public class Drive extends SubsystemBase{
       update = update * modulus;
 
       SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
-      
+
       for(int i = 0; i < 4; i++){
         final Module module = modules[i];
         final double distance = module.getDrivePositionUpdates().get(update);
         final Rotation2d angle = new Rotation2d(module.getTurnPositionUpdates().get(update));
 
         wheelDeltas[i] = new SwerveModulePosition((distance - lastModulePositionMeters[i]), angle);
+        lastModulePositionMeters[i] = distance;
       }
 
       final Twist2d twist = kinematics.toTwist2d(wheelDeltas);
