@@ -69,6 +69,15 @@ public class Drive extends SubsystemBase{
   private final BooleanPublisher measuredStopPublisher = driveTable.getBooleanTopic("Measured Stop").publish();
 
   
+  /**
+   * Constructor for the Drive Subsytem
+   * 
+   * @param gyro The interface for a gyro that tracks the drivetrains orientation
+   * @param flModule The interface of the drivetrain's front left module
+   * @param frModule The interface of the drivetrain's front right module
+   * @param blModule The interface of the drivetrain's back left module
+   * @param brModule The interface of the drivetrain's back right module
+   */
 
   public Drive(GyroIO gyro, ModuleIO flModule, ModuleIO frModule, ModuleIO blModule, ModuleIO brModule){
       gyroIO = gyro;
@@ -82,20 +91,25 @@ public class Drive extends SubsystemBase{
   }
 
   public void periodic(){
+    //updates gyro data
     gyroIO.updateInputs(gyroIOInputs);
 
+    //runs the modules
     for(Module a : modules){
       a.periodic();
     }
 
+    //passes new information to the odometry and pose estimator
     updateOdometry();
 
+    //publishes information to the drive table
     speedSetpointPublisher.set(setpointSpeeds);
     gyroPublisher.set(gyroIOInputs.yawPositionRad);
     gyroVelocityPublisher.set(gyroIOInputs.yawVelocityRadPerSec);
     stopModePublisher.set(stopMode.toString());
     measuredStopPublisher.set(isStopped());
 
+    //makes the robot move
     drive();
   }
 
@@ -106,6 +120,7 @@ public class Drive extends SubsystemBase{
     final ChassisSpeeds filteredFieldRelative = filter.calculate();
     setpointSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(filteredFieldRelative, getYaw());
 
+    //if we're disabled the modules are all stoped, the goal speed is set to 0, and the filter is reset
     if(DriverStation.isDisabled()){
       for(Module a : modules){
         a.stop();
@@ -114,6 +129,7 @@ public class Drive extends SubsystemBase{
       filter.reset();
     } else{
       if(isStopped()){
+          //TODO when polishing maybe change this so that the robot doesn't hard stop avery time
           setpointStates = setStop();
           forceModules = true;
       } else {
@@ -146,10 +162,16 @@ public class Drive extends SubsystemBase{
     };
   }
 
+  /**
+   * Tells the robot to move at a velocity of 0, does not directly use stop modes
+   */
   public void stop(){
     runVelocity(new ChassisSpeeds());
   }
 
+  /**
+   * Moves all modules to form a x causing the robot to hardstop in place
+   */
   public SwerveModuleState[] setStop(){
     SwerveModuleState[] setpointStates = new SwerveModuleState[4];
     
@@ -159,6 +181,11 @@ public class Drive extends SubsystemBase{
     return setpointStates;
   }
 
+  /**
+   * Updates the drive filter with the new field relative speed the robot should be driving at
+   * 
+   * @param speeds the robot relative speed being requested of the robot
+   */
   public void runVelocity(ChassisSpeeds speeds){
     ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DRIVE_DRIFT_RATE);
     goalSetpointPublisher.set(ajusted);
@@ -167,19 +194,31 @@ public class Drive extends SubsystemBase{
     filter.setGoal(fieldRel);
   }
 
+  /**
+   * Checks our linear and rotational velocity to see if the robot is physicially stopped
+   */
   public boolean isStopped(){
     double magnitude = Math.hypot(setpointSpeeds.vxMetersPerSecond, setpointSpeeds.vyMetersPerSecond);
     return magnitude < Constants.DRIVE_STOP_XY_THRESHOLD && Math.abs(setpointSpeeds.omegaRadiansPerSecond) < Constants.DRIVE_THETA_THRESHOLD;
   }
 
+  /**
+   * Returns the robots rotation acording to the drivetrain's gyroscope
+   */
   public Rotation2d getYaw(){
     return new Rotation2d(gyroIOInputs.yawPositionRad);
   }
 
+  /**
+   * Returns the robots rotational velocity acording to the drivetrain's gyroscope
+   */
   public Rotation2d getYawVelocity(){
     return new Rotation2d(gyroIOInputs.yawVelocityRadPerSec);
   }
 
+  /**
+   * Passes new drive information to the Odometry threat and pose estimator
+   */
   public void updateOdometry(){
     final double startTime = Timer.getFPGATimestamp();
     SwerveModuleState[] meauredStates = new SwerveModuleState[4];
@@ -280,10 +319,16 @@ public class Drive extends SubsystemBase{
     SmartDashboard.putNumber("Odom Time", endTime - startTime);
   }
 
+  /**
+   * Returns the robots rotation according to the pose estimator
+   */
   public Rotation2d getRotation(){
     return poseEstimator.getLatestPose().getRotation();
   }
   
+  /**
+   * Returns the robots position according to the pose estimator
+   */
   public Pose2d getPose(){
     return poseEstimator.getLatestPose();
   }
