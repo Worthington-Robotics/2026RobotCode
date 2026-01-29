@@ -50,7 +50,7 @@ public class RobotContainer {
   private void configureBindings() {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
-        drive, () -> driver.getLeftX(), () -> driver.getLeftY(), () -> driver.getRightY()));
+        drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
   }
 
   public Command getAutonomousCommand() {
