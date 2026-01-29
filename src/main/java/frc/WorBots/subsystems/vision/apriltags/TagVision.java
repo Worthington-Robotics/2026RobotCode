@@ -125,22 +125,22 @@ public class TagVision extends SubsystemBase{
   //The higher the value, the greater the trust in them. 
   private static final double[] TAG_WEIGHTS =
       new double[] {
-        1.05, // AprilTag 1 
-        1.05, // AprilTag 2
-        1.1, // AprilTag 3
+        1.0, // AprilTag 1 
+        0.9, // AprilTag 2
+        0.9, // AprilTag 3
         0.9, // AprilTag 4
         0.9, // AprilTag 5
         1.0, // AprilTag 6
         1.0, // AprilTag 7
         0.9, // AprilTag 8
-        1.0, // AprilTag 9 
-        1.0, // AprilTag 10
-        1.0, // AprilTag 11
+        0.9, // AprilTag 9 
+        0.9, // AprilTag 10
+        0.9, // AprilTag 11
         1.0, // AprilTag 12
-        1.0, // AprilTag 13
-        1.0, // AprilTag 14
-        1.0, // AprilTag 15
-        1.0, // AprilTag 16
+        1.1, // AprilTag 13
+        1.1, // AprilTag 14
+        1.1, // AprilTag 15
+        1.1, // AprilTag 16
       };
 
   /** Factor for speed compensation */
