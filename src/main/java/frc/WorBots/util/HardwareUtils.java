@@ -13,7 +13,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.playingwithfusion.TimeOfFlight;
+// import com.playingwithfusion.TimeOfFlight;
 //TODO add playing with fusion when proper libraries are released
 import edu.wpi.first.hal.PowerDistributionFaults;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -43,10 +43,10 @@ public class HardwareUtils {
    * @param tof The time of flight
    * @return True if the device is working properly, false if it is not
    */
-  public static boolean getTimeOfFlightStatus(TimeOfFlight tof) {
-    final TimeOfFlight.Status status = tof.getStatus();
-    return status == TimeOfFlight.Status.Valid;
-  }
+  // public static boolean getTimeOfFlightStatus(TimeOfFlight tof) {
+  //   final TimeOfFlight.Status status = tof.getStatus();
+  //   return status == TimeOfFlight.Status.Valid;
+  // }
 
   /**
    * Safely sets a motor voltage with voltage limiting and temperature checks
