@@ -10,6 +10,6 @@ public class Shooter extends SubsystemBase {
     private boolean hasFuel = false;
     private double feederWheelVolts = 0.0;
 
-
+    //Publish the values etc
     
 }
