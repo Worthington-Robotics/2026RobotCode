@@ -88,7 +88,6 @@ public class Drive extends SubsystemBase{
       modules[3] = new Module(brModule, 3);
 
       //TODO remove when we acually have autos to set a real start pose
-      poseEstimator.resetPose(new Pose2d(3, 3, new Rotation2d()));
       poseEstimator.resetPose(new Pose2d(15, 5, new Rotation2d(Units.degreesToRadians(180))));
   }
 
