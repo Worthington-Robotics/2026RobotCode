@@ -1,9 +1,12 @@
 package frc.WorBots;
 
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
   public static final double ROBOT_PERIOD = 50.0;
+  public static final double ROBOT_PERIOD_SECONDS = 1/ROBOT_PERIOD;
   public static final boolean IS_COMP = false;
   public static final boolean getSim(){
     return Robot.isSimulation();
@@ -30,4 +33,6 @@ public class Constants {
  */
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
+  //Turret and Shooter Constants
+  public static final Transform2d ROBOT_TO_TURRET = new Transform2d(); //TODO add real values
 }
