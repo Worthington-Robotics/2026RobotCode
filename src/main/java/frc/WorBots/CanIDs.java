@@ -22,4 +22,9 @@ public class CanIDs {
     public static final int BACK_LEFT_ENCODER_ID = 0;
     public static final int BACK_RIGHT_ENCODER_ID = 0;
   }
+
+  public class SuperStructure{
+    //Spindexer
+    public static final int SPINDEXER_ID = 0;
+  }
 }

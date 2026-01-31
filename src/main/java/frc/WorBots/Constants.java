@@ -32,4 +32,12 @@ public class Constants {
  */
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
+  //Spindexer Constants
+  //TODO find all these values
+  public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
+  public static final double SPINDEXER_GEAR_RATIO = 1;
+  public static final double SPINDEXER_JKgMETERSSQUARED = 1;
+  public static final double SPINDEXER_KS = 1;
+  public static final double SPINDEXER_KV = 1;
+
 }
