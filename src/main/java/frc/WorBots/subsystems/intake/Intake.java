@@ -22,6 +22,7 @@ public class Intake extends SubsystemBase {
     //The setpoint voltage for the intake
     private double setPointVoltage = 0.0;
 
+    //All publishers
     private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private final NetworkTable intakeTable = instance.getTable("Intake");
     private final DoublePublisher setpointPub =
@@ -35,11 +36,13 @@ public class Intake extends SubsystemBase {
         intakeTable.getDoubleTopic("ToF Distance").publish();
 
     
+    //Constructor 
     public Intake(IntakeIO io){
         this.io = io;
         //StatusPage.reportStatus(StatusPage.INTAKE_SUBSYSTEM, true);
     }
 
+    //The periodic function
     @Override 
     public void periodic(){
         io.updateInputs(inputs);
@@ -65,8 +68,25 @@ public class Intake extends SubsystemBase {
 
     }
 
-    
-    
+    //Getters and Setters
+    public boolean getHasFuel(){
+        return hasFuel;
+    }
+
+    public double getSetPointVoltage(){
+        return setPointVoltage;
+    }
+
+    public double getTimeOfFlightDist(){
+        return inputs.timeOfFlightDistMeters;
+    }
+
+    public void setVolts(double voltage){
+        setPointVoltage = voltage;
+        
+    }
+
+
 
 
 }
