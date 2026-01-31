@@ -31,7 +31,7 @@ public class DriveWithJoysticks extends Command {
     final double leftY = leftYSupplier.get();
     final double rightX = rightXSupplier.get();
 
-    RobotContainer.driveController.drive(drive, leftX, leftY, rightX);
+    RobotContainer.driveController.drive(drive, -leftY, leftX, rightX);
   }
 
   @Override

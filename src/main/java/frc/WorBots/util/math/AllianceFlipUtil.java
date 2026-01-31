@@ -10,6 +10,7 @@ package frc.WorBots.util.math;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -180,6 +181,23 @@ public class AllianceFlipUtil {
    */
   public static Pose2d flipY(Pose2d pose) {
     return new Pose2d(pose.getX(), FieldConstants.fieldWidth - pose.getY(), pose.getRotation());
+  }
+
+  /**
+   * Flips Field Relative Chasis Speeds to alliance relative chasis speeds
+   * @param speeds The field relative chasis speed
+   * @return The alliance relative chasis speed
+   */
+  public static ChassisSpeeds flipSpeeds(ChassisSpeeds speeds){
+    if(shouldFlip()){
+      ChassisSpeeds output = new ChassisSpeeds();
+      output.vxMetersPerSecond = -speeds.vxMetersPerSecond;
+      output.vyMetersPerSecond = - speeds.vyMetersPerSecond;
+      output.omegaRadiansPerSecond = -speeds.omegaRadiansPerSecond;
+      return output;
+    } else{
+      return speeds;
+    }
   }
 
   /** Gets whether alliance-relative x-values should be flipped, for the red side */
