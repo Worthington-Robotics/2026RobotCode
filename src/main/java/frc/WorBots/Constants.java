@@ -32,7 +32,11 @@ public class Constants {
  */
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
+  /** The CAN bus name used for swerve devices and pigeon */
+  public static final String SWERVE_CAN_BUS = "rio";
 
+  /** The CAN bus name used for anything other than swerve */
+  public static final String MAIN_CAN_BUS = "Main";
 
   //Intake Constants
   //These values need to be modified
