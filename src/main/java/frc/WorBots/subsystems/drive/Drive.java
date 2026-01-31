@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -87,7 +88,7 @@ public class Drive extends SubsystemBase{
       modules[3] = new Module(brModule, 3);
 
       //TODO remove when we acually have autos to set a real start pose
-      poseEstimator.resetPose(new Pose2d(3, 3, new Rotation2d()));
+      poseEstimator.resetPose(new Pose2d(15, 5, new Rotation2d(Units.degreesToRadians(180))));
   }
 
   public void periodic(){
@@ -190,7 +191,9 @@ public class Drive extends SubsystemBase{
     ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DRIVE_DRIFT_RATE);
     goalSetpointPublisher.set(ajusted);
 
+    //Calculates a field relative velocity as if we're on blue, then flips it to red if nessesary
     ChassisSpeeds fieldRel = ChassisSpeeds.fromRobotRelativeSpeeds(speeds, getYaw());
+    //ChassisSpeeds allianceRel = AllianceFlipUtil.flipSpeeds(fieldRel);
     filter.setGoal(fieldRel);
   }
 
