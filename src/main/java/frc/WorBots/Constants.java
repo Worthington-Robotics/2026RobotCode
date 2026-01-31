@@ -38,5 +38,6 @@ public class Constants {
   //These values need to be modified
   public static final double INTAKE_MAX_TEMP = 80.0;
   public static final double INTAKE_VOLTS = 4.25;
-  
+  public static final double TIME_OF_FLIGHT_THRES = 0.255;
+
 }
