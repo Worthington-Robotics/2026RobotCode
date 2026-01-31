@@ -20,18 +20,22 @@ public class Intake extends SubsystemBase {
     private boolean hasFuel = false;
 
     //The setpoint voltage for the intake
-    private double setPointVoltage = 0.0;
+    private double setPointVoltageIntake = 0.0;
+
+    private double setPointVoltageExtending = 0.0;
 
     //All publishers
     private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private final NetworkTable intakeTable = instance.getTable("Intake");
-    private final DoublePublisher setpointPub =
-        intakeTable.getDoubleTopic("Setpoint Volts").publish();
+    private final DoublePublisher setpointIntakePub =
+        intakeTable.getDoubleTopic("Intake Setpoint Volts").publish();
+    private final DoublePublisher setpointExtendingPub = 
+        intakeTable.getDoubleTopic("Extending Setpoint Volts").publish();
     private final BooleanPublisher hasFuelPub =
         intakeTable.getBooleanTopic("Has Fuel").publish();
     private final DoublePublisher currentDrawPub =
         intakeTable.getDoubleTopic("Current Draw").publish();
-
+  
     private final DoublePublisher timeOfFlightDistPub =
         intakeTable.getDoubleTopic("ToF Distance").publish();
 
@@ -49,8 +53,9 @@ public class Intake extends SubsystemBase {
         
         hasFuel = inputs.timeOfFlightDistMeters <= Constants.TIME_OF_FLIGHT_THRES;
 
-        if (inputs.motor.temperatureCelsius > Constants.INTAKE_MAX_TEMP || DriverStation.isDisabled()){
-            setPointVoltage = 0.0;
+        if (inputs.intakeMotor.temperatureCelsius > Constants.INTAKE_MAX_TEMP || DriverStation.isDisabled()|| inputs.extendingMotor.temperatureCelsius > Constants.INTAKE_MAX_TEMP){
+            setPointVoltageIntake = 0.0;
+        
         }
 
        /*  
@@ -58,10 +63,15 @@ public class Intake extends SubsystemBase {
             StatusPage.INTAKE_CONNECTED,
             inputs.isConnected && inputs.motor.temperatureCelsius <= Constants.INTAKE_MAX_TEMP); */
 
-        io.setIntakeVolts(setPointVoltage);
+        //Setting the voltages of the motors    
+        io.setIntakeMotorVolts(setPointVoltageIntake);
 
-        inputs.motor.publish();
-        setpointPub.set(setPointVoltage);
+        io.setExtendingMotorVolts(setPointVoltageExtending);
+
+        inputs.intakeMotor.publish();
+        inputs.extendingMotor.publish();
+        setpointIntakePub.set(setPointVoltageIntake);
+        setpointExtendingPub.set(setPointVoltageExtending);
         hasFuelPub.set(hasFuel);
         timeOfFlightDistPub.set(inputs.timeOfFlightDistMeters);
         currentDrawPub.set(inputs.currentDraw);
@@ -73,19 +83,26 @@ public class Intake extends SubsystemBase {
         return hasFuel;
     }
 
-    public double getSetPointVoltage(){
-        return setPointVoltage;
+    public double getSetPointVoltageIntake(){
+        return setPointVoltageIntake;
+    }
+
+    public double getSetPointVoltageExtending(){
+        return setPointVoltageExtending;
     }
 
     public double getTimeOfFlightDist(){
         return inputs.timeOfFlightDistMeters;
     }
 
-    public void setVolts(double voltage){
-        setPointVoltage = voltage;
+    public void setVoltsIntake(double voltage){
+        setPointVoltageIntake = voltage;
         
     }
 
+    public void setVoltsExtending(double voltage){
+        setPointVoltageExtending = voltage;
+    }
 
 
 
