@@ -32,4 +32,11 @@ public class Constants {
  */
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
+
+
+  //Intake Constants
+  //These values need to be modified
+  public static final double INTAKE_MAX_TEMP = 80.0;
+  public static final double INTAKE_VOLTS = 4.25;
+  
 }
