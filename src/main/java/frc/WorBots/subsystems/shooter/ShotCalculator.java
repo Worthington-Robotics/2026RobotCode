@@ -9,6 +9,8 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.WorBots.Constants;
 
+/* Taken and modified from team 6328. */
+
 /***
  * A class that can be used to calclate the required parameters for the robot's
  * next shot
