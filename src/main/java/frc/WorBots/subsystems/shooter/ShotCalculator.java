@@ -68,7 +68,7 @@ public class ShotCalculator {
    * @return The parameters required to make a shot into the hub with the current
    *         robot position and velocity
    */
-  public ShootingParams getParams(Pose2d pose, ChassisSpeeds robotVelocity) {
+  public ShootingParams getParamsToHub(Pose2d pose, ChassisSpeeds robotVelocity) {
     // Calculate the estimated robot pose when this method is done running
     Pose2d estimatedPose = pose
         .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, pose.getRotation()).toTwist2d(phaseDelay));
