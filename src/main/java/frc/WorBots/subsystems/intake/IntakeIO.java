@@ -10,7 +10,8 @@ public interface IntakeIO {
 
         double timeOfFlightDistMeters = 0.0;
         boolean isConnected = false;
-        double currentDraw = 0.0;
+        double intakeCurrent;
+        double extendingCurrent;
 
 
 

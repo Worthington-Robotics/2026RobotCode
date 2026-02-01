@@ -52,13 +52,29 @@ public class IntakeIOTalon implements IntakeIO {
             new OptimalStatusSignal<>(extendingMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
 
         HardwareUtils.setCurrentLimit(intakeMotor, 160);
-        HarwareUtils.setCurrentLimit(extendingMotor, 160);    
+        HardwareUtils.setCurrentLimit(extendingMotor, 160);    
 
         intakeMotor.optimizeBusUtilization();
         extendingMotor.optimizeBusUtilization();
 
     }
 
+    public void updateInputs(IntakeIOInputs inputs){
+        intakeMotorSignals.update(inputs.intakeMotor, intakeMotor);
+        extendingMotorSignals.update(inputs.extendingMotor, extendingMotor);
 
+        inputs.intakeCurrent = intakeCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
+        inputs.extendingCurrent = extendingCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
+        inputs.timeOfFlightDistMeters = timeOfFlight.getRange() / 1000.0;
+    }
+
+    //Need to actually figure out the max voltage
+    public void setIntakeVolts(double volts){
+        intakeMotorSignals.setVoltage(intakeMotor, volts, 10);
+    }
+
+    public void setExtendingMotorVolts(double volts){
+        extendingMotorSignals.setVoltage(extendingMotor, volts, 10);
+    }
     
 }

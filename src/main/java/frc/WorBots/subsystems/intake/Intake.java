@@ -33,9 +33,10 @@ public class Intake extends SubsystemBase {
         intakeTable.getDoubleTopic("Extending Setpoint Volts").publish();
     private final BooleanPublisher hasFuelPub =
         intakeTable.getBooleanTopic("Has Fuel").publish();
-    private final DoublePublisher currentDrawPub =
-        intakeTable.getDoubleTopic("Current Draw").publish();
-  
+    private final DoublePublisher currentDrawIntakePub =
+        intakeTable.getDoubleTopic("Intake Current Draw").publish();
+    private final DoublePublisher currentDrawExtendingPub = 
+        intakeTable.getDoubleTopic("Extending Current Draw").publish(null);
     private final DoublePublisher timeOfFlightDistPub =
         intakeTable.getDoubleTopic("ToF Distance").publish();
 
@@ -74,7 +75,8 @@ public class Intake extends SubsystemBase {
         setpointExtendingPub.set(setPointVoltageExtending);
         hasFuelPub.set(hasFuel);
         timeOfFlightDistPub.set(inputs.timeOfFlightDistMeters);
-        currentDrawPub.set(inputs.currentDraw);
+        currentDrawIntakePub.set(inputs.intakeCurrent);
+        currentDrawExtendingPub.set(inputs.extendingCurrent);
 
     }
 
