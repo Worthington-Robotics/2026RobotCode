@@ -1,18 +1,25 @@
 package frc.WorBots.subsystems.intake;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.WorBots.Constants;
 
 //import frc.WorBots.util.RobotSimulator;
 
 public class IntakeIOSim implements IntakeIO{
-    private FlywheelSim intakeSim;
-    private FlywheelSim extendingSim;
+    private FlywheelSim intakeSim = 
+        new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60(1), Constants.MOMENT_OF_INERTIA, Constants.INTAKE_INTAKE_GR), DCMotor.getKrakenX60(1));
+    private SingleJointedArmSim extendingSim = 
+        new SingleJointedArmSim(DCMotor.getKrakenX60(1), Constants.INTAKE_PIVOT_GR, Constants.INTAKE_PIVOT_GR, 0, 0, 0, false, 0, null);
 
 
-    public IntakeIOSim(){
-        intakeSim = new FlywheelSim(null, null, null);
-        extendingSim = new FlywheelSim(null, null, null);
+    public IntakeIOSim(){}
+
+    public void updateInputs(IntakeIOInputs inputs){
+        //tell sim what inputs are 
+        //tell update freq
+        //update inputs
     }
 }
