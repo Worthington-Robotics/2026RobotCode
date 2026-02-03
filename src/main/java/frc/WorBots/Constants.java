@@ -18,8 +18,8 @@ public class Constants {
 
   //Drive Constants
   public static final double DRIVE_MULTIPLIER = 1.0;
-  public static final double DRIVE_GEAR_RATIO = 5.36;
-  public static final double TURN_GEAR_RATIO = 18.75;
+  public static final double DRIVE_GEAR_RATIO = 6.02;
+  public static final double TURN_GEAR_RATIO = 287.0 / 11.0;
   public static final double DRIVE_DRIFT_RATE = 0.0; //rads/sec rotational error from driving
   public static final double DRIVE_STOP_XY_THRESHOLD = Units.inchesToMeters(1.6); // m/sec
   public static final double DRIVE_THETA_THRESHOLD = Units.degreesToRadians(1.0); // rads/sec
