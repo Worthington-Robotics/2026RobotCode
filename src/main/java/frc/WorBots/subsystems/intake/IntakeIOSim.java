@@ -21,5 +21,25 @@ public class IntakeIOSim implements IntakeIO{
         //tell sim what inputs are 
         //tell update freq
         //update inputs
+        intakeSim.update(Constants.ROBOT_PERIOD);
+        inputs.isConnected = true;
+
+        inputs.extendingMotor.velocityRadsPerSec = extendingSim.getVelocityRadPerSec();
+        inputs.intakeMotor.velocityRadsPerSec = intakeSim.getAngularVelocityRadPerSec();
+
+        inputs.extendingCurrent = extendingSim.getCurrentDrawAmps();
+        inputs.intakeCurrent = intakeSim.getCurrentDrawAmps();
+        
+        //Figure this out later
+        inputs.timeOfFlightDistMeters = 0.0;
+    }
+
+    
+    public void setIntakeMotorVolts(double volts){
+        intakeSim.setInputVoltage(volts);
+    }
+
+    public void setExtendingMotorVolts(double volts){
+        extendingSim.setInputVoltage(volts);
     }
 }
