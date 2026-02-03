@@ -13,5 +13,7 @@ public interface SpindexerIO {
 
     public default void setVelocity(double vel){}
 
+    public default void setVoltage(double volts){}
+
     public default void stop(){}
 }

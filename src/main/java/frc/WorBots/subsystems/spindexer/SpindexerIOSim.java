@@ -22,7 +22,6 @@ public class SpindexerIOSim implements SpindexerIO {
 
   @Override
   public void updateInputs(SpindexerIOInputs inputs){
-    System.out.println(voltage);
     sim.setInputVoltage(voltage);
     sim.update(Constants.ROBOT_PERIOD);
     inputs.active = isActive();
@@ -40,6 +39,11 @@ public class SpindexerIOSim implements SpindexerIO {
   }
 
   @Override
+  public void setVoltage(double volts){
+    this.voltage = volts;
+  }
+
+  @Override
   public void stop(){
     this.voltage = 0;
   }
@@ -52,6 +56,7 @@ public class SpindexerIOSim implements SpindexerIO {
       return false;
   }
 
+  //TODO implement someway to manually trigger this
   private boolean isJammed(){
     return false;
   }

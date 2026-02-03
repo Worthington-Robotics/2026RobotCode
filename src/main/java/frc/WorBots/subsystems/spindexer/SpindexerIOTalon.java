@@ -3,13 +3,9 @@ package frc.WorBots.subsystems.spindexer;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
-import frc.WorBots.util.HardwareUtils.TalonSignals;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 
 public class SpindexerIOTalon implements SpindexerIO{
@@ -26,7 +22,6 @@ public class SpindexerIOTalon implements SpindexerIO{
 
   @Override
   public void updateInputs(SpindexerIOInputs inputs){
-    System.out.println(voltage);
     talon.setVoltage(voltage);
     inputs.active = isActive();
     inputs.jammed = isJammed();
@@ -36,6 +31,11 @@ public class SpindexerIOTalon implements SpindexerIO{
   @Override
   public void setVelocity(double vel){
     this.voltage = feedforward.calculate(vel);
+  }
+
+  @Override
+  public void setVoltage(double volts){
+    this.voltage = volts;
   }
 
   @Override
@@ -52,6 +52,7 @@ public class SpindexerIOTalon implements SpindexerIO{
       return false;
   }
 
+  //TODO implement
   private boolean isJammed(){
     return false;
   }
