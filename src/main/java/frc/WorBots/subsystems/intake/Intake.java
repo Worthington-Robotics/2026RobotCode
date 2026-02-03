@@ -16,8 +16,6 @@ public class Intake extends SubsystemBase {
     private final IntakeIO io;
     private final IntakeIOInputs inputs = new IntakeIOInputs();
 
-    //Whether or not the intake has fuel within it
-    private boolean hasFuel = false;
 
     //The setpoint voltage for the intake
     private double setPointVoltageIntake = 0.0;
@@ -31,14 +29,12 @@ public class Intake extends SubsystemBase {
         intakeTable.getDoubleTopic("Intake Setpoint Volts").publish();
     private final DoublePublisher setpointExtendingPub = 
         intakeTable.getDoubleTopic("Extending Setpoint Volts").publish();
-    private final BooleanPublisher hasFuelPub =
-        intakeTable.getBooleanTopic("Has Fuel").publish();
+
     private final DoublePublisher currentDrawIntakePub =
         intakeTable.getDoubleTopic("Intake Current Draw").publish();
     private final DoublePublisher currentDrawExtendingPub = 
         intakeTable.getDoubleTopic("Extending Current Draw").publish(null);
-    private final DoublePublisher timeOfFlightDistPub =
-        intakeTable.getDoubleTopic("ToF Distance").publish();
+
 
     
     //Constructor 
@@ -52,7 +48,7 @@ public class Intake extends SubsystemBase {
     public void periodic(){
         io.updateInputs(inputs);
         
-        hasFuel = inputs.timeOfFlightDistMeters <= Constants.TIME_OF_FLIGHT_THRES;
+    
 
         if (inputs.intakeMotor.temperatureCelsius > Constants.INTAKE_MAX_TEMP || DriverStation.isDisabled()|| inputs.extendingMotor.temperatureCelsius > Constants.INTAKE_MAX_TEMP){
             setPointVoltageIntake = 0.0;
@@ -73,17 +69,13 @@ public class Intake extends SubsystemBase {
         inputs.extendingMotor.publish();
         setpointIntakePub.set(setPointVoltageIntake);
         setpointExtendingPub.set(setPointVoltageExtending);
-        hasFuelPub.set(hasFuel);
-        timeOfFlightDistPub.set(inputs.timeOfFlightDistMeters);
+    
         currentDrawIntakePub.set(inputs.intakeCurrent);
         currentDrawExtendingPub.set(inputs.extendingCurrent);
 
     }
 
     //Getters and Setters
-    public boolean getHasFuel(){
-        return hasFuel;
-    }
 
     public double getSetPointVoltageIntake(){
         return setPointVoltageIntake;
@@ -93,9 +85,6 @@ public class Intake extends SubsystemBase {
         return setPointVoltageExtending;
     }
 
-    public double getTimeOfFlightDist(){
-        return inputs.timeOfFlightDistMeters;
-    }
 
     public void setVoltsIntake(double voltage){
         setPointVoltageIntake = voltage;

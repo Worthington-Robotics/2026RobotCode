@@ -3,8 +3,6 @@ package frc.WorBots.subsystems.intake;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.playingwithfusion.TimeOfFlight;
-import com.playingwithfusion.TimeOfFlight.RangingMode;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.units.measure.Current;
 import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
@@ -18,7 +16,6 @@ import frc.WorBots.CanIDs;
 public class IntakeIOTalon implements IntakeIO {
     private final TalonFX intakeMotor;
     private final TalonFX extendingMotor;
-    private final TimeOfFlight timeOfFlight;
 
     private final TalonSignalsPositional intakeMotorSignals;
     private final TalonSignalsPositional extendingMotorSignals;
@@ -42,8 +39,7 @@ public class IntakeIOTalon implements IntakeIO {
         intakeMotorSignals = new TalonSignalsPositional(intakeMotor);
         extendingMotorSignals = new TalonSignalsPositional(extendingMotor);
 
-        timeOfFlight = new TimeOfFlight(CanIDs.Main.TOF_ID);
-        timeOfFlight.setRangingMode(RangingMode.Short, 24);
+
 
 
         intakeCurrentDrawSignal = 
@@ -65,7 +61,7 @@ public class IntakeIOTalon implements IntakeIO {
 
         inputs.intakeCurrent = intakeCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
         inputs.extendingCurrent = extendingCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
-        inputs.timeOfFlightDistMeters = timeOfFlight.getRange() / 1000.0;
+    
     }
 
     //Need to actually figure out the max voltage

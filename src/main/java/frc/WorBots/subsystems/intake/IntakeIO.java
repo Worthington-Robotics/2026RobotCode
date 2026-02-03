@@ -8,7 +8,7 @@ public interface IntakeIO {
         TalonInputsPositional intakeMotor = new TalonInputsPositional("Intake", "Intake Motor");
         TalonInputsPositional extendingMotor = new TalonInputsPositional("Intake", "Extending Motor");
 
-        double timeOfFlightDistMeters = 0.0;
+        
         boolean isConnected = false;
         double intakeCurrent;
         double extendingCurrent;

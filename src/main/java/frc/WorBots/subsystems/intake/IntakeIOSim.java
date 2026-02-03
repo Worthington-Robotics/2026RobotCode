@@ -29,9 +29,7 @@ public class IntakeIOSim implements IntakeIO{
 
         inputs.extendingCurrent = extendingSim.getCurrentDrawAmps();
         inputs.intakeCurrent = intakeSim.getCurrentDrawAmps();
-        
-        //Figure this out later
-        inputs.timeOfFlightDistMeters = 0.0;
+    
     }
 
     
