@@ -8,6 +8,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.WorBots.Constants;
+import frc.WorBots.FieldConstants;
 
 /* Taken and modified from team 6328. */
 
@@ -53,7 +54,7 @@ public class ShotCalculator {
     maxDistance = 10.0; // TODO set this //The maximum distance the robot can shoot
     phaseDelay = 0.03; // TODO set this
 
-    shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0));
+    shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0)); //TODO set real values
     shotHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
     shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
     shotHoodAngleMap.put(2.81, Rotation2d.fromDegrees(27.0));
@@ -64,7 +65,7 @@ public class ShotCalculator {
     shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(32.0));
     shotHoodAngleMap.put(5.60, Rotation2d.fromDegrees(35.0));
 
-    shotFlywheelSpeedMap.put(1.34, 210.0);
+    shotFlywheelSpeedMap.put(1.34, 210.0); //TODO set real values
     shotFlywheelSpeedMap.put(1.78, 220.0);
     shotFlywheelSpeedMap.put(2.17, 220.0);
     shotFlywheelSpeedMap.put(2.81, 230.0);
@@ -75,7 +76,7 @@ public class ShotCalculator {
     shotFlywheelSpeedMap.put(5.57, 275.0);
     shotFlywheelSpeedMap.put(5.60, 290.0);
 
-    timeOfFlightMap.put(5.68, 1.16);
+    timeOfFlightMap.put(5.68, 1.16); //TODO set real values
     timeOfFlightMap.put(4.55, 1.12);
     timeOfFlightMap.put(3.15, 1.11);
     timeOfFlightMap.put(1.88, 1.09);
@@ -96,7 +97,7 @@ public class ShotCalculator {
     Pose2d estimatedPose = pose
         .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, pose.getRotation()).toTwist2d(phaseDelay));
     // Calculate the distance from the turret to the target
-    Translation2d target = new Translation2d(); // TODO set this
+    Translation2d target = FieldConstants.hubPosition; //TODO add alliance flipping this
     Pose2d turretPosition = estimatedPose.transformBy(Constants.ROBOT_TO_TURRET);
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
@@ -139,4 +140,11 @@ public class ShotCalculator {
         shotFlywheelSpeedMap.get(lookaheadTurretToTargetDistance));
     return latestParams;
   }
+
+  //Original code
+  /*** Does the thing */
+  public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity, boolean doOverride){
+    return new ShootingParams(doOverride, turretAngle, hoodAngle, hoodAngle);
+  }
+
 }
