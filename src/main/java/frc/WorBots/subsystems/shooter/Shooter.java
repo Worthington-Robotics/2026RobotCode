@@ -7,8 +7,16 @@ import frc.WorBots.subsystems.shooter.ShooterIO.ShooterIOInputs;
 public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputs inputs = new ShooterIOInputs();
-    private boolean hasFuel = false;
-    private double feederWheelVolts = 0.0;
 
     //Publish the values etc
+    public Shooter(ShooterIOInputs inputs){
+        this.inputs = inputs;
+    }
+
+
+
+
+
+
+
 }
