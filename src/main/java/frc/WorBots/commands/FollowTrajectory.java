@@ -24,7 +24,7 @@ public class FollowTrajectory extends Command {
 
   @Override
   public void initialize(){
-    startTimestamp = Timer.getTimestamp();
+    startTimestamp = Timer.getFPGATimestamp();
     controller = new HolonomicDriveController(
     new PIDController(0, 0, 0), //TODO: Add PID Values
     new PIDController(0, 0, 0),
@@ -39,7 +39,7 @@ public class FollowTrajectory extends Command {
    */
   @Override
   public void execute(){
-    double timeDelta = Timer.getTimestamp() - startTimestamp;
+    double timeDelta = Timer.getFPGATimestamp() - startTimestamp;
     Trajectory.State goal = trajectory.sample(timeDelta);
 
     ChassisSpeeds adjustedSpeeds = controller.calculate(drive.getPose(), goal, goal.poseMeters.getRotation());
