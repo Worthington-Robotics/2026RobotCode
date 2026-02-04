@@ -42,7 +42,6 @@ public class FollowTrajectory extends Command {
     double timeDelta = Timer.getTimestamp() - startTimestamp;
     Trajectory.State goal = trajectory.sample(timeDelta);
 
-    // I am 70% sure that goal.poseMeters.getRotation gives the correct rotation but could still be wrong
     ChassisSpeeds adjustedSpeeds = controller.calculate(drive.getPose(), goal, goal.poseMeters.getRotation());
     RobotContainer.driveController.drive(drive, adjustedSpeeds);
     
