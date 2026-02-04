@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
     private final IntakeIO io;
     private final IntakeIOInputs inputs = new IntakeIOInputs();
 
-
+    //TODO: Add enum in Hardware Utils so that able to switch b/w states
     //The setpoint voltage for the intake
     private double setPointVoltageIntake = 0.0;
 
