@@ -9,6 +9,7 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.util.math.GeomUtil;
 
 /* Taken and modified from team 6328. */
 
@@ -92,7 +93,7 @@ public class ShotCalculator {
    * @return The parameters required to make a shot into the hub with the current
    *         robot position and velocity
    */
-  public ShootingParams getParamsToHub(Pose2d pose, ChassisSpeeds robotVelocity, boolean doOverride) {
+  public ShootingParams getParamsToHub(Pose2d pose, ChassisSpeeds robotVelocity) {
     // Calculate the estimated robot pose when this method is done running
     Pose2d estimatedPose = pose
         .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, pose.getRotation()).toTwist2d(phaseDelay));
@@ -142,9 +143,16 @@ public class ShotCalculator {
   }
 
   //Original code
-  /*** Does the thing */
-  public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity, boolean doOverride){
-    return new ShootingParams(doOverride, turretAngle, hoodAngle, hoodAngle);
+  /*** Gets the shooter parameters in order to pass */
+  public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity){
+    if(GeomUtil.translation2dInBoundingBox(pose.getTranslation(), null)){ //TODO add bounds
+      Translation2d targetPose = new Translation2d(); //TODO add a real value and alliance flip
+    } else if (GeomUtil.translation2dInBoundingBox(pose.getTranslation(), null)) {
+      Translation2d targetPose = new Translation2d(); //TODO add a real value and alliance flip
+    } else {
+      return null;
+    }
+    return new ShootingParams(true, turretAngle, hoodAngle, hoodAngle);
   }
 
 }
