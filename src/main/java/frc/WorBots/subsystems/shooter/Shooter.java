@@ -11,5 +11,4 @@ public class Shooter extends SubsystemBase {
     private double feederWheelVolts = 0.0;
 
     //Publish the values etc
-    
 }
