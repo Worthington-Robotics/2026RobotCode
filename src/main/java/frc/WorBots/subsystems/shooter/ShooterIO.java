@@ -6,6 +6,9 @@ public interface ShooterIO {
 
     public static class ShooterIOInputs{
         boolean isConnected = false;
+        double leaderCurrent;
+        double followerCurrent;
+        double hoodCurrent;
 
         public final TalonInputsPositional leader = 
             new TalonInputsPositional("Shooter", "Flywheel Leader");
@@ -20,7 +23,7 @@ public interface ShooterIO {
         public double hoodVelocityRadPerSec = 0;
     }
     //implement things like make shooter spin at velocity
-    public void updateInputs(ShooterIOInputs input);
+    public default void updateInputs(ShooterIOInputs input){};
 
     public default void setFollowerVolts(double volts){};
 
