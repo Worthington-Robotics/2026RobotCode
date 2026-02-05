@@ -1,11 +1,7 @@
 package frc.WorBots.subsystems.intake;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.units.measure.Current;
-import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
 import edu.wpi.first.units.measure.Current;
 import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
@@ -23,25 +19,28 @@ public class IntakeIOTalon implements IntakeIO {
     private final OptimalStatusSignal<Current> intakeCurrentDrawSignal;
     private final OptimalStatusSignal<Current> extendingCurrentDrawSignal;
 
-    private final LinearFilter tofFilter = LinearFilter.movingAverage(1);
 
     public IntakeIOTalon(){
 
+        //Instantiating the TalonFXs. 
         intakeMotor = new TalonFX(CanIDs.Main.INTAKE_MOTOR_ID, Constants.MAIN_CAN_BUS );
         extendingMotor = new TalonFX(CanIDs.Main.EXTENDING_MOTOR_ID, Constants.MAIN_CAN_BUS);
 
 
+        //TODO Actually find out whether or not to invert the two motors
+
+        /*Setting the neutral modes and inversion states of both the
+        extending and intaking motors.*/
         intakeMotor.setNeutralMode(NeutralModeValue.Brake);
         HardwareUtils.setInverted(extendingMotor, false);
         extendingMotor.setNeutralMode(NeutralModeValue.Brake);
         HardwareUtils.setInverted(intakeMotor, false);
 
+        //Sets Talon signals for intaking and extending motors.
         intakeMotorSignals = new TalonSignalsPositional(intakeMotor);
         extendingMotorSignals = new TalonSignalsPositional(extendingMotor);
 
-
-
-
+        //Sets the current draw signal and current limits for intaking and extending motors.
         intakeCurrentDrawSignal = 
             new OptimalStatusSignal<>(intakeMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
         extendingCurrentDrawSignal = 
@@ -64,7 +63,8 @@ public class IntakeIOTalon implements IntakeIO {
     
     }
 
-    //Need to actually figure out the max voltage
+    //TODO Set actual max voltage
+
     public void setIntakeVolts(double volts){
         intakeMotorSignals.setVoltage(intakeMotor, volts, 10);
     }

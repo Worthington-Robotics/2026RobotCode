@@ -9,6 +9,7 @@ import frc.WorBots.Constants;
 //import frc.WorBots.util.RobotSimulator;
 
 public class IntakeIOSim implements IntakeIO{
+    //The Simulated Motors
     private FlywheelSim intakeSim = 
         new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60(1), Constants.MOMENT_OF_INERTIA, Constants.INTAKE_INTAKE_GR), DCMotor.getKrakenX60(1));
     private SingleJointedArmSim extendingSim = 
@@ -17,10 +18,10 @@ public class IntakeIOSim implements IntakeIO{
 
     public IntakeIOSim(){}
 
+    /***Updates the inputs, sets the update frequency, and passes the inputs to Simulator.
+     * @param inputs The inputs for the intake
+     */
     public void updateInputs(IntakeIOInputs inputs){
-        //tell sim what inputs are 
-        //tell update freq
-        //update inputs
         intakeSim.update(Constants.ROBOT_PERIOD);
         inputs.isConnected = true;
 
