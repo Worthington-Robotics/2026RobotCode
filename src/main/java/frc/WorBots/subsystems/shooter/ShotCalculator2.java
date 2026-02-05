@@ -9,6 +9,7 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.util.math.AllianceFlipUtil;
 
 /**
  * A tool for calculating the required parameters of the robots next shot
@@ -80,9 +81,7 @@ public class ShotCalculator2 {
                 - Constants.ROBOT_TO_TURRET.getY() * Math.sin(robotAngle));    
 
     //Calculates the hubs position relative to the turret
-    Translation2d hubPose = new Translation2d(
-      FieldConstants.hubPosition.getX() - turretPose.getX(), 
-      FieldConstants.hubPosition.getY() - turretPose.getY());
+    Translation2d hubPose = AllianceFlipUtil.apply(FieldConstants.hubPosition);
 
     //distance to hub
     double hubDistance = Math.hypot(hubPose.getX(), hubPose.getY());
