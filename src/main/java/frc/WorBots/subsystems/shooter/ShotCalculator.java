@@ -9,6 +9,7 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeomUtil;
 
 /* Taken and modified from team 6328. */
@@ -98,7 +99,7 @@ public class ShotCalculator {
     Pose2d estimatedPose = pose
         .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, pose.getRotation()).toTwist2d(phaseDelay));
     // Calculate the distance from the turret to the target
-    Translation2d target = FieldConstants.hubPosition; //TODO add alliance flipping this
+    Translation2d target = AllianceFlipUtil.apply(FieldConstants.hubPosition);
     Pose2d turretPosition = estimatedPose.transformBy(Constants.ROBOT_TO_TURRET);
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
