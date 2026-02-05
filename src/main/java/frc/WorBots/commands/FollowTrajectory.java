@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.RobotContainer;
@@ -28,7 +29,7 @@ public class FollowTrajectory extends Command {
     controller = new HolonomicDriveController(
     new PIDController(0, 0, 0), //TODO: Add PID Values
     new PIDController(0, 0, 0),
-    new ProfiledPIDController(0, 0, 0, null)
+    new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0))
     );
   }
 
@@ -44,7 +45,12 @@ public class FollowTrajectory extends Command {
 
     ChassisSpeeds adjustedSpeeds = controller.calculate(drive.getPose(), goal, goal.poseMeters.getRotation());
     RobotContainer.driveController.drive(drive, adjustedSpeeds);
-    
+  }
+  
+  //TODO add an is finished method to check if the robot is at its destination and end the command
+  @Override
+  public boolean isFinished(){
+    return false;
   }
 }
 
