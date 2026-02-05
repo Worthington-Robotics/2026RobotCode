@@ -1,5 +1,6 @@
 package frc.WorBots.subsystems.shooter;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.subsystems.shooter.ShooterIO.ShooterIOInputs;
 import frc.WorBots.util.debug.TunablePIDController;
@@ -21,6 +22,8 @@ public class Shooter extends SubsystemBase {
 
     private final SimpleMotorFeedforward leaderFeedForward;
     private final SimpleMotorFeedforward hoodFeedForward;
+    
+    
 
 
     //Publish the values etc
