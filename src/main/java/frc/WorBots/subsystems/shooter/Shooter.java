@@ -19,6 +19,9 @@ public class Shooter extends SubsystemBase {
     private final TunablePIDController hoodPID =
         new TunablePIDController(new TunablePIDGains("Shooter", "Hood Gains"));
 
+    private final SimpleMotorFeedforward leaderFeedForward;
+    private final SimpleMotorFeedforward hoodFeedForward;
+
 
     //Publish the values etc
     public Shooter(ShooterIOInputs inputs){
