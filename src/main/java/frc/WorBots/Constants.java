@@ -18,6 +18,7 @@ public class Constants {
 
   //Drive Constants
   public static final double DRIVE_MULTIPLIER = 1.0;
+  public static final double DRIVE_SLOW_MULTIPLIER = DRIVE_MULTIPLIER * 0.75;
   public static final double DRIVE_GEAR_RATIO = 6.02;
   public static final double TURN_GEAR_RATIO = 287.0 / 11.0;
   public static final double DRIVE_DRIFT_RATE = 0.0; //rads/sec rotational error from driving

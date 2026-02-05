@@ -3,6 +3,7 @@ package frc.WorBots.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.WorBots.Constants;
 import frc.WorBots.RobotContainer;
 import frc.WorBots.subsystems.drive.Drive;
 
@@ -34,9 +35,9 @@ public class DriveWithJoysticks extends Command {
     double rightX = rightXSupplier.get();
 
     if(slowSupplier.get()){
-      leftX /= 2;
-      leftY /= 2;
-      rightX /= 2;
+      leftX *= Constants.DRIVE_SLOW_MULTIPLIER;
+      leftY *= Constants.DRIVE_SLOW_MULTIPLIER;
+      rightX *= Constants.DRIVE_SLOW_MULTIPLIER;
     }
 
     RobotContainer.driveController.drive(drive, -leftY, leftX, rightX);
