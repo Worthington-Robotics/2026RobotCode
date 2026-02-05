@@ -10,67 +10,66 @@ import frc.WorBots.Constants;
 import frc.WorBots.CanIDs;
 
 public class IntakeIOTalon implements IntakeIO {
-    private final TalonFX intakeMotor;
-    private final TalonFX extendingMotor;
+  private final TalonFX intakeMotor;
+  private final TalonFX extendingMotor;
 
-    private final TalonSignalsPositional intakeMotorSignals;
-    private final TalonSignalsPositional extendingMotorSignals;
+  private final TalonSignalsPositional intakeMotorSignals;
+  private final TalonSignalsPositional extendingMotorSignals;
 
-    private final OptimalStatusSignal<Current> intakeCurrentDrawSignal;
-    private final OptimalStatusSignal<Current> extendingCurrentDrawSignal;
+  private final OptimalStatusSignal<Current> intakeCurrentDrawSignal;
+  private final OptimalStatusSignal<Current> extendingCurrentDrawSignal;
 
+  public IntakeIOTalon() {
 
-    public IntakeIOTalon(){
+    // Instantiating the TalonFXs.
+    intakeMotor = new TalonFX(CanIDs.Main.INTAKE_MOTOR_ID, Constants.MAIN_CAN_BUS);
+    extendingMotor = new TalonFX(CanIDs.Main.EXTENDING_MOTOR_ID, Constants.MAIN_CAN_BUS);
 
-        //Instantiating the TalonFXs. 
-        intakeMotor = new TalonFX(CanIDs.Main.INTAKE_MOTOR_ID, Constants.MAIN_CAN_BUS );
-        extendingMotor = new TalonFX(CanIDs.Main.EXTENDING_MOTOR_ID, Constants.MAIN_CAN_BUS);
+    // TODO Actually find out whether or not to invert the two motors
 
+    /*
+     * Setting the neutral modes and inversion states of both the
+     * extending and intaking motors.
+     */
+    intakeMotor.setNeutralMode(NeutralModeValue.Brake);
+    HardwareUtils.setInverted(extendingMotor, false);
+    extendingMotor.setNeutralMode(NeutralModeValue.Brake);
+    HardwareUtils.setInverted(intakeMotor, false);
 
-        //TODO Actually find out whether or not to invert the two motors
+    // Sets Talon signals for intaking and extending motors.
+    intakeMotorSignals = new TalonSignalsPositional(intakeMotor);
+    extendingMotorSignals = new TalonSignalsPositional(extendingMotor);
 
-        /*Setting the neutral modes and inversion states of both the
-        extending and intaking motors.*/
-        intakeMotor.setNeutralMode(NeutralModeValue.Brake);
-        HardwareUtils.setInverted(extendingMotor, false);
-        extendingMotor.setNeutralMode(NeutralModeValue.Brake);
-        HardwareUtils.setInverted(intakeMotor, false);
+    // Sets the current draw signal and current limits for intaking and extending
+    // motors.
+    intakeCurrentDrawSignal = new OptimalStatusSignal<>(intakeMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
+    extendingCurrentDrawSignal = new OptimalStatusSignal<>(extendingMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
 
-        //Sets Talon signals for intaking and extending motors.
-        intakeMotorSignals = new TalonSignalsPositional(intakeMotor);
-        extendingMotorSignals = new TalonSignalsPositional(extendingMotor);
+    HardwareUtils.setCurrentLimit(intakeMotor, 160);
+    HardwareUtils.setCurrentLimit(extendingMotor, 160);
 
-        //Sets the current draw signal and current limits for intaking and extending motors.
-        intakeCurrentDrawSignal = 
-            new OptimalStatusSignal<>(intakeMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
-        extendingCurrentDrawSignal = 
-            new OptimalStatusSignal<>(extendingMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
+    intakeMotor.optimizeBusUtilization();
+    extendingMotor.optimizeBusUtilization();
 
-        HardwareUtils.setCurrentLimit(intakeMotor, 160);
-        HardwareUtils.setCurrentLimit(extendingMotor, 160);    
+  }
 
-        intakeMotor.optimizeBusUtilization();
-        extendingMotor.optimizeBusUtilization();
+  public void updateInputs(IntakeIOInputs inputs) {
+    intakeMotorSignals.update(inputs.intakeMotor, intakeMotor);
+    extendingMotorSignals.update(inputs.extendingMotor, extendingMotor);
 
-    }
+    inputs.intakeCurrent = intakeCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
+    inputs.extendingCurrent = extendingCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
 
-    public void updateInputs(IntakeIOInputs inputs){
-        intakeMotorSignals.update(inputs.intakeMotor, intakeMotor);
-        extendingMotorSignals.update(inputs.extendingMotor, extendingMotor);
+  }
 
-        inputs.intakeCurrent = intakeCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
-        inputs.extendingCurrent = extendingCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
-    
-    }
+  // TODO Set actual max voltage
 
-    //TODO Set actual max voltage
+  public void setIntakeVolts(double volts) {
+    intakeMotorSignals.setVoltage(intakeMotor, volts, 10);
+  }
 
-    public void setIntakeVolts(double volts){
-        intakeMotorSignals.setVoltage(intakeMotor, volts, 10);
-    }
+  public void setExtendingMotorVolts(double volts) {
+    extendingMotorSignals.setVoltage(extendingMotor, volts, 10);
+  }
 
-    public void setExtendingMotorVolts(double volts){
-        extendingMotorSignals.setVoltage(extendingMotor, volts, 10);
-    }
-    
 }
