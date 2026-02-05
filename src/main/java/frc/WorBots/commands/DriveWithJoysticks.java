@@ -10,14 +10,14 @@ public class DriveWithJoysticks extends Command {
   private final Drive drive;
   private final Supplier<Double> leftXSupplier;
   private final Supplier<Double> leftYSupplier;
-  private final Supplier<Double> rightYSupplier;
+  private final Supplier<Double> rightXSupplier;
 
-  public DriveWithJoysticks(Drive drive, Supplier<Double> leftXSupplier, Supplier<Double> leftYSupplier, Supplier<Double> rightYSupplier){
+  public DriveWithJoysticks(Drive drive, Supplier<Double> leftXSupplier, Supplier<Double> leftYSupplier, Supplier<Double> rightXSupplier){
     addRequirements(drive);
     this.drive = drive;
     this.leftXSupplier = leftXSupplier;
     this.leftYSupplier = leftYSupplier;
-    this.rightYSupplier = rightYSupplier;
+    this.rightXSupplier = rightXSupplier;
   }
 
   @Override
@@ -29,9 +29,9 @@ public class DriveWithJoysticks extends Command {
   public void execute(){
     final double leftX = leftXSupplier.get();
     final double leftY = leftYSupplier.get();
-    final double rightY = rightYSupplier.get();
+    final double rightX = rightXSupplier.get();
 
-    RobotContainer.driveController.drive(drive, leftX, leftY, rightY);
+    RobotContainer.driveController.drive(drive, -leftY, leftX, rightX);
   }
 
   @Override
