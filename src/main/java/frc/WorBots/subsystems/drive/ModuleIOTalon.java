@@ -41,7 +41,7 @@ public class ModuleIOTalon implements ModuleIO {
   private final TalonFX turnMotor;
   private final CANcoder absoluteEncoder;
 
-  private final Rotation2d encoderOffset;
+  // private final Rotation2d encoderOffset;
   private final double wheelRadius;
   private final int id;
 
@@ -63,37 +63,40 @@ public class ModuleIOTalon implements ModuleIO {
     switch (index) {
       case 0: // Front Left
         driveMotor = new TalonFX(CanIDs.Swerve.FRONT_LEFT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+        HardwareUtils.setInverted(driveMotor, true);
         turnMotor = new TalonFX(CanIDs.Swerve.FRONT_LEFT_TURN_ID, CanIDs.Swerve.CAN_BUS);
         absoluteEncoder =
             new CANcoder(CanIDs.Swerve.FRONT_LEFT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        encoderOffset =
-            new Rotation2d(
-                1.7840 - 0.03 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
+        // encoderOffset =
+        //     new Rotation2d(
+        //         1.7840 - 0.03 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
         wheelRadius = Units.inchesToMeters(1.856);
         break;
       case 1: // Front Right
         driveMotor = new TalonFX(CanIDs.Swerve.FRONT_RIGHT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+        HardwareUtils.setInverted(driveMotor, false);
         turnMotor = new TalonFX(CanIDs.Swerve.FRONT_RIGHT_TURN_ID, CanIDs.Swerve.CAN_BUS);
         absoluteEncoder =
             new CANcoder(CanIDs.Swerve.FRONT_RIGHT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        encoderOffset = new Rotation2d(0.2883 + 0.007 + Units.degreesToRadians(90.0));
+        //encoderOffset = new Rotation2d(0.2883 + 0.007);
         wheelRadius = Units.inchesToMeters(1.873);
         break;
       case 2: // Back Left
         driveMotor = new TalonFX(CanIDs.Swerve.BACK_LEFT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+        HardwareUtils.setInverted(driveMotor, true);
         turnMotor = new TalonFX(CanIDs.Swerve.BACK_LEFT_TURN_ID, CanIDs.Swerve.CAN_BUS);
         absoluteEncoder =
             new CANcoder(CanIDs.Swerve.BACK_LEFT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        encoderOffset =
-            new Rotation2d(-1.5942 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
+        //    new Rotation2d(-1.5942 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
         wheelRadius = Units.inchesToMeters(1.867);
         break;
       case 3: // Back Right
         driveMotor = new TalonFX(CanIDs.Swerve.BACK_RIGHT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+        HardwareUtils.setInverted(driveMotor, true);
         turnMotor = new TalonFX(CanIDs.Swerve.BACK_RIGHT_TURN_ID, CanIDs.Swerve.CAN_BUS);
         absoluteEncoder =
             new CANcoder(CanIDs.Swerve.BACK_RIGHT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        encoderOffset = new Rotation2d(-1.1990 - 0.032 + Units.degreesToRadians(90.0));
+        //encoderOffset = new Rotation2d(-1.1990 - 0.032 + Units.degreesToRadians(90.0));
         wheelRadius = Units.inchesToMeters(1.867);
         break;
       default:
@@ -109,8 +112,7 @@ public class ModuleIOTalon implements ModuleIO {
     driveMotor.setNeutralMode(NeutralModeValue.Brake);
     turnMotor.setNeutralMode(NeutralModeValue.Brake);
 
-    HardwareUtils.setInverted(driveMotor, false);
-    HardwareUtils.setInverted(turnMotor, true);
+    HardwareUtils.setInverted(turnMotor, false);
 
     driveMotor.setPosition(0.0);
     turnMotor.setPosition(0.0);
@@ -168,7 +170,8 @@ public class ModuleIOTalon implements ModuleIO {
       while (turnPositionQueue.size() > 0) {
         final double angle = turnPositionQueue.poll();
         inputs.turnPositionUpdates.add(
-            MathUtil.angleModulus(Units.rotationsToRadians(angle) - encoderOffset.getRadians()));
+            MathUtil.angleModulus(Units.rotationsToRadians(angle)));
+            // - encoderOffset.getRadians()
       }
       inputs.turnAbsolutePositionRad =
           inputs.turnPositionUpdates.get(inputs.turnPositionUpdates.size() - 1);
