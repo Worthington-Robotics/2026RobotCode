@@ -153,6 +153,7 @@ public class ShotCalculator {
     } else {
       return null;
     }
+    
     return new ShootingParams(true, turretAngle, hoodAngle, hoodAngle);
   }
 
