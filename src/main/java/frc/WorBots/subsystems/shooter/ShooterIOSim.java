@@ -9,7 +9,7 @@ public class ShooterIOSim implements ShooterIO {
     public SingleJointedArmSim hood = 
         new SingleJointedArmSim(null, 0, 0, 0, 0, 0, false, 0, null);
 
-    public FlywheelSim flyfollower = 
+    public FlywheelSim flyFollower = 
         new FlywheelSim(null, null, null);
 
     public FlywheelSim flyLeader =
@@ -30,7 +30,7 @@ public class ShooterIOSim implements ShooterIO {
 
         inputs.leaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
         inputs.followerVelocityRadPerSec = flyFollower.getAngularVelocityRadPerSec();
-        inputs.hoodVelocityRadPerSec = hood.getAngularVelocityRadPerSec();
+        inputs.hoodVelocityRadPerSec = hood.getVelocityRadPerSec();
 
         inputs.leaderCurrent = flyLeader.getCurrentDrawAmps();
         inputs.followerCurrent = flyFollower.getCurrentDrawAmps();
