@@ -36,4 +36,6 @@ public class Constants {
 
   //Turret and Shooter Constants
   public static final Transform2d ROBOT_TO_TURRET = new Transform2d(); //TODO add real values
+  public static final double SHOOTER_ERROR_THRES = 0.0;
+  public static final double SHOOTER_MAX_VOLTS = 0.0;
 }
