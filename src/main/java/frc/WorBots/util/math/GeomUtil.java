@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.WorBots.Constants;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -490,6 +491,14 @@ public class GeomUtil {
    */
   public static boolean doesLinePassThroughPolygon(Translation2d[] line, Translation2d[] vertices){
     boolean output = false;
+    if (vertices.length < 3) {
+      throw new InvalidParameterException(
+          "Provided Vertices are insufficent to form a polygon");
+    }
+    if (line.length < 2) {
+      throw new InvalidParameterException(
+          "A insufficient number of endpoints has been provided to create the line segment, please ensure you are providing both endpoints");
+    }
     //Checks all but first to last edge
     for(int i = 0; i < vertices.length - 1; i++){
       if(doLinesIntersect(line, new Translation2d[] {vertices[i], vertices[i + 1]})){
