@@ -481,4 +481,24 @@ public class GeomUtil {
     translation2dInBoundingBox(line[0], bounds) ||
     translation2dInBoundingBox(line[1], bounds);
   }
+
+  /**
+   * Checks if a line segment passes through a polygon.
+   * @param line A two item Translation2d array containing the two endpoints of the line segment to test.
+   * @param vertices A Translation2d array containing the cordinates of each vertice of the polygon in sequential order. The order can be CW or CCW.
+   * @return Wether the line passes through the polygon
+   */
+  public static boolean doesLinePassThroughPolygon(Translation2d[] line, Translation2d[] vertices){
+    boolean output = false;
+    //Checks all but first to last edge
+    for(int i = 0; i < vertices.length - 1; i++){
+      if(doLinesIntersect(line, new Translation2d[] {vertices[i], vertices[i + 1]})){
+        output = true;
+      }
+    }
+    if(!output && doLinesIntersect(line, new Translation2d[]{vertices[0], vertices[vertices.length - 1]})){
+      output = true;
+    }
+    return output;
+  }
 }
