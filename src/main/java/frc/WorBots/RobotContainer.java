@@ -4,8 +4,14 @@
 
 package frc.WorBots;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.WorBots.commands.DriveWithJoysticks;
 import frc.WorBots.subsystems.drive.Drive;
@@ -44,6 +50,28 @@ public class RobotContainer {
         new ModuleIOSim(3));
     }
 
+    AutoBuilder.configure(
+      () -> drive.getPose(), //Get Pose Command
+      pose -> drive.resetPose(pose), //Reset Pose Command
+      () -> drive.getRobotRelativeSpeeds(), //Robot Relative Speed Supplier
+      speeds -> drive.runVelocity(speeds), //Output Command
+      new PPHolonomicDriveController( //Holonomic Drive Controller Used by PathPlanner
+        new PIDConstants(5.0, 0.0, 0.0), //Translation PID Constants
+        new PIDConstants(5.0, 0.0, 0.0), //Rotational PID Constants
+        Constants.ROBOT_PERIOD), //PID Period
+      Constants.PATHPLANNER_CONFIG,
+      () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      drive);
     configureBindings();
   }
 
@@ -54,6 +82,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return new PathPlannerAuto("Example Path");
   }
 }

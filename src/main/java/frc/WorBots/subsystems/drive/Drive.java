@@ -153,12 +153,7 @@ public class Drive extends SubsystemBase{
   }
 
   private Translation2d[] getModuleTranslations(){
-    return new Translation2d[] {
-      new Translation2d(Constants.ROBOT_WHEELBASE / 2, Constants.ROBOT_WHEELBASE / 2),
-      new Translation2d(Constants.ROBOT_WHEELBASE / 2, -Constants.ROBOT_WHEELBASE / 2),
-      new Translation2d(-Constants.ROBOT_WHEELBASE / 2, Constants.ROBOT_WHEELBASE / 2),
-      new Translation2d(-Constants.ROBOT_WHEELBASE / 2, -Constants.ROBOT_WHEELBASE / 2)
-    };
+    return Constants.DRIVE_MODULE_OFFSETS;
   }
 
   /**
@@ -215,6 +210,13 @@ public class Drive extends SubsystemBase{
    */
   public Rotation2d getYawVelocity(){
     return new Rotation2d(gyroIOInputs.yawVelocityRadPerSec);
+  }
+
+  /**
+   * Returns the robot relative velocity, mostly for pathPlanner
+   */
+  public ChassisSpeeds getRobotRelativeSpeeds(){
+    return ChassisSpeeds.fromFieldRelativeSpeeds(filter.calculate(), getYaw());
   }
 
   /**
@@ -299,6 +301,14 @@ public class Drive extends SubsystemBase{
 
     final double endTime = Timer.getFPGATimestamp();
     SmartDashboard.putNumber("Odom Time", endTime - startTime);
+  }
+
+  /**
+   * sets the robots pose and rotation
+   * @return
+   */
+  public void resetPose(Pose2d pose){
+    poseEstimator.resetPose(pose);
   }
 
   /**
