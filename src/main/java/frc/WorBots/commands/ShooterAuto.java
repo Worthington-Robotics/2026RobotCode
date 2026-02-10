@@ -2,10 +2,12 @@ package frc.WorBots.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.WorBots.FieldConstants;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.shooter.Shooter;
 import frc.WorBots.subsystems.shooter.ShotCalculator;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
+import frc.WorBots.util.math.AllianceFlipUtil;
 
 /** A command to aim and prepare shots automatically */
 public class ShooterAuto extends Command {
@@ -27,7 +29,13 @@ public class ShooterAuto extends Command {
 
   @Override
   public void execute(){
-    ShootingParams params = shotCalculator.getParamsToHub(drive.getPose(), null); //TODO add a method to drive to get robot velocity
+    pose = drive.getPose();
+    if(AllianceFlipUtil.apply(pose).getX()< FieldConstants.hubPosition.getX()){
+      ShootingParams params = shotCalculator.getParamsToHub(pose, null); //TODO add a method to drive to get robot velocity
+    } else {
+      ShootingParams params = shotCalculator.getPassParams(pose, null); //TODO add a method to drive to get robot velocity
+    }
+    //TODO run params
   }
   
 }
