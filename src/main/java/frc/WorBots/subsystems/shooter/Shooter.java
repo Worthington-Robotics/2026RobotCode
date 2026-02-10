@@ -15,15 +15,9 @@ import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputs inputs = new ShooterIOInputs();
-<<<<<<< Updated upstream
   //TODO move the PIDs to the ShooterIOTalon
     private final TunablePIDController followerPID =
         new TunablePIDController(new TunablePIDGains("Shooter", "Flywheel Follower Gains"));
-=======
-
-    private final TunableProfiledPIDController followerPIDController =
-        new TunableProfiledPIDController("Shooter", "Flywheel Follower Controller");
->>>>>>> Stashed changes
 
     private final TunableProfiledPIDController leaderPIDController =
         new TunableProfiledPIDController("Shooter", "Flywheel Leader Controller");

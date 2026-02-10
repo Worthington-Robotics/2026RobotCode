@@ -146,15 +146,22 @@ public class ShotCalculator {
   //Original code
   /*** Gets the shooter parameters in order to pass */
   public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity){
+    boolean isValid = true;
+    Translation2d targetPose;
     if(GeomUtil.translation2dInBoundingBox(pose.getTranslation(), null)){ //TODO add bounds
-      Translation2d targetPose = new Translation2d(); //TODO add a real value and alliance flip
+      targetPose = new Translation2d(); //TODO add a real value and alliance flip
     } else if (GeomUtil.translation2dInBoundingBox(pose.getTranslation(), null)) {
-      Translation2d targetPose = new Translation2d(); //TODO add a real value and alliance flip
+      targetPose = new Translation2d(); //TODO add a real value and alliance flip
     } else {
-      return null;
+      return new ShootingParams(false, new Rotation2d(), 0, 0);
     }
-    
-    return new ShootingParams(true, turretAngle, hoodAngle, hoodAngle);
+    Translation2d[] shotPath = {pose.getTranslation(), targetPose};
+    if(GeomUtil.doesLinePassThroughArea(shotPath, FieldConstants.passExclusionZone)){ //TODO apply alliance flip 
+      isValid=false;
+    }
+    turretAngle = targetPose.minus(pose.getTranslation()).getAngle();
+    //TODO use ranging tables to find to the shot
+    return new ShootingParams(isValid, turretAngle, hoodAngle, hoodAngle);
   }
 
 }
