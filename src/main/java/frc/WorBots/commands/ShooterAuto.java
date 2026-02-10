@@ -12,6 +12,7 @@ import frc.WorBots.util.math.AllianceFlipUtil;
 /** A command to aim and prepare shots automatically */
 public class ShooterAuto extends Command {
   private final Shooter shooter;
+  //TODO add turret to this code
   private final Drive drive;
   private ShotCalculator shotCalculator = new ShotCalculator();
 
@@ -25,6 +26,7 @@ public class ShooterAuto extends Command {
     addRequirements(shooter);
     this.shooter = shooter;
     this.drive = drive;
+    //TODO add turret here
   }
 
   @Override
