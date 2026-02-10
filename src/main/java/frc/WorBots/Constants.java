@@ -21,10 +21,10 @@ public class Constants {
   public static final double ROBOT_WIDTH = Units.inchesToMeters(27); //m
   public static final double ROBOT_WHEELBASE = Units.inchesToMeters(24); //m
   public static final double ROBOT_MASS = Units.lbsToKilograms(115);
-  public static final double ROBOT_MOI = 1;
+  public static final double ROBOT_MOI = 5;
   
   //Drive Constants
-  public static final double DRIVE_MULTIPLIER = 1.0;
+  public static final double DRIVE_MULTIPLIER = 1;
   public static final double DRIVE_CURRENT_LIMIT = 40;
   public static final double DRIVE_GEAR_RATIO = 6.02;
   public static final double TURN_GEAR_RATIO = 287.0 / 11.0;
@@ -47,6 +47,7 @@ public class Constants {
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
   //PathPlanner Constants
-  public static final ModuleConfig PATHPLANNER_MODULE_CONFIG = new ModuleConfig(Units.inchesToMeters(2), DRIVE_MAX_VELOCITY, ROBOT_WHEELBASE, DCMotor.getKrakenX60(1), DRIVE_CURRENT_LIMIT, 1);
+  public static final ModuleConfig PATHPLANNER_MODULE_CONFIG = new ModuleConfig(Units.inchesToMeters(2), DRIVE_MAX_VELOCITY, ROBOT_WHEELBASE, DCMotor.getKrakenX60(1).withReduction(TURN_GEAR_RATIO), DRIVE_CURRENT_LIMIT, 1);
   public static final RobotConfig PATHPLANNER_CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, PATHPLANNER_MODULE_CONFIG, DRIVE_MODULE_OFFSETS);
 }
+

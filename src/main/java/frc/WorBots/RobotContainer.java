@@ -30,7 +30,7 @@ public class RobotContainer {
   public final CommandXboxController operator = new CommandXboxController(1);
 
   //Drive Controller
-  public static final DriveController driveController = new DriveController();
+  public static final DriveController driveController = new DriveController(); 
 
   public RobotContainer() {
     //setup Subsystems
@@ -54,7 +54,7 @@ public class RobotContainer {
       () -> drive.getPose(), //Get Pose Command
       pose -> drive.resetPose(pose), //Reset Pose Command
       () -> drive.getRobotRelativeSpeeds(), //Robot Relative Speed Supplier
-      speeds -> drive.runVelocity(speeds), //Output Command
+      speeds -> driveController.drive(drive, speeds.div(10)), //Output Command
       new PPHolonomicDriveController( //Holonomic Drive Controller Used by PathPlanner
         new PIDConstants(5.0, 0.0, 0.0), //Translation PID Constants
         new PIDConstants(5.0, 0.0, 0.0), //Rotational PID Constants
@@ -82,6 +82,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Example Path");
+    return new PathPlannerAuto("New Auto");
   }
 }

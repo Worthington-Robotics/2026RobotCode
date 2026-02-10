@@ -2,6 +2,8 @@ package frc.WorBots.subsystems.drive;
 
 import java.util.ArrayList;
 
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -84,9 +86,6 @@ public class Drive extends SubsystemBase{
       modules[1] = new Module(frModule, 1);
       modules[2] = new Module(blModule, 2);
       modules[3] = new Module(brModule, 3);
-
-      //TODO remove when we acually have autos to set a real start pose
-      poseEstimator.resetPose(new Pose2d(15, 5, new Rotation2d(Units.degreesToRadians(180))));
   }
 
   public void periodic(){
