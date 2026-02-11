@@ -1,7 +1,5 @@
 package frc.WorBots.commands;
 
-import com.fasterxml.jackson.databind.deser.impl.BeanAsArrayBuilderDeserializer;
-
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -25,7 +23,7 @@ public class FollowTrajectory extends Command {
   private final boolean endWithPosition;
 
   private double startTimestamp = 0;
-  HolonomicDriveController controller = null;
+  HolonomicDriveController controller;
 
   /** 
    * A command used to move the robot along a trajectory.
@@ -78,7 +76,7 @@ public class FollowTrajectory extends Command {
    */
   @Override
   public boolean isFinished(){
-    if(endWithPosition || (trajectory.getTotalTimeSeconds() - getTimeDelta() <= Constants.MIN_TIME)){
+    if(endWithPosition && (trajectory.getTotalTimeSeconds() - getTimeDelta() <= Constants.MIN_TIME)){
       Pose2d currentPose = drive.getPose();
       Translation2d goalPosition = trajectory.sample(trajectory.getTotalTimeSeconds()).poseMeters.getTranslation();
       Translation2d currentPosition = currentPose.getTranslation();
