@@ -5,12 +5,12 @@
 package frc.WorBots;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.WorBots.commands.DriveWithJoysticks;
@@ -31,6 +31,9 @@ public class RobotContainer {
 
   //Drive Controller
   public static final DriveController driveController = new DriveController(); 
+
+  //Auto Selector
+  private final SendableChooser<Command> autoSelector;
 
   public RobotContainer() {
     //setup Subsystems
@@ -54,7 +57,7 @@ public class RobotContainer {
       () -> drive.getPose(), //Get Pose Command
       pose -> drive.resetPose(pose), //Reset Pose Command
       () -> drive.getRobotRelativeSpeeds(), //Robot Relative Speed Supplier
-      speeds -> driveController.drive(drive, speeds.div(10)), //Output Command
+      speeds -> driveController.drive(drive, speeds), //Output Command
       new PPHolonomicDriveController( //Holonomic Drive Controller Used by PathPlanner
         new PIDConstants(5.0, 0.0, 0.0), //Translation PID Constants
         new PIDConstants(5.0, 0.0, 0.0), //Rotational PID Constants
@@ -72,6 +75,11 @@ public class RobotContainer {
         return false;
       },
       drive);
+
+      autoSelector = AutoBuilder.buildAutoChooser();
+      
+      SmartDashboard.putData("Auto Selector", autoSelector);
+      
     configureBindings();
   }
 
@@ -82,6 +90,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("New Auto");
+    return autoSelector.getSelected();
   }
 }
