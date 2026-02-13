@@ -45,17 +45,24 @@ public class ShotCalculator {
   private static double minDistance;
   private static double maxDistance;
   private static double phaseDelay;
-  // Set up interpolating tree tables
+  // Set up interpolating tree maps for scoring
   private static final InterpolatingTreeMap<Double, Rotation2d> shotHoodAngleMap = new InterpolatingTreeMap<>(
       InverseInterpolator.forDouble(), Rotation2d::interpolate);
   private static final InterpolatingDoubleTreeMap shotFlywheelSpeedMap = new InterpolatingDoubleTreeMap();
   private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
+
+  //Set up interpolating tree maps for passing
+  private static final InterpolatingTreeMap<Double, Rotation2d> passHoodAngleMap = new InterpolatingTreeMap<>(
+      InverseInterpolator.forDouble(), Rotation2d::interpolate);
+  private static final InterpolatingDoubleTreeMap passFlywheelSpeedMap = new InterpolatingDoubleTreeMap();
+  private static final InterpolatingDoubleTreeMap passTimeOfFlightMap = new InterpolatingDoubleTreeMap();
 
   static {
     minDistance = 0.0; // TODO set this //Thee minimum distance the robot can shoot
     maxDistance = 10.0; // TODO set this //The maximum distance the robot can shoot
     phaseDelay = 0.03; // TODO set this
 
+    //Add values to scoring interpolating tree maps
     shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0)); //TODO set real values
     shotHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
     shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
@@ -83,6 +90,36 @@ public class ShotCalculator {
     timeOfFlightMap.put(3.15, 1.11);
     timeOfFlightMap.put(1.88, 1.09);
     timeOfFlightMap.put(1.38, 0.90);
+
+    
+    // Add values to Passing interpolating tree maps
+    passHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0)); //TODO set real values
+    passHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
+    passHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
+    passHoodAngleMap.put(2.81, Rotation2d.fromDegrees(27.0));
+    passHoodAngleMap.put(3.82, Rotation2d.fromDegrees(29.0));
+    passHoodAngleMap.put(4.09, Rotation2d.fromDegrees(30.0));
+    passHoodAngleMap.put(4.40, Rotation2d.fromDegrees(31.0));
+    passHoodAngleMap.put(4.77, Rotation2d.fromDegrees(32.0));
+    passHoodAngleMap.put(5.57, Rotation2d.fromDegrees(32.0));
+    passHoodAngleMap.put(5.60, Rotation2d.fromDegrees(35.0));
+
+    passFlywheelSpeedMap.put(1.34, 210.0); //TODO set real values
+    passFlywheelSpeedMap.put(1.78, 220.0);
+    passFlywheelSpeedMap.put(2.17, 220.0);
+    passFlywheelSpeedMap.put(2.81, 230.0);
+    passFlywheelSpeedMap.put(3.82, 250.0);
+    passFlywheelSpeedMap.put(4.09, 255.0);
+    passFlywheelSpeedMap.put(4.40, 260.0);
+    passFlywheelSpeedMap.put(4.77, 265.0);
+    passFlywheelSpeedMap.put(5.57, 275.0);
+    passFlywheelSpeedMap.put(5.60, 290.0);
+
+    passTimeOfFlightMap.put(5.68, 1.16); //TODO set real values
+    passTimeOfFlightMap.put(4.55, 1.12);
+    passTimeOfFlightMap.put(3.15, 1.11);
+    passTimeOfFlightMap.put(1.88, 1.09);
+    passTimeOfFlightMap.put(1.38, 0.90);
   }
 
   /***
@@ -147,21 +184,23 @@ public class ShotCalculator {
   /*** Gets the shooter parameters in order to pass */
   public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity){
     boolean isValid = true;
+    Translation2d turretPose = pose.getTranslation(); //TODO add translating from robot to turret
     Translation2d targetPose;
-    if(GeomUtil.translation2dInBoundingBox(pose.getTranslation(), null)){ //TODO add bounds
-      targetPose = new Translation2d(); //TODO add a real value and alliance flip
-    } else if (GeomUtil.translation2dInBoundingBox(pose.getTranslation(), null)) {
-      targetPose = new Translation2d(); //TODO add a real value and alliance flip
+    if(GeomUtil.translation2dInBoundingBox(turretPose, null)){ //TODO add bounds
+      targetPose = AllianceFlipUtil.apply(new Translation2d()); //TODO add a real value
+    } else if (GeomUtil.translation2dInBoundingBox(turretPose, null)) {
+      targetPose = AllianceFlipUtil.apply(new Translation2d()); //TODO add a real value
     } else {
       return new ShootingParams(false, new Rotation2d(), 0, 0);
     }
-    Translation2d[] shotPath = {pose.getTranslation(), targetPose};
-    if(GeomUtil.doesLinePassThroughArea(shotPath, FieldConstants.passExclusionZone)){ //TODO apply alliance flip 
+    Translation2d[] shotPath = {turretPose, targetPose};
+    if(GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))){ //TODO make sure alliance flip for arrays is working correctly 
       isValid=false;
     }
-    turretAngle = targetPose.minus(pose.getTranslation()).getAngle();
+    turretAngle = targetPose.minus(turretPose).getAngle();
+    double distance = targetPose.getDistance(turretPose);
     //TODO use ranging tables to find to the shot
-    return new ShootingParams(isValid, turretAngle, hoodAngle, hoodAngle);
+    return new ShootingParams(isValid, turretAngle, passHoodAngleMap.get(distance).getRadians(), passFlywheelSpeedMap.get(distance));
   }
 
 }
