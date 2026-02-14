@@ -16,9 +16,11 @@ public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputs inputs = new ShooterIOInputs();
 
+    /*
     private final TunableProfiledPIDController followerPIDController =
         new TunableProfiledPIDController("Shooter", "Flywheel Follower Controller");
 
+    */
     private final TunableProfiledPIDController leaderPIDController =
         new TunableProfiledPIDController("Shooter", "Flywheel Leader Controller");
 
@@ -67,7 +69,7 @@ public class Shooter extends SubsystemBase {
         if(!Constants.getSim()){
           leaderPIDController.setGains(0, 0, 0);
           leaderPIDController.setConstraints(0, 0);
-          followerPIDController.setConstraints(0, 0);
+          
         }
         //When in Sim
         else{
@@ -85,12 +87,12 @@ public class Shooter extends SubsystemBase {
       leaderPIDController.update();
       hoodPIDController.update();
 
-      inputs.follower.publish();
+    
       inputs.hood.publish();
       inputs.leader.publish();
       controlModePub.set(controlMode.toString());
       //TODO: fix this after finishing the subsytem
-      hoodPosePub.set();
+      hoodPosePub.set(inputs.actualHoodPosition);
       shooterSpeedActualPub.set(0.0);
       shooterSpeedDesiredPub.set(setPointVoltage);
 
@@ -144,4 +146,4 @@ public class Shooter extends SubsystemBase {
 
 
 
-}
+

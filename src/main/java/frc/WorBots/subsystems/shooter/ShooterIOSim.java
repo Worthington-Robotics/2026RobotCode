@@ -7,13 +7,14 @@ import frc.WorBots.Constants;
 public class ShooterIOSim implements ShooterIO {
 
     public SingleJointedArmSim hood = 
-        new SingleJointedArmSim(null, 0, 0, 0, 0, 0, false, 0, null);
+      new SingleJointedArmSim(null, 0, 0, 0, 0, 0, false, 0, null);
 
+    /*   
     public FlywheelSim flyFollower = 
-        new FlywheelSim(null, null, null);
-
+      new FlywheelSim(null, null, null);
+    */
     public FlywheelSim flyLeader =
-        new FlywheelSim(null, null, null);
+      new FlywheelSim(null, null, null);
 
 
 
@@ -22,31 +23,33 @@ public class ShooterIOSim implements ShooterIO {
 
     public void updateInputs(ShooterIOInputs inputs){
 
-        flyFollower.update(Constants.ROBOT_PERIOD);
-        hood.update(Constants.ROBOT_PERIOD);
-        flyLeader.update(Constants.ROBOT_PERIOD);
+      
+      hood.update(Constants.ROBOT_PERIOD);
+      flyLeader.update(Constants.ROBOT_PERIOD);
 
-        inputs.isConnected = true;
+      inputs.isConnected = true;
 
-        inputs.leaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
-        inputs.followerVelocityRadPerSec = flyFollower.getAngularVelocityRadPerSec();
-        inputs.hoodVelocityRadPerSec = hood.getVelocityRadPerSec();
+      inputs.actualLeaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
+      
+      inputs.actualHoodPosition = hood.getAngleRads();
 
-        inputs.leaderCurrent = flyLeader.getCurrentDrawAmps();
-        inputs.followerCurrent = flyFollower.getCurrentDrawAmps();
-        inputs.hoodCurrent = hood.getCurrentDrawAmps();
+        
+      inputs.leaderCurrent = flyLeader.getCurrentDrawAmps();
+      
+      inputs.hoodCurrent = hood.getCurrentDrawAmps();
+        
 
     }
 
-    public void setFollowerVolts(double volts){
-        flyFollower.setInputVoltage(volts);
-    }
+    
 
     public void setLeaderVolts(double volts){
-        flyLeader.setInputVoltage(volts);
+      flyLeader.setInputVoltage(volts);
     }
 
     public void setHoodVolts(double volts){
-        hood.setInputVoltage(volts);
+      hood.setInputVoltage(volts);
     }
+
+    
 }

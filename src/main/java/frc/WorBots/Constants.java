@@ -34,6 +34,8 @@ public class Constants {
  */
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
+  //CAN Bus constants
+  public static final String SUPERSTRUCTURE_CANBUS = "Superstructure CAN Bus";
   //Turret and Shooter Constants
   public static final Transform2d ROBOT_TO_TURRET = new Transform2d(); //TODO add real values
   public static final double SHOOTER_ERROR_THRES = 0.0;
