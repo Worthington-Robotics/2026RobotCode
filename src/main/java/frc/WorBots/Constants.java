@@ -42,7 +42,8 @@ public class Constants {
   public static final double DRIVE_MAX_ACCELERATION = Units.feetToMeters(40); //m/sec^2
   public static final double DRIVE_MAX_ROTATIONAL_VELOCITY = Units.degreesToRadians(720); //rads/sec
   public static final double DRIVE_MAX_ROTATION_ACCELERATION = Units.degreesToRadians(3000); //rad/sec^2
-    /**
+
+/**
  * The minimum speed percentage of the maximum that can be set before angle changes are ignored
  */
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
@@ -50,5 +51,31 @@ public class Constants {
   //PathPlanner Constants
   public static final ModuleConfig PATHPLANNER_MODULE_CONFIG = new ModuleConfig(Units.inchesToMeters(2), DRIVE_MAX_VELOCITY, ROBOT_WHEELBASE, DCMotor.getKrakenX60(1).withReduction(TURN_GEAR_RATIO), DRIVE_CURRENT_LIMIT, 1);
   public static final RobotConfig PATHPLANNER_CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, PATHPLANNER_MODULE_CONFIG, DRIVE_MODULE_OFFSETS);
+  /** The CAN bus name used for swerve devices and pigeon */
+  public static final String SWERVE_CAN_BUS = "rio";
+
+  /** The CAN bus name used for anything other than swerve */
+  public static final String MAIN_CAN_BUS = "Main";
+
+  //Intake Constants
+  //These values need to be modified
+  public static final double INTAKE_MAX_TEMP = 80.0;
+  public static final double INTAKE_VOLTS = 4.25;
+  public static final double TIME_OF_FLIGHT_THRES = 0.255;
+  public static final double INTAKE_PIVOT_GR = 1;
+  public static final double MOMENT_OF_INERTIA = 1;
+  public static final double INTAKE_INTAKE_GR = 1;
+  public static final double INTAKE_EXTENDING_KP = 0.0;
+  public static final double INTAKE_EXTENDING_KD = 0.0;
+  //Trajectory Constants
+  /**
+   * How close the robot needs to be to its goal position to stop following the trajectory.
+   */
+  public static final double MIN_DISTANCE = 0.1; //m
+  /**
+   * How close the robot needs to be to the end time of the trajectory before it stops following it.
+   */
+  public static final double MIN_TIME = 0.5; //s
+
 }
 
