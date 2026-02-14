@@ -22,4 +22,13 @@ public class CanIDs {
     public static final int BACK_LEFT_ENCODER_ID = 9;
     public static final int BACK_RIGHT_ENCODER_ID = 12;
   }
+
+  //A class that contains all the Main Can IDS
+  public class Main {
+
+    public static final int EXTENDING_MOTOR_ID = 0;
+    public static final int INTAKE_MOTOR_ID = 1;
+    public static final int TOF_ID = 2;
+
+  }
 }

@@ -33,6 +33,22 @@ public class Constants {
  */
   public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
+  /** The CAN bus name used for swerve devices and pigeon */
+  public static final String SWERVE_CAN_BUS = "rio";
+
+  /** The CAN bus name used for anything other than swerve */
+  public static final String MAIN_CAN_BUS = "Main";
+
+  //Intake Constants
+  //These values need to be modified
+  public static final double INTAKE_MAX_TEMP = 80.0;
+  public static final double INTAKE_VOLTS = 4.25;
+  public static final double TIME_OF_FLIGHT_THRES = 0.255;
+  public static final double INTAKE_PIVOT_GR = 1;
+  public static final double MOMENT_OF_INERTIA = 1;
+  public static final double INTAKE_INTAKE_GR = 1;
+  public static final double INTAKE_EXTENDING_KP = 0.0;
+  public static final double INTAKE_EXTENDING_KD = 0.0;
   //Trajectory Constants
   /**
    * How close the robot needs to be to its goal position to stop following the trajectory.
