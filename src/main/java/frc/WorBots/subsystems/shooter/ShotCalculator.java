@@ -132,11 +132,46 @@ public class ShotCalculator {
    *         robot position and velocity
    */
   public ShootingParams getParamsToHub(Pose2d pose, ChassisSpeeds robotVelocity) {
-    // Calculate the estimated robot pose when this method is done running
-    Pose2d estimatedPose = pose
-        .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, pose.getRotation()).toTwist2d(phaseDelay));
-    // Calculate the distance from the turret to the target
     Translation2d target = AllianceFlipUtil.apply(FieldConstants.hubPosition);
+    return getParams(pose, robotVelocity, target, passHoodAngleMap, passFlywheelSpeedMap, passTimeOfFlightMap, true);
+  }
+
+  /*** Gets the shooter parameters in order to pass 
+   * @param Pose The robot's position
+   * @param robotVelocity The robot's velocity
+  */
+  public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity){
+    boolean isValid = true;
+    Translation2d turretPose = pose.getTranslation(); //TODO add translating from robot to turret
+    Translation2d targetPose;
+    if(GeomUtil.translation2dInBoundingBox(turretPose, null)){ //TODO add bounds
+      targetPose = AllianceFlipUtil.apply(new Translation2d()); //TODO add a real value
+    } else if (GeomUtil.translation2dInBoundingBox(turretPose, null)) {
+      targetPose = AllianceFlipUtil.apply(new Translation2d()); //TODO add a real value
+    } else {
+      return new ShootingParams(false, new Rotation2d(), 0, 0);
+    }
+    Translation2d[] shotPath = {turretPose, targetPose};
+    if(GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))){ //TODO make sure alliance flip for arrays is working correctly 
+      isValid=false;
+    }
+    return getParams(pose, robotVelocity, targetPose, passHoodAngleMap, passFlywheelSpeedMap, passTimeOfFlightMap, isValid);
+  }
+
+  /*** An internal method used for getting the shot parameters to a pose 
+   * @param robotPose The position of the robot
+   * @param robotVelocity The robot's velocity
+   * @param target The target of the shot
+   * @param hoodAngleMap The interpolating tree map to use for calculating shooter angle
+   * @param flywheelSpeedMap The interpolating tree map to use for calculating the flywheel speed
+   * @param timeOfFlightMap The interpolating tree map to use for calculating the time of flight of a shot
+   * @param isValid If the shot is a valid shot
+  */
+  private ShootingParams getParams(Pose2d robotPose, ChassisSpeeds robotVelocity, Translation2d target, InterpolatingTreeMap<Double, Rotation2d> hoodAngleMap, InterpolatingDoubleTreeMap flywheelSpeedMap, InterpolatingDoubleTreeMap timeOfFlightMap, boolean isValid){
+    // Calculate the estimated robot pose when this method is done running
+    Pose2d estimatedPose = robotPose
+        .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, robotPose.getRotation()).toTwist2d(phaseDelay));
+    // Calculate the distance from the turret to the target
     Pose2d turretPosition = estimatedPose.transformBy(Constants.ROBOT_TO_TURRET);
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
@@ -171,36 +206,13 @@ public class ShotCalculator {
 
     // Calculate params
     turretAngle = target.minus(lookAheadPose.getTranslation()).getAngle();
-    hoodAngle = shotHoodAngleMap.get(lookaheadTurretToTargetDistance).getRadians();
+    hoodAngle = hoodAngleMap.get(lookaheadTurretToTargetDistance).getRadians();
     latestParams = new ShootingParams(lookaheadTurretToTargetDistance >= minDistance
-        && lookaheadTurretToTargetDistance <= maxDistance,
+        && lookaheadTurretToTargetDistance <= maxDistance && isValid,
         turretAngle,
         hoodAngle,
-        shotFlywheelSpeedMap.get(lookaheadTurretToTargetDistance));
+        flywheelSpeedMap.get(lookaheadTurretToTargetDistance));
     return latestParams;
-  }
-
-  //Original code
-  /*** Gets the shooter parameters in order to pass */
-  public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity){
-    boolean isValid = true;
-    Translation2d turretPose = pose.getTranslation(); //TODO add translating from robot to turret
-    Translation2d targetPose;
-    if(GeomUtil.translation2dInBoundingBox(turretPose, null)){ //TODO add bounds
-      targetPose = AllianceFlipUtil.apply(new Translation2d()); //TODO add a real value
-    } else if (GeomUtil.translation2dInBoundingBox(turretPose, null)) {
-      targetPose = AllianceFlipUtil.apply(new Translation2d()); //TODO add a real value
-    } else {
-      return new ShootingParams(false, new Rotation2d(), 0, 0);
-    }
-    Translation2d[] shotPath = {turretPose, targetPose};
-    if(GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))){ //TODO make sure alliance flip for arrays is working correctly 
-      isValid=false;
-    }
-    turretAngle = targetPose.minus(turretPose).getAngle();
-    double distance = targetPose.getDistance(turretPose);
-    //TODO use ranging tables to find to the shot
-    return new ShootingParams(isValid, turretAngle, passHoodAngleMap.get(distance).getRadians(), passFlywheelSpeedMap.get(distance));
-  }
+}
 
 }
