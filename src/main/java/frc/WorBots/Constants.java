@@ -21,8 +21,8 @@ public class Constants {
   public static final double ROBOT_LENGTH = Units.inchesToMeters(27); //m
   public static final double ROBOT_WIDTH = Units.inchesToMeters(27); //m
   public static final double ROBOT_WHEELBASE = Units.inchesToMeters(24); //m
-  public static final double ROBOT_MASS = Units.lbsToKilograms(115);
-  public static final double ROBOT_MOI = 5;
+  public static final double ROBOT_MASS = Units.lbsToKilograms(109.277);
+  public static final double ROBOT_MOI = 4.7089; //Kg * m^2
   
   //Drive Constants
   public static final double DRIVE_MULTIPLIER = 1;
