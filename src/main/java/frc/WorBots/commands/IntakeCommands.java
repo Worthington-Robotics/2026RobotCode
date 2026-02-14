@@ -28,7 +28,7 @@ public class IntakeCommands {
    */
   public Command extend(Intake extend) {
     return extend.runOnce(() -> {
-      extend.setVoltsExtending(5);
+      extend.extend();
     });
   }
 
@@ -42,7 +42,7 @@ public class IntakeCommands {
    */
   public Command retract(Intake extend) {
     return extend.runOnce(() -> {
-      extend.setVoltsExtending(-5);
+      extend.retract();
     });
   }
 }
