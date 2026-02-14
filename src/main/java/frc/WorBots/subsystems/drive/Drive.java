@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -40,9 +41,7 @@ public class Drive extends SubsystemBase{
 
   private ChassisSpeeds setpointSpeeds = new ChassisSpeeds();
 
-  private Twist2d fieldVelocity = new Twist2d();
-
-  private ChassisSpeeds measurdSpeeds;
+  private ChassisSpeeds measuredSpeeds;
 
   private Rotation2d lastGyroYaw = new Rotation2d();
 
@@ -87,7 +86,7 @@ public class Drive extends SubsystemBase{
       modules[3] = new Module(brModule, 3);
 
       //TODO remove when we acually have autos to set a real start pose
-      poseEstimator.resetPose(new Pose2d(3, 3, new Rotation2d()));
+      poseEstimator.resetPose(new Pose2d(15, 5, new Rotation2d(Units.degreesToRadians(180))));
   }
 
   public void periodic(){
@@ -176,7 +175,7 @@ public class Drive extends SubsystemBase{
     SwerveModuleState[] setpointStates = new SwerveModuleState[4];
     
     for(int i = 0; i < 4; i++){
-      setpointStates[i] = new SwerveModuleState(0.0, new Rotation2d(StopMode.BlockAll.moduleAngles[i]));
+      setpointStates[i] = new SwerveModuleState(0.0, modules[i].getAngle() );
     }
     return setpointStates;
   }
@@ -190,7 +189,9 @@ public class Drive extends SubsystemBase{
     ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DRIVE_DRIFT_RATE);
     goalSetpointPublisher.set(ajusted);
 
+    //Calculates a field relative velocity as if we're on blue, then flips it to red if nessesary
     ChassisSpeeds fieldRel = ChassisSpeeds.fromRobotRelativeSpeeds(speeds, getYaw());
+    //ChassisSpeeds allianceRel = AllianceFlipUtil.flipSpeeds(fieldRel);
     filter.setGoal(fieldRel);
   }
 
@@ -221,23 +222,14 @@ public class Drive extends SubsystemBase{
    */
   public void updateOdometry(){
     final double startTime = Timer.getFPGATimestamp();
-    SwerveModuleState[] meauredStates = new SwerveModuleState[4];
+    SwerveModuleState[] measuredStates = new SwerveModuleState[4];
 
     for(int i=0; i<4; i++){
-      meauredStates[i] = modules[i].getState();
+      measuredStates[i] = modules[i].getState();
     }
-    moduleMeasuredPublisher.set(Logger.statesToArray(meauredStates));
+    moduleMeasuredPublisher.set(Logger.statesToArray(measuredStates));
 
-    measurdSpeeds = kinematics.toChassisSpeeds(meauredStates);
-    final Translation2d linearFieldVelocity =
-      new Translation2d(measurdSpeeds.vxMetersPerSecond, measurdSpeeds.vyMetersPerSecond)
-      .rotateBy(getRotation());
-    
-    fieldVelocity = new Twist2d(
-      linearFieldVelocity.getX(),
-      linearFieldVelocity.getY(),
-      gyroIOInputs.connected
-        ? gyroIOInputs.yawVelocityRadPerSec : measurdSpeeds.omegaRadiansPerSecond);
+    measuredSpeeds = kinematics.toChassisSpeeds(measuredStates);
 
     OdometryThread.odometryLock.lock();
     ArrayList<Double> timestamps = new ArrayList<>(OdometryThread.timestampQueue.size());
@@ -247,7 +239,6 @@ public class Drive extends SubsystemBase{
       final double timestamp = OdometryThread.timestampQueue.poll();
       timestamps.add(timestamp);
     }
-    SmartDashboard.putNumberArray("timestamps", timestamps.toArray(new Double[0]));
 
     OdometryThread.odometryLock.unlock();
 
@@ -272,9 +263,7 @@ public class Drive extends SubsystemBase{
         modulus = 3;
       }
     }
-    SmartDashboard.putNumber("minSize", minSize);
     int update = 0;
-    double temp[] = new double[3];
     for(update = 0; update < minSize / modulus; update++){
       update = update * modulus;
 
@@ -295,24 +284,17 @@ public class Drive extends SubsystemBase{
       if(gyroIOInputs.connected) {
         final double dtheta = gyroYaw.minus(lastGyroYaw).getRadians();
 
-        SmartDashboard.putNumber("Odometry dTheta Error", dtheta - twist.dtheta);
         twist.dtheta = dtheta;
       }
 
       lastGyroYaw = gyroYaw;
 
       poseEstimator.addDriveDataNoUpdate(timestamps.get(update), twist);
-      temp[0] = twist.dx;
-      temp[1] = twist.dy;
-      temp[2] = twist.dtheta;
       posePublisher.set(getPose());
 
-      gyroIO.setExpectedYawVelocity(measurdSpeeds.omegaRadiansPerSecond);
+      gyroIO.setExpectedYawVelocity(measuredSpeeds.omegaRadiansPerSecond);
     }
-
-    SmartDashboard.putNumber("odometry update", update);
-    SmartDashboard.putNumberArray("odometry update twist", temp);
-
+    measuredSpeedPublisher.set(measuredSpeeds);
     poseEstimator.update();
 
     final double endTime = Timer.getFPGATimestamp();
