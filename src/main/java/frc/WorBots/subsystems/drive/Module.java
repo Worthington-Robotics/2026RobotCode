@@ -12,9 +12,10 @@ public class Module {
   private SwerveModuleState lastSetpoint = new SwerveModuleState();
 
   /**
-   * This module represents one swerve module, which includes a turn motor, and drive motor.
+   * This module represents one swerve module, which includes a turn motor, and
+   * drive motor.
    *
-   * @param io The module IO to be ran with.
+   * @param io    The module IO to be ran with.
    * @param index The index of the module from 0-3.
    */
   public Module(ModuleIO io, int index) {
@@ -29,11 +30,13 @@ public class Module {
   }
 
   /**
-   * Calculates and sets the current motors to the provided state. It is recommended to first call
+   * Calculates and sets the current motors to the provided state. It is
+   * recommended to first call
    * optimizeState() on the setpoint in order to have optimal control
    *
    * @param state The desired state.
-   * @param force Whether or not to force the state, even if the drive velocity is zero.
+   * @param force Whether or not to force the state, even if the drive velocity is
+   *              zero.
    */
   public void runState(SwerveModuleState state, boolean force) {
     // Perform anti-jitter to prevent module rotations for very small motions
@@ -59,14 +62,12 @@ public class Module {
     final Rotation2d delta = GeneralMath.wrappingAngleDifference(state.angle, getAngle());
     // Turns greater than 90 degrees can just have the module flip its direction
     if (Math.abs(delta.getDegrees()) > 90.0) {
-      state =
-          new SwerveModuleState(
-              -state.speedMetersPerSecond, state.angle.rotateBy(Rotation2d.fromDegrees(180.0)));
+      state = new SwerveModuleState(
+          -state.speedMetersPerSecond, state.angle.rotateBy(Rotation2d.fromDegrees(180.0)));
     }
 
     // Stray module correction
-    state.speedMetersPerSecond *=
-        GeneralMath.curve(Math.cos(io.getInputs().turnPositionErrorRad), 1.0);
+    state.speedMetersPerSecond *= Math.cos(io.getInputs().turnPositionErrorRad);
 
     return state;
   }

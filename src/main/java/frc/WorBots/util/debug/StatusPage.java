@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-//import frc.WorBots.util.BuildConstants;
+import frc.WorBots.util.BuildConstants;
 import java.util.HashMap;
 
 /** A utility class which shows the status of systems on the robot to NetworkTables */
@@ -34,8 +34,8 @@ public class StatusPage {
   public static final String DRIVE_CONTROLLER = "Drive Controller";
   public static final String SUPERSTRUCTURE_SUBSYSTEM = "Superstructure Subsystem";
   public static final String DRIVE_SUBSYSTEM = "Drive Subsystem";
-  public static final String CORAL_INTAKE_SUBSYSTEM = "Coral Intake Subsystem";
-  public static final String ALGAE_INTAKE_SUBSYSTEM = "Algae Intake Subsystem";
+  public static final String INTAKE_SUBSYSTEM = " Intake Subsystem";
+  public static final String SHOOTER_INTAKE_SUBSYSTEM = "Shooter Subsystem";
   public static final String CLIMBER_SUBSYSTEM = "Algae Intake Subsystem";
   public static final String LIGHTS_SUBSYSTEM = "Lights Subsystem";
   public static final String TAG_VISION_SUBSYSTEM = "Tag Vision Subsystem";
@@ -79,8 +79,8 @@ public class StatusPage {
     ROBOT_CODE,
     SUPERSTRUCTURE_SUBSYSTEM,
     DRIVE_SUBSYSTEM,
-    CORAL_INTAKE_SUBSYSTEM,
-    ALGAE_INTAKE_SUBSYSTEM,
+    INTAKE_SUBSYSTEM,
+    SHOOTER_INTAKE_SUBSYSTEM,
     TAG_VISION_SUBSYSTEM,
     CLIMBER_SUBSYSTEM,
     DRIVER_CAM,

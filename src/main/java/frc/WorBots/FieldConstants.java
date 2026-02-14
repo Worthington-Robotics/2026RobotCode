@@ -29,4 +29,6 @@ public class FieldConstants {
 
 
     
+    public static final double fieldWidth = Units.inchesToMeters(317.69);
+    public static final double fieldLength = Units.inchesToMeters(651.22);
 }
