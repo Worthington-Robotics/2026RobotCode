@@ -12,6 +12,7 @@ public class Constants {
   public static final double ROBOT_PERIOD = 0.01;
   public static final double ROBOT_FREQUENCY = 1.0 / ROBOT_PERIOD;
   public static final boolean IS_COMP = false;
+  public static final boolean ENABLE_DEBUG_ROUTINES = true;
   public static final boolean getSim(){
     return Robot.isSimulation();
   }

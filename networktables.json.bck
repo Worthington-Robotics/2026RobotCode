@@ -14,5 +14,13 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/SmartDashboard/DB/Button 0",
+    "type": "boolean",
+    "value": false,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

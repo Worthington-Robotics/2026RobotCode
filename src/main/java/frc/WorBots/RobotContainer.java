@@ -4,15 +4,21 @@
 
 package frc.WorBots;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.DriveWithJoysticks;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.drive.GyroIOPigeon2;
@@ -30,10 +36,15 @@ public class RobotContainer {
   public final CommandXboxController operator = new CommandXboxController(1);
 
   //Drive Controller
-  public static final DriveController driveController = new DriveController(); 
+  public static final DriveController driveController = new DriveController();
+  
+  /** Whether proper autos with a valid alliance have been generated */
+  public static boolean validAutosGenerated = false;
+
+  public static Optional<Alliance> allianceUsedForAutos = Optional.empty();
 
   //Auto Selector
-  private final SendableChooser<Command> autoSelector;
+  private AutoSelector selector;
 
   public RobotContainer() {
     //setup Subsystems
@@ -76,10 +87,7 @@ public class RobotContainer {
       },
       drive);
 
-      autoSelector = AutoBuilder.buildAutoChooser();
-      
-      SmartDashboard.putData("Auto Selector", autoSelector);
-      
+    registerAutos();
     configureBindings();
   }
 
@@ -90,6 +98,46 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoSelector.getSelected();
+    if (selector == null) {
+      return Commands.none();
+    }
+
+    return selector.getCommand();
+  }
+
+  public void checkAutos() {
+    if (!validAutosGenerated) {
+      if (DriverStation.getAlliance().isPresent()) {
+        allianceUsedForAutos = DriverStation.getAlliance();
+        registerAutos();
+        validAutosGenerated = true;
+        SmartDashboard.putBoolean("DB/LED 0", true);
+        //StatusPage.reportStatus(StatusPage.AUTOS, true);
+      }
+    }
+    SmartDashboard.putString("DB/String 9", "FMS Says: " + DriverStation.getAlliance().toString());
+  }
+
+  private void registerAutos(){
+    selector = new AutoSelector("Auto Selector 2");
+    
+    //Fetchs all of the autos from Path Planner
+    List<String> autos = AutoBuilder.getAllAutoNames();
+
+    //For each auto it checks if Its a Comp or Debug auto and modifies the list of registered autos
+    for(String auto: autos){
+      System.out.println(auto.substring(0, 6));
+      if(Constants.IS_COMP){
+        if(!auto.substring(0, 3).equals("COMP")){
+          continue;
+        }
+      }
+      if(!Constants.ENABLE_DEBUG_ROUTINES){
+        if(auto.substring(0, 5).equals("DEBUG")){
+          continue;
+        }
+      }
+      selector.addRoutine(auto, new PathPlannerAuto(auto));
+    }
   }
 }
