@@ -4,6 +4,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 
 //import frc.WorBots.util.RobotSimulator;
@@ -42,5 +43,9 @@ public class IntakeIOSim implements IntakeIO {
 
   public void setExtendingMotorVolts(double volts) {
     extendingSim.setInputVoltage(volts);
+  }
+
+  public void setPosition(IntakePoses pose){
+    SmartDashboard.putNumber("Intake Position Setpoint", pose.get());
   }
 }

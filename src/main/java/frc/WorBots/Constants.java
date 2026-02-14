@@ -46,5 +46,7 @@ public class Constants {
   public static final double INTAKE_PIVOT_GR = 1;
   public static final double MOMENT_OF_INERTIA = 1;
   public static final double INTAKE_INTAKE_GR = 1;
+  public static final double INTAKE_EXTENDING_KP = 0.0;
+  public static final double INTAKE_EXTENDING_KD = 0.0;
 
 }

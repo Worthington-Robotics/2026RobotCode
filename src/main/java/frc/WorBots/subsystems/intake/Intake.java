@@ -13,6 +13,8 @@ public class Intake extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOInputs inputs = new IntakeIOInputs();
 
+  private boolean controlWithVoltage = true;
+
   // TODO: Add enum in Hardware Utils so that able to switch b/w states
 
   // The setpoint voltages for both the intaking and extending motors
@@ -55,23 +57,24 @@ public class Intake extends SubsystemBase {
         StatusPage.INTAKE_CONNECTED,
         inputs.isConnected && inputs.intakeMotor.temperatureCelsius <= Constants.INTAKE_MAX_TEMP);
 
-    // Setting the voltages of the motors
     io.setIntakeMotorVolts(setPointVoltageIntake);
+    inputs.intakeMotor.publish();
+    setpointIntakePub.set(setPointVoltageIntake);
 
+    if (controlWithVoltage){
+    // Setting the voltages of the motors
     io.setExtendingMotorVolts(setPointVoltageExtending);
 
     // Publishing the motor signals.
-    inputs.intakeMotor.publish();
     inputs.extendingMotor.publish();
 
-    // Publishing the setpoint voltage for extending and intaking motors.
-    setpointIntakePub.set(setPointVoltageIntake);
+    // Publishing the setpoint voltage for extending and intaking motors.    
     setpointExtendingPub.set(setPointVoltageExtending);
-
+    }
     // Publishing the current draw for extending and intaking motors.
     currentDrawIntakePub.set(inputs.intakeCurrent);
     currentDrawExtendingPub.set(inputs.extendingCurrent);
-
+      
   }
 
   // Getters and Setters
@@ -90,7 +93,18 @@ public class Intake extends SubsystemBase {
   }
 
   public void setVoltsExtending(double voltage) {
+    controlWithVoltage = true;
     setPointVoltageExtending = voltage;
+  }
+
+  public void extend(){
+    controlWithVoltage = false;
+    io.setPosition(IntakePoses.EXTENDED);
+  }
+  
+  public void retract(){
+    controlWithVoltage = false;
+    io.setPosition(IntakePoses.RETRACTED);
   }
 
 }

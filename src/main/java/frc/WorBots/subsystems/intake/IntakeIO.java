@@ -40,4 +40,10 @@ public interface IntakeIO {
   public default void updateInputs(IntakeIOInputs inputs) {
   }
 
+  /**
+   * Sets the position of the intake extending motor
+   * @param pose The position to go to
+   */
+  public default void setPosition(IntakePoses pose){}
+
 }

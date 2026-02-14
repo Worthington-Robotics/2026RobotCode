@@ -1,5 +1,7 @@
 package frc.WorBots.subsystems.intake;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Current;
@@ -12,6 +14,8 @@ import frc.WorBots.CanIDs;
 public class IntakeIOTalon implements IntakeIO {
   private final TalonFX intakeMotor;
   private final TalonFX extendingMotor;
+  //Set up request to command motor position
+  final PositionVoltage request = new PositionVoltage(0).withSlot(0);
 
   private final TalonSignalsPositional intakeMotorSignals;
   private final TalonSignalsPositional extendingMotorSignals;
@@ -48,6 +52,14 @@ public class IntakeIOTalon implements IntakeIO {
     HardwareUtils.setCurrentLimit(intakeMotor, 160);
     HardwareUtils.setCurrentLimit(extendingMotor, 160);
 
+    //Set up the extending motor PID
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kP = Constants.INTAKE_EXTENDING_KP;
+    slot0Configs.kI = 0.0;
+    slot0Configs.kD = Constants.INTAKE_EXTENDING_KD;
+
+    extendingMotor.getConfigurator().apply(slot0Configs);
+
     intakeMotor.optimizeBusUtilization();
     extendingMotor.optimizeBusUtilization();
 
@@ -70,6 +82,10 @@ public class IntakeIOTalon implements IntakeIO {
 
   public void setExtendingMotorVolts(double volts) {
     extendingMotorSignals.setVoltage(extendingMotor, volts, 10);
+  }
+
+  public void setPosition(IntakePoses pose){
+    extendingMotor.setControl(request.withPosition(pose.get()));
   }
 
 }
