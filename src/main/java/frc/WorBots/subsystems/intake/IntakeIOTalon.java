@@ -26,8 +26,8 @@ public class IntakeIOTalon implements IntakeIO {
   public IntakeIOTalon() {
 
     // Instantiating the TalonFXs.
-    intakeMotor = new TalonFX(CanIDs.Main.INTAKE_MOTOR_ID, Constants.MAIN_CAN_BUS);
-    extendingMotor = new TalonFX(CanIDs.Main.EXTENDING_MOTOR_ID, Constants.MAIN_CAN_BUS);
+    intakeMotor = new TalonFX(CanIDs.SuperStructure.INTAKE_MOTOR_ID, Constants.MAIN_CAN_BUS);
+    extendingMotor = new TalonFX(CanIDs.SuperStructure.EXTENDING_MOTOR_ID, Constants.MAIN_CAN_BUS);
 
     // TODO Actually find out whether or not to invert the two motors
 
