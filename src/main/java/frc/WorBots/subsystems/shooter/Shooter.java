@@ -16,11 +16,6 @@ public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputs inputs = new ShooterIOInputs();
 
-    /*
-    private final TunableProfiledPIDController followerPIDController =
-        new TunableProfiledPIDController("Shooter", "Flywheel Follower Controller");
-
-    */
     private final TunableProfiledPIDController leaderPIDController =
         new TunableProfiledPIDController("Shooter", "Flywheel Leader Controller");
 
@@ -29,8 +24,10 @@ public class Shooter extends SubsystemBase {
 
     private final SimpleMotorFeedforward leaderFeedForwardController;
     private final SimpleMotorFeedforward hoodFeedForwardController;
-    private double setPointVoltage;
+    private double setpointVelocity;
+    private double setpointPosition;
 
+    //Two control modes, one allows you to provide voltage, the other means that the robot is disabled.
     private enum ControlMode{
       Voltage,
       Disabled
@@ -45,17 +42,20 @@ public class Shooter extends SubsystemBase {
       shooter.getStringTopic("Control Mode").publish();
     private final DoublePublisher hoodPosePub =
       shooter.getDoubleTopic("Hood Pose").publish();
-      //hood pose
+    private final DoublePublisher hoodPoseDesiredPub = 
+      shooter.getDoubleTopic("Hood Setpoint ").publish();
     private final DoublePublisher shooterSpeedActualPub =
       shooter.getDoubleTopic("Shooter Speed Actual").publish();
     private final DoublePublisher shooterSpeedDesiredPub =
       shooter.getDoubleTopic("Shooter Speed Desired").publish();
-      //shooter speed -> desired and real
 
-//intake extension and retracts, using set position of the motor
     
 
-    //Publish the values etc
+    //TODO: tune the PIDs, setting the tolerances and feedforward values too.  
+    /**
+     * Creates a Shooter object alongside its respective PIDs.
+     * @param inputs
+     */
     public Shooter(ShooterIOInputs inputs){
         this.inputs = inputs;
 
@@ -82,6 +82,11 @@ public class Shooter extends SubsystemBase {
         }
     }  
 
+    /***
+     * Periodic function. Publishes values for the hood and leader values, alongside 
+     * setting PIDs for them both.
+     */
+    @Override
     public void periodic(){
       io.updateInputs(inputs);
       leaderPIDController.update();
@@ -91,10 +96,11 @@ public class Shooter extends SubsystemBase {
       inputs.hood.publish();
       inputs.leader.publish();
       controlModePub.set(controlMode.toString());
-      //TODO: fix this after finishing the subsytem
       hoodPosePub.set(inputs.actualHoodPosition);
+      hoodPoseDesiredPub.set(setpointPosition);
+
       shooterSpeedActualPub.set(0.0);
-      shooterSpeedDesiredPub.set(setPointVoltage);
+      shooterSpeedDesiredPub.set(setpointVelocity);
 
     
       if ( controlMode == ControlMode.Disabled){
@@ -102,34 +108,60 @@ public class Shooter extends SubsystemBase {
         io.setLeaderVolts(0);
       }
       else{
-        leaderPIDController.pid.setGoal(inputs.desiredLeaderVelocityRadPerSec);
+        leaderPIDController.pid.setGoal(setpointVelocity);
         double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
-        leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec, inputs.desiredLeaderVelocityRadPerSec +leaderPID);
+        leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec, setpointVelocity +leaderPID);
 
-        hoodPIDController.pid.setGoal(inputs.desiredHoodPosition);
+        hoodPIDController.pid.setGoal(setpointPosition);
         double hoodPID = hoodPIDController.pid.calculate(inputs.actualHoodPosition);
         hoodFeedForwardController.calculate(hoodPID);
 
       }
     }
 
+    /***
+     * Resets the hood position.
+     */
+    public void resetHoodPosition(){
+      disable();
+      io.resetHoodPosition();
+    }
+    /***
+     * Disables the robot.
+     */
     public void disable(){
       controlMode = ControlMode.Disabled;
      }
 
-    public double getDesiredHoodVelocity(){
-      return inputs.desiredHoodPosition;
+    /***
+     * Method that returns the setpoint position of the hood.
+     * @return Setpoint Position of the hood.
+     */ 
+    public double getDesiredHoodPosition(){
+      return setpointPosition;
     }
+    /***
+     * Method returning the setpoint velocity of the leader.
+     * @return Setpoint Velocity of the leader.
+     */
     public double getDesiredLeaderVelocity(){
-      return inputs.desiredLeaderVelocityRadPerSec;
+      return setpointVelocity;
     }
 
-    public double getIsDesiredHoodPosition(){
-      return inputs.desiredHoodPosition = inputs.actualHoodPosition;
+    /***
+     * Gets if the hood is at the desired position.
+     * @return true/false.
+     */
+    public boolean getIsDesiredHoodPosition(){
+      return setpointPosition == inputs.actualHoodPosition;
     }
 
-    public double getIsDesiredLeaderVelocity(){
-      return inputs.desiredLeaderVelocityRadPerSec = inputs.desiredLeaderVelocityRadPerSec;
+    /***
+     * Gets if the leader is at its desired velocity.
+     * @return true/false. 
+     */
+    public boolean getIsDesiredLeaderVelocity(){
+      return setpointVelocity == inputs.actualLeaderVelocityRadPerSec;
     }
 
 
