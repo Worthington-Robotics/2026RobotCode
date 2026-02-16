@@ -29,6 +29,10 @@ public class Turret {
 
     }
 
+    public Turret(TurretIO io){
+        this.io = io;
+    }
+
       public void disable(){
         controlMode = turretControlMode.Disabled; 
       }
@@ -42,6 +46,7 @@ public class Turret {
       private double clampSetpoint(double setpoint) {
         return MathUtil.clamp(setpoint, MIN_ANGLE, MAX_ANGLE);
       }
+
       public void setPosition(double positionRads){
         positionRads = clampSetpoint(positionRads);
         if (positionRads != setpointPosition) {
@@ -53,14 +58,23 @@ public class Turret {
 
       
 
-    public Turret(TurretIO io){
-        this.io = io;
-    }
+    
 
     
-    public void stopTurret(){
+      public void stopTurret(){
         io.setVoltage(0.0);
-    }
+      }
+
+      public double getPosition() {
+        return inputs.turretFusedAngle;
+      }
+
+     public boolean atSetpoint() {
+      return pid.turretFeedBack.atGoal();
+
+      }
+ 
+    
   
 
   }
