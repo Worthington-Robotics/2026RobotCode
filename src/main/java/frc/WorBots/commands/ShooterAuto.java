@@ -1,5 +1,7 @@
 package frc.WorBots.commands;
 
+import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate.Param;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.FieldConstants;
@@ -32,12 +34,14 @@ public class ShooterAuto extends Command {
   @Override
   public void execute(){
     pose = drive.getPose();
+    ShootingParams params;
     if(AllianceFlipUtil.apply(pose).getX()< FieldConstants.hubPosition.getX()){
-      ShootingParams params = shotCalculator.getParamsToHub(pose, null); //TODO add a method to drive to get robot velocity
+      params = shotCalculator.getParamsToHub(pose, null); //TODO add a method to drive to get robot velocity
     } else {
-      ShootingParams params = shotCalculator.getPassParams(pose, null); //TODO add a method to drive to get robot velocity
+      params = shotCalculator.getPassParams(pose, null); //TODO add a method to drive to get robot velocity
     }
-    //TODO run params
+    if(params.isValid()){
+      shooter.setShooterParams(params);
+    }
+    }
   }
-  
-}
