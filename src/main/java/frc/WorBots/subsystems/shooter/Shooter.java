@@ -16,6 +16,7 @@ public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputs inputs = new ShooterIOInputs();
 
+    //TODO preferably do PIDs in IOTalon and IOSim
     private final TunableProfiledPIDController leaderPIDController =
         new TunableProfiledPIDController("Shooter", "Flywheel Leader Controller");
 
@@ -52,6 +53,7 @@ public class Shooter extends SubsystemBase {
     
 
     //TODO: tune the PIDs, setting the tolerances and feedforward values too.  
+    //TODO make it accept an io rather than an io inputs
     /**
      * Creates a Shooter object alongside its respective PIDs.
      * @param inputs
@@ -108,6 +110,7 @@ public class Shooter extends SubsystemBase {
         io.setLeaderVolts(0);
       }
       else{
+        //TODO actually set the motor's voltages
         leaderPIDController.pid.setGoal(setpointVelocity);
         double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
         leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec, setpointVelocity +leaderPID);
