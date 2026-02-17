@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.shooter.ShooterIO.ShooterIOInputs;
+import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
@@ -16,7 +17,6 @@ public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputs inputs = new ShooterIOInputs();
 
-    //TODO preferably do PIDs in IOTalon and IOSim
     private final TunableProfiledPIDController leaderPIDController =
         new TunableProfiledPIDController("Shooter", "Flywheel Leader Controller");
 
@@ -167,7 +167,30 @@ public class Shooter extends SubsystemBase {
       return setpointVelocity == inputs.actualLeaderVelocityRadPerSec;
     }
 
+    /***
+     * Makes the shooter execute a set of shooting params
+     * @param params
+     */
+    public void setShooterParams(ShootingParams params){
+      setFlywheelSpeed(params.flywheelspeed());
+      setHoodPose(params.hoodAngle());
+    }
 
+    /***
+     * Sets the flysheel speed
+     * @param speed The speed to set the flywheel to; in m/second
+     */
+    public void setFlywheelSpeed(double speed){
+      setpointVelocity = speed;
+    }
+
+    /***
+     * Sets the hood position
+     * @param pose The position to set the hood to
+     */
+    public void setHoodPose(double pose){
+      setpointPosition = pose;
+    }
 
       }
 
