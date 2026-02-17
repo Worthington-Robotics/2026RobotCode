@@ -20,9 +20,11 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
+import frc.WorBots.FieldConstants;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
@@ -331,5 +333,21 @@ public class Drive extends SubsystemBase{
    */
   public Pose2d getPose(){
     return poseEstimator.getLatestPose();
+  }
+
+  /**
+   * @return wether the robot is in its alliance zone, returns false if it doesn't have a alliance
+   */
+  public Boolean isNear(){
+    Pose2d currentPose = getPose();
+    if(DriverStation.getAlliance().isPresent()){
+      if(DriverStation.getAlliance().get() == Alliance.Blue){
+        return currentPose.getX() < FieldConstants.BLUE_ZONE_LINE_X_CORD;
+      } else{
+        return currentPose.getX() > FieldConstants.RED_ZONE_LINE_X_CORD;
+      }
+    }
+
+    return false;
   }
 }
