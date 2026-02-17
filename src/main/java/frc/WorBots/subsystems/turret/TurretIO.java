@@ -24,6 +24,9 @@ public interface TurretIO {
   public void updateInputs(TurretIOInputs inputs);
 
   public void setControlMode(Turret turretControlMode);
+  
+  //TODO add a set position method
+  //TODO add a method to get if the turret is at setpoint
 
   
 

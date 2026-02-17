@@ -1,6 +1,5 @@
 package frc.WorBots.subsystems.turret;
 
-import java.lang.invoke.VarHandle.VarHandleDesc;
 import java.util.Optional;
 
 import com.ctre.phoenix6.StatusSignal;
@@ -9,24 +8,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc.WorBots.CanIDs;
-import frc.WorBots.Constants;
 import frc.WorBots.subsystems.turret.Turret.turretControlMode;
 import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
-import frc.WorBots.util.control.DutyCycleEncoderFilter;
 
 public class TurretIOTalon {
     
@@ -56,6 +46,7 @@ public class TurretIOTalon {
 
     turretInputs = new TurretIOInputs();
     turretMotor = new TalonFX(CanIDs.TURRET_ID);
+    //TODO make device ID a constant in the CanIDs file
     turretAbsEncoder = new CANcoder(0);
 
     turretAbsEncoderSignal = turretAbsEncoder.getAbsolutePosition();
@@ -63,7 +54,7 @@ public class TurretIOTalon {
     turretMotorSignal = turretMotor.getPosition();
     motorCurrentSignal = turretMotor.getSupplyCurrent();
         
-        
+    //TODO set update frequency to the frequency of the robot, which is stored in constants 
     turretAbsEncoderSignal.setUpdateFrequency(0.0);
     turretRelEncoderSignal.setUpdateFrequency(0.0);
     turretMotorSignal.setUpdateFrequency(0.0);
@@ -99,6 +90,7 @@ public class TurretIOTalon {
       motorCurrentSignal.refresh();
       double volts = 0.0;
        
+      //TODO redundant check, can be removed
       if(turretInputs.controlMode == turretControlMode.Disabled){
         volts = 0.0;
       }
@@ -112,11 +104,12 @@ public class TurretIOTalon {
 
       if(turretInputs.controlMode == turretControlMode.Position){
 
-        final double feedback = turretFeedBack.calculate(turretInputs.turretFusedAngle, turretInputs.goalAngle); //TODO check if this is right way to create PID controller
+        final double feedback = turretFeedBack.calculate(turretInputs.turretFusedAngle, turretInputs.goalAngle); 
         final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);  //send feedback to feedforward to get the velocity for feedforward
 
         volts = feedback + feedforward;
 
+        //TODO tune min and max voltage and make them constants or local constants
         MathUtil.clamp(volts, -5, 5);
         turretMotor.setVoltage(volts);
         
@@ -146,7 +139,7 @@ public class TurretIOTalon {
           }
 
           
-          
+          //TODO remove angle modulus because the turret can turn more the 360 degrees and rotation beyond that point is significant
           turretInputs.turretFusedAngle = MathUtil.angleModulus(relReading + fusEncoderOffset);
 
           } 
