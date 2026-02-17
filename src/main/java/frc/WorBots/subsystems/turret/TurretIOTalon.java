@@ -132,8 +132,8 @@ public class TurretIOTalon {
             );
         
         
-        if(absReading.isPresent()){
-        turretInputs.turretAbsAngle = absReading.get();
+          if(absReading.isPresent()){
+          turretInputs.turretAbsAngle = absReading.get();
         }
 
         if (shouldReadAbsEncoder) {
@@ -154,7 +154,7 @@ public class TurretIOTalon {
         }
 
       
-      turretInputs.absEncoderConnected = turretAbsEncoder.isConnected();
+     turretInputs.absEncoderConnected = turretAbsEncoder.isConnected();
 
     }
       
