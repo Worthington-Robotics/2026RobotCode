@@ -3,11 +3,16 @@ package frc.WorBots.subsystems.lights;
 import java.util.Optional;
 
 import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.subsystems.drive.Drive;
+import frc.WorBots.subsystems.lights.LightUtils.ColorSequence;
+import frc.WorBots.subsystems.lights.LightsIO.DummyLights;
+import frc.WorBots.subsystems.lights.LightsIO.LightStrip;
+import frc.WorBots.util.cache.Cache.TimeCache;
 
 public class Lights extends SubsystemBase {
     public static Lights instance = new Lights();
@@ -15,9 +20,16 @@ public class Lights extends SubsystemBase {
     public static Lights getInstance(){
         return instance;
     }
+    
+    private LightStrip strip;
 
+    //What should be run if no override is present
     private LightModes currentMode = LightModes.Disabled;
-    private LightEffects currentEffects = LightEffects.none;
+    private LightEffects currentEffect = LightEffects.none;
+
+    //These are what actually get run, they're here for the override
+    private LightModes activeMode = currentMode;
+    private LightEffects activeEffect = currentEffect;
 
     /** The override for the current mode */
     private Optional<LightModes> modeOverride = Optional.empty();
@@ -35,14 +47,27 @@ public class Lights extends SubsystemBase {
     private Drive drive;
 
     //Mode specific varriables
-
     //solid mode
     private Color solidColor = Color.kBlack;
 
+    //Color varriables
+    private static final ColorSequence WORBOTS_FLAME_COLORS =
+      new ColorSequence(
+          Color.kWhite,
+          Color.kCadetBlue,
+          Color.kBlue,
+          Color.kBlue,
+          Color.kIndigo,
+          Color.kIndigo,
+          Color.kRed,
+          Color.kRed,
+          Color.kRed,
+          Color.kRed,
+          Color.kRed,
+          Color.kBlack);
+
     public static enum LightModes{
-        Aiming,
-        HubLocked,
-        Passing,
+        TurretDisplay,
         Climbing,
         SpinJam,
         SysFault,
@@ -50,34 +75,112 @@ public class Lights extends SubsystemBase {
 
         Disabled,
         Solid,
-        PitTest;
+        PitLight;
     }
 
     public static enum LightEffects{
         none,
-        invalidShotFlash;
+        invalidShotFlash,
+        timePulse;
     }
 
     private Lights(){
         //TODO Add light Strips here
+        strip = new LightStrip(1, 100);
     }
 
     public void periodic(){
         SmartDashboard.putString("Lights Mode", currentMode.toString());
-        SmartDashboard.putString("Lights Effect", currentEffects.toString());
+        SmartDashboard.putString("Lights Effect", currentEffect.toString());
         SmartDashboard.putString("Lights Mode Override", modeOverride.toString());
         SmartDashboard.putString("Lights Effect Override", effectOverride.toString());
 
-        isNear = drive.isNear();
+        if(DriverStation.isDisabled()){
+          currentMode = LightModes.Disabled;
+        }
+        else{
+          //TODO implement
+        }
+
+        activeMode = currentMode;
+        if(modeOverride.isPresent()){
+          activeMode = modeOverride.get();
+        }
+
+        switch (activeMode) {
+          case TurretDisplay:
+            //Display turret status, yellow for aiming, green for hub lock, purple for passing
+            LightUtils.solid(strip, solidColor); //TODO
+
+            break;
+          case Climbing:
+            //Displays blue light when climb is active to remind the drivers to chill
+            solidColor = Color.kCadetBlue;
+            LightUtils.solid(strip, solidColor);
+
+            break;
+          case SpinJam:
+            //Displays orange light when Spindexer jam is detetcted
+            LightUtils.blink(strip, Color.kOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
+
+            break;
+          case SysFault:
+            //Displays solid red when a System Fault occurs
+            solidColor = Color.kRed;
+            LightUtils.solid(strip, solidColor);
+
+            break;
+          case VisionLost:
+            //Displays blinking white light if vision is lost
+            LightUtils.blink(strip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
+
+            break;
+          case Solid:
+            //Diplays a solid light of a set color, mostly a debug mode
+            LightUtils.solid(strip, solidColor);
+
+            break;
+          case PitLight:
+            //Displays solid white light to make it easier to see while working on the robot
+            solidColor = Color.kWhite;
+            LightUtils.solid(strip, solidColor);
+
+            break;
+          case Disabled:
+            //Displays worbots flame while robot is disabled
+            LightUtils.flame(strip, 0.95, WORBOTS_FLAME_COLORS);
+            break;
+        }
+
+        strip.periodic();
     }
 
     public void runEffect(LightEffects effect){
-        switch (effect) {
-            case invalidShotFlash:
-                
-                break;
-            default:
-                break;
+      currentEffect = effect;
+      activeEffect = effect;
+      if(effectOverride.isPresent()){
+        activeEffect = effectOverride.get();
+      }
+
+      switch (activeEffect) {
+        case invalidShotFlash:
+          //Flashes the lights yellow if the drivers try to shoot before the robot has a lock
+          final double flashPeriod = 0.125;
+          LightUtils.blink(strip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
+          if (effectTimer.get() > flashPeriod * 3.0) {
+            effectOverride = Optional.empty();
+          }
+
+          break;
+        case timePulse:
+          //TODO, make the lights pulse (varry brightness) faster and faster as you approach active hub switch
+
+          break;
+        case none:
+
+          break;
+        default:
+          break;
         }
     }
 
@@ -91,7 +194,7 @@ public class Lights extends SubsystemBase {
   }
 
   public void setEffect(LightEffects effect) {
-    this.currentEffects = effect;
+    this.currentEffect = effect;
     effectTimer.restart();
   }
 

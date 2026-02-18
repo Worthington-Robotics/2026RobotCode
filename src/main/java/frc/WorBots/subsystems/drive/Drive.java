@@ -334,20 +334,4 @@ public class Drive extends SubsystemBase{
   public Pose2d getPose(){
     return poseEstimator.getLatestPose();
   }
-
-  /**
-   * @return wether the robot is in its alliance zone, returns false if it doesn't have a alliance
-   */
-  public Boolean isNear(){
-    Pose2d currentPose = getPose();
-    if(DriverStation.getAlliance().isPresent()){
-      if(DriverStation.getAlliance().get() == Alliance.Blue){
-        return currentPose.getX() < FieldConstants.BLUE_ZONE_LINE_X_CORD;
-      } else{
-        return currentPose.getX() > FieldConstants.RED_ZONE_LINE_X_CORD;
-      }
-    }
-
-    return false;
-  }
 }
