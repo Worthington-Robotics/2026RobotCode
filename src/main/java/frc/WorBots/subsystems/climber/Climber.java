@@ -10,17 +10,18 @@ public class Climber extends SubsystemBase{
   private double setPointVoltage = 0.0;
   private double postition;
 
-  private climberControlMode controlMode = climberControlMode.disabled;
+  climberControlMode controlMode = climberControlMode.disabled;
 
   public enum climberControlMode{
     voltage,
     position,
-    disabled
+    disabled;
   }
 
   @Override
   public void periodic(){
     io.updateInputs(inputs);
+    io.setControlMode(controlMode);
   }
 
   public Climber(ClimberIO io){
@@ -49,5 +50,9 @@ public class Climber extends SubsystemBase{
 
   public void disable(){
     controlMode = climberControlMode.disabled;
+  }
+
+  public climberControlMode getControlMode(){
+    return controlMode;
   }
 }
