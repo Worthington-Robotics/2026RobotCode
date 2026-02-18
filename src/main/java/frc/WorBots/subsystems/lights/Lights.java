@@ -2,13 +2,11 @@ package frc.WorBots.subsystems.lights;
 
 import java.util.Optional;
 
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.LightUtils.ColorSequence;
 import frc.WorBots.subsystems.lights.LightsIO.DummyLights;
 import frc.WorBots.subsystems.lights.LightsIO.LightStrip;
@@ -39,12 +37,6 @@ public class Lights extends SubsystemBase {
 
     /** Timer for the temporary flash effect, restarting when the effect is applied */
     private final Timer effectTimer = new Timer();
-
-    /**true if robot is in our alliance zone, false otherwise */
-    private boolean isNear;
-
-    //Used for isNear
-    private Drive drive;
 
     //Mode specific varriables
     //solid mode
