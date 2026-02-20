@@ -58,23 +58,23 @@ public class RebuiltUtils {
       if (allianceStarts) {
         return 0;
       }
-      return 105 - matchTime;
+      return matchTime - 105;
     } else if (matchTime > 80) {
       if (!allianceStarts) {
         return 0;
       }
-      return 80 - matchTime;
+      return matchTime - 80;
     } else if (matchTime > 55) {
       if (allianceStarts) {
         return 0;
       }
-      return 55 - matchTime;
+      return matchTime - 55;
     } else if (matchTime > 30) {
       if (!allianceStarts) {
         return 0;
       }
-      return 30 - matchTime;
+      return matchTime - 30;
     }
-    return 99; // This should never trigger
+    return 999; // This should never trigger
   }
 }
