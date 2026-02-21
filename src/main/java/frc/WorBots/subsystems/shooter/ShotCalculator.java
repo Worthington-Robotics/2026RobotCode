@@ -72,22 +72,44 @@ public class ShotCalculator {
       { 4.5, Units.degreesToRadians(45), 6.64078308635, 0.958314690914},
       { 5.0, Units.degreesToRadians(45), 7, 1.0101523795},
       { 5.5, Units.degreesToRadians(45), 7.34166193719, 1.05945675362},
+      { 6.0, Units.degreesToRadians(45), 7.66811580507, 1.10656648953},
+      { 6.5, Units.degreesToRadians(45), 7.98122797569, 1.15175091871},
+      { 7.0, Units.degreesToRadians(45), 8.28251169634, 1.19522841404},
+      { 7.5, Units.degreesToRadians(45), 8.57321409974, 1.23717894611},
+      { 8.0, Units.degreesToRadians(45), 8.85437744847, 1.27775292122},
+      { 8.5, Units.degreesToRadians(45), 9.12688336728, 1.31707756441},
+      { 9.0, Units.degreesToRadians(45), 9.3914855055, 1.35526163291},
+      { 9.5, Units.degreesToRadians(45), 9.64883412646, 1.3923989646},
+      { 10.0, Units.degreesToRadians(45), 9.89949493661, 1.42857119515},
+      { 10.5, Units.degreesToRadians(45), 10.1439637223, 1.46384987023},
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of
     // flight (sec)
     double[][] passingData = { { 0, 0, 0, 0 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
-      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1.0, Units.degreesToRadians(45), 3.1304951685, 0.451753877637},
+      { 1.5, Units.degreesToRadians(45), 3.83405790254, 0.553283244767},
+      { 2.0, Units.degreesToRadians(45), 4.42718872424, 0.638876460609},
+      { 2.5, Units.degreesToRadians(45), 4.94974746831, 0.714285597573},
+      { 3.0, Units.degreesToRadians(45), 5.42217668469, 0.782460668584},
+      { 3.5, Units.degreesToRadians(45), 5.85662018574, 0.845154116632},
+      { 4.0, Units.degreesToRadians(45), 6.260990337, 0.903507755274},
+      { 4.5, Units.degreesToRadians(45), 6.64078308635, 0.958314690914},
+      { 5.0, Units.degreesToRadians(45), 7, 1.0101523795},
+      { 5.5, Units.degreesToRadians(45), 7.34166193719, 1.05945675362},
+      { 6.0, Units.degreesToRadians(45), 7.66811580507, 1.10656648953},
+      { 6.5, Units.degreesToRadians(45), 7.98122797569, 1.15175091871},
+      { 7.0, Units.degreesToRadians(45), 8.28251169634, 1.19522841404},
+      { 7.5, Units.degreesToRadians(45), 8.57321409974, 1.23717894611},
+      { 8.0, Units.degreesToRadians(45), 8.85437744847, 1.27775292122},
+      { 8.5, Units.degreesToRadians(45), 9.12688336728, 1.31707756441},
+      { 9.0, Units.degreesToRadians(45), 9.3914855055, 1.35526163291},
+      { 9.5, Units.degreesToRadians(45), 9.64883412646, 1.3923989646},
+      { 10.0, Units.degreesToRadians(45), 9.89949493661, 1.42857119515},
+      { 10.5, Units.degreesToRadians(45), 10.1439637223, 1.46384987023},
       };
-    minDistance = 0.0; // TODO set this //Thee minimum distance the robot can shoot
-    maxDistance = 10.0; // TODO set this //The maximum distance the robot can shoot
+    minDistance = 1.0; // TODO set this //Thee minimum distance the robot can shoot
+    maxDistance = 6.5; // TODO set this //The maximum distance the robot can shoot
     phaseDelay = 0.03; // TODO set this
 
     for (double[] i : scoringData) {
@@ -125,14 +147,18 @@ public class ShotCalculator {
    * @param Pose          The robot's position
    * @param robotVelocity The robot's velocity
    */
+  //TODO finish fixing get pass params
   public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity) {
     boolean isValid = true;
     Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
     Translation2d targetPose;
     if (GeomUtil.translation2dInBoundingBox(turretPose, AllianceFlipUtil.apply(FieldConstants.allianceZone))) {
-      targetPose = AllianceFlipUtil.apply(FieldConstants.hubPosition); 
-    } else {
       return new ShootingParams(false, new Rotation2d(), 0, 0);
+    }
+    if (pose.getY() > FieldConstants.hubPosition.getY()){
+      targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), FieldConstants.passTarget.getY()+ (FieldConstants.fieldWidth / 2)));
+    } else {
+      targetPose = AllianceFlipUtil.apply(FieldConstants.passTarget);
     }
     Translation2d[] shotPath = { turretPose, targetPose };
     if (GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))) { // TODO make sure alliance flip for arrays is working correctly
@@ -181,14 +207,10 @@ public class ShotCalculator {
     double timeOfFlight;
     Pose2d lookAheadPose = turretPosition;
     double lookaheadTurretToTargetDistance = turretToTargetDistance;
-    // double lastOffsetX = 0.0;
-    // double lastOffsetY = 0.0;
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 40; i++) {
       timeOfFlight = timeOfFlightMap.get(lookaheadTurretToTargetDistance);
       double offsetX = turretVelocityX * timeOfFlight;
       double offsetY = turretVelocityY * timeOfFlight;
-      // lastOffsetX = offsetX;
-      // lastOffsetY = offsetY;
       lookAheadPose = new Pose2d(
           turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
           turretPosition.getRotation());
