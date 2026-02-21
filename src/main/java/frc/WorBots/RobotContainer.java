@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.DriveWithJoysticks;
+import frc.WorBots.commands.ShooterTest;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.drive.GyroIOPigeon2;
 import frc.WorBots.subsystems.drive.GyroIOSim;
@@ -67,7 +68,7 @@ public class RobotContainer {
         new ModuleIOSim(1), 
         new ModuleIOSim(2), 
         new ModuleIOSim(3));
-      shooter = new Shooter(new ShooterIOSim());
+      shooter = new Shooter(new ShooterIOTalon()); //TODO change backt o sim
     }
 
     AutoBuilder.configure(
@@ -101,7 +102,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
-    
+    shooter.setDefaultCommand(new ShooterTest(shooter, drive));
   }
 
   public Command getAutonomousCommand() {

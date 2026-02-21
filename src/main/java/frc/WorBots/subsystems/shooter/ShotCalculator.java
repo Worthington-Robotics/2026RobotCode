@@ -7,6 +7,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
 import frc.WorBots.util.math.AllianceFlipUtil;
@@ -60,14 +61,31 @@ public class ShotCalculator {
   static {
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of
     // flight (sec)
-    double[][] scoringData = { { 1.0, 1.0, 1.0, 1.0 },
-        { 2.0, 2.0, 2.0, 2.0 } };
+    double[][] scoringData = {
+      { 1.0, Units.degreesToRadians(45), 3.1304951685, 0.451753877637},
+      { 1.5, Units.degreesToRadians(45), 3.83405790254, 0.553283244767},
+      { 2.0, Units.degreesToRadians(45), 4.42718872424, 0.638876460609},
+      { 2.5, Units.degreesToRadians(45), 4.94974746831, 0.714285597573},
+      { 3.0, Units.degreesToRadians(45), 5.42217668469, 0.782460668584},
+      { 3.5, Units.degreesToRadians(45), 5.85662018574, 0.845154116632},
+      { 4.0, Units.degreesToRadians(45), 6.260990337, 0.903507755274},
+      { 4.5, Units.degreesToRadians(45), 6.64078308635, 0.958314690914},
+      { 5.0, Units.degreesToRadians(45), 7, 1.0101523795},
+      { 5.5, Units.degreesToRadians(45), 7.34166193719, 1.05945675362},
+      };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of
     // flight (sec)
     double[][] passingData = { { 0, 0, 0, 0 },
-        { 1, 1, 1, 1 }
-    };
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      { 1, Units.degreesToRadians(maxDistance), 1, 1 },
+      };
     minDistance = 0.0; // TODO set this //Thee minimum distance the robot can shoot
     maxDistance = 10.0; // TODO set this //The maximum distance the robot can shoot
     phaseDelay = 0.03; // TODO set this
@@ -111,24 +129,13 @@ public class ShotCalculator {
     boolean isValid = true;
     Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
     Translation2d targetPose;
-    if (GeomUtil.translation2dInBoundingBox(turretPose, null)) { // TODO add bounds
-      targetPose = AllianceFlipUtil.apply(new Translation2d()); // TODO add a real value
-    } else if (GeomUtil.translation2dInBoundingBox(turretPose, null)) {
-      targetPose = AllianceFlipUtil.apply(new Translation2d()); // TODO add a real value
+    if (GeomUtil.translation2dInBoundingBox(turretPose, AllianceFlipUtil.apply(FieldConstants.allianceZone))) {
+      targetPose = AllianceFlipUtil.apply(FieldConstants.hubPosition); 
     } else {
       return new ShootingParams(false, new Rotation2d(), 0, 0);
     }
     Translation2d[] shotPath = { turretPose, targetPose };
-    if (GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))) { // TODO
-                                                                                                                // make
-                                                                                                                // sure
-                                                                                                                // alliance
-                                                                                                                // flip
-                                                                                                                // for
-                                                                                                                // arrays
-                                                                                                                // is
-                                                                                                                // working
-                                                                                                                // correctly
+    if (GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))) { // TODO make sure alliance flip for arrays is working correctly
       isValid = false;
     }
     return getParams(pose, robotVelocity, targetPose, passHoodAngleMap, passFlywheelSpeedMap, passTimeOfFlightMap,
