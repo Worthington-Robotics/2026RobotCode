@@ -53,13 +53,12 @@ public class Shooter extends SubsystemBase {
     
 
     //TODO: tune the PIDs, setting the tolerances and feedforward values too.  
-    //TODO make it accept an io rather than an io inputs
     /**
      * Creates a Shooter object alongside its respective PIDs.
-     * @param inputs
+     * @param io
      */
-    public Shooter(ShooterIOInputs inputs){
-        this.inputs = inputs;
+    public Shooter(ShooterIO io){
+        this.io = io;
 
         leaderPIDController.pid.setTolerance(0.0);
         hoodPIDController.pid.setTolerance(0.0);
