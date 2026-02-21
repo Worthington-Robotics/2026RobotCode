@@ -44,7 +44,7 @@ public class RebuiltUtils {
       // TODO log if this condition is triggered
     }
 
-    // Error checking, could be removed for minor performance improvement
+    // Checking for bad game data
     if (!(gameData.charAt(0) == 'R' || gameData.charAt(0) == 'B')) {
       return 0; // TODO log if this condition is triggered
     }
