@@ -78,6 +78,8 @@ public class RebuiltUtils {
     return 999; // This should never trigger
   }
 
+  //TODO figure out why this is returning 999
+
   /**
    * @return The time until the next hub switch
    */
