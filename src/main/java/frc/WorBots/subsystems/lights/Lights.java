@@ -38,6 +38,33 @@ public class Lights extends SubsystemBase {
     /** Timer for the temporary flash effect, restarting when the effect is applied */
     private final Timer effectTimer = new Timer();
 
+    
+    //Robot State Varriables 
+
+    /**What the turret is aiming at*/
+    private enum Target{
+      Hub,
+      Pass,
+      None;
+    }
+    /**Current Target the Turret is aiming at */
+    private Target currentTarget = Target.None;
+
+    private boolean climbing = false;
+
+    /**Turret Status */
+    private Optional<Boolean> turretAtGoal = Optional.empty();
+
+    /**Vision Status */
+    private Optional<Boolean> visionDown = Optional.empty();
+
+    /**Has a system fault been detected */
+    private Optional<Boolean> sysFault = Optional.empty();
+
+    /**Has a spindexer jam been detected */
+    private Optional<Boolean> spinJammed = Optional.empty();
+
+
     //Mode specific varriables
     //solid mode
     private Color solidColor = Color.kBlack;
@@ -89,9 +116,25 @@ public class Lights extends SubsystemBase {
 
         if(DriverStation.isDisabled()){
           currentMode = LightModes.Disabled;
-        }
-        else{
-          //TODO implement
+        } else {
+          //Priority from lowest to hightest, Turret Display, Vision Down, Spin Jam, Climbing, Sys Fault
+          currentMode = LightModes.TurretDisplay;
+
+          if(visionDown.isPresent() && visionDown.get() == true){
+            currentMode = LightModes.VisionLost;
+          }
+
+          if(spinJammed.isPresent() && spinJammed.get() == true){
+            currentMode = LightModes.SpinJam;
+          }
+
+          if(climbing){
+            currentMode = LightModes.Climbing;
+          }
+
+          if(sysFault.isPresent() && sysFault.get() == true){
+            currentMode = LightModes.SysFault;
+          }
         }
 
         activeMode = currentMode;
@@ -102,8 +145,15 @@ public class Lights extends SubsystemBase {
         switch (activeMode) {
           case TurretDisplay:
             //Display turret status, yellow for aiming, green for hub lock, purple for passing
-            LightUtils.solid(strip, solidColor); //TODO
-
+            if(turretAtGoal.isPresent() && turretAtGoal.get() == true){
+              if(currentTarget == Target.Hub){
+              LightUtils.solid(strip, Color.kGreen);
+              } else {
+                LightUtils.solid(strip, Color.kPurple);
+              } 
+            } else {
+              LightUtils.solid(strip, Color.kGold);
+            }
             break;
           case Climbing:
             //Displays blue light when climb is active to remind the drivers to chill
