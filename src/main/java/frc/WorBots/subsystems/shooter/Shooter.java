@@ -88,7 +88,6 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic(){
       io.updateInputs(inputs);
-      //TODO we don't need to use software defined PIDS if we are using motor pids
       leaderPIDController.update();
       hoodPIDController.update();
 

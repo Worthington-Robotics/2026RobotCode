@@ -211,7 +211,7 @@ public class ShotCalculator {
     double timeOfFlight;
     Pose2d lookAheadPose = turretPosition;
     double lookaheadTurretToTargetDistance = turretToTargetDistance;
-    for (int i = 0; i < 40; i++) {
+    for (int i = 0; i < 20; i++) {
       timeOfFlight = timeOfFlightMap.get(lookaheadTurretToTargetDistance);
       double offsetX = turretVelocityX * timeOfFlight;
       double offsetY = turretVelocityY * timeOfFlight;
