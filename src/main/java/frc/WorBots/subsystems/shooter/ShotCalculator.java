@@ -8,6 +8,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
 import frc.WorBots.util.math.AllianceFlipUtil;
@@ -43,8 +44,10 @@ public class ShotCalculator {
 
   ShootingParams latestParams = null;
 
-  private static double minDistance;
-  private static double maxDistance;
+  private static double minScoreDistance;
+  private static double maxScoreDistance;
+  private static double minPassDistance;
+  private static double maxPassDistance;
   private static double phaseDelay;
   // Set up interpolating tree maps for scoring
   private static final InterpolatingTreeMap<Double, Rotation2d> shotHoodAngleMap = new InterpolatingTreeMap<>(
@@ -108,8 +111,10 @@ public class ShotCalculator {
       { 10.0, Units.degreesToRadians(45), 9.89949493661, 1.42857119515},
       { 10.5, Units.degreesToRadians(45), 10.1439637223, 1.46384987023},
       };
-    minDistance = 1.0; // TODO set this //Thee minimum distance the robot can shoot
-    maxDistance = 6.5; // TODO set this //The maximum distance the robot can shoot
+    minScoreDistance = 1.0; // TODO set this //Thee minimum distance the robot can shoot
+    maxScoreDistance = 10.5; // TODO set this //The maximum distance the robot can shoot
+    minPassDistance = 1.0;
+    maxPassDistance = 10.5;
     phaseDelay = 0.03; // TODO set this
 
     for (double[] i : scoringData) {
@@ -138,7 +143,7 @@ public class ShotCalculator {
    */
   public ShootingParams getParamsToHub(Pose2d pose, ChassisSpeeds robotVelocity) {
     Translation2d target = AllianceFlipUtil.apply(FieldConstants.hubPosition);
-    return getParams(pose, robotVelocity, target, shotHoodAngleMap, shotFlywheelSpeedMap, timeOfFlightMap, true);
+    return getParams(pose, robotVelocity, target, shotHoodAngleMap, shotFlywheelSpeedMap, timeOfFlightMap, true, minScoreDistance, maxScoreDistance);
   }
 
   /***
@@ -155,7 +160,7 @@ public class ShotCalculator {
     if (GeomUtil.translation2dInBoundingBox(turretPose, AllianceFlipUtil.apply(FieldConstants.allianceZone))) {
       return new ShootingParams(false, new Rotation2d(), 0, 0);
     }
-    if (pose.getY() > FieldConstants.hubPosition.getY()){
+    if (pose.getY() < FieldConstants.hubPosition.getY()){
       targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), FieldConstants.passTarget.getY()+ (FieldConstants.fieldWidth / 2)));
     } else {
       targetPose = AllianceFlipUtil.apply(FieldConstants.passTarget);
@@ -165,7 +170,7 @@ public class ShotCalculator {
       isValid = false;
     }
     return getParams(pose, robotVelocity, targetPose, passHoodAngleMap, passFlywheelSpeedMap, passTimeOfFlightMap,
-        isValid);
+        isValid, minPassDistance, maxPassDistance);
   }
 
   /***
@@ -184,7 +189,7 @@ public class ShotCalculator {
    */
   private ShootingParams getParams(Pose2d robotPose, ChassisSpeeds robotVelocity, Translation2d target,
       InterpolatingTreeMap<Double, Rotation2d> hoodAngleMap, InterpolatingDoubleTreeMap flywheelSpeedMap,
-      InterpolatingDoubleTreeMap timeOfFlightMap, boolean isValid) {
+      InterpolatingDoubleTreeMap timeOfFlightMap, boolean isValid, double minDistance, double maxDistance) {
     // Calculate the estimated robot pose when this method is done running
     Pose2d estimatedPose = robotPose
         .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, robotPose.getRotation()).toTwist2d(phaseDelay));
@@ -216,7 +221,7 @@ public class ShotCalculator {
           turretPosition.getRotation());
       lookaheadTurretToTargetDistance = target.getDistance(lookAheadPose.getTranslation());
     }
-
+  
     // Calculate params
     turretAngle = target.minus(lookAheadPose.getTranslation()).getAngle();
     hoodAngle = hoodAngleMap.get(lookaheadTurretToTargetDistance).getRadians();

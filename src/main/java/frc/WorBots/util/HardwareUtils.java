@@ -14,7 +14,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 //import com.playingwithfusion.TimeOfFlight;
-//TODO add playing with fusion when proper libraries are released
 import edu.wpi.first.hal.PowerDistributionFaults;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.units.measure.Angle;

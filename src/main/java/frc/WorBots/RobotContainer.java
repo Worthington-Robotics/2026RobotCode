@@ -68,7 +68,7 @@ public class RobotContainer {
         new ModuleIOSim(1), 
         new ModuleIOSim(2), 
         new ModuleIOSim(3));
-      shooter = new Shooter(new ShooterIOTalon()); //TODO change backt o sim
+      shooter = new Shooter(new ShooterIOSim()); //TODO make shooterIOSim work
     }
 
     AutoBuilder.configure(
@@ -102,7 +102,6 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
-    shooter.setDefaultCommand(new ShooterTest(shooter, drive));
   }
 
   public Command getAutonomousCommand() {
