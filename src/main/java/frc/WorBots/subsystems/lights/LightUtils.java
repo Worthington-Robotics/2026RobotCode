@@ -149,6 +149,21 @@ public class LightUtils {
   }
 
   /**
+   * Pulses the lights faster and faster as you approach a event
+   * @param io The lights
+   * @param color The color to pulse
+   * @param minBrightness The minimium brightness you want the lights to reach stored as a decimal between 0 and 1
+   * @param totalTime the total time the pulse goes for
+   * @param timeUntilEvent How long until the event you care about
+   * @param scale Effects how rapidly the lights pulse, bigger = faster
+   */
+  public static void dopplerEffect(LightsIO io, Color color, double minBrightness, double totalTime, double timeUntilEvent, double scale){
+    double brightnessScale = 1 - minBrightness;
+    double brightnessMod = brightnessScale * Math.abs(Math.sin(scale * (totalTime - timeUntilEvent) * (totalTime -timeUntilEvent)));
+    LightUtils.solid(io, color, minBrightness + brightnessMod);
+  }
+
+  /**
    * Does a ripple effect over time
    *
    * @param io The lights

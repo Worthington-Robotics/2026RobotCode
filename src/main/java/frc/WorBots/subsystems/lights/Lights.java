@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.subsystems.lights.LightUtils.ColorSequence;
 import frc.WorBots.subsystems.lights.LightsIO.DummyLights;
 import frc.WorBots.subsystems.lights.LightsIO.LightStrip;
+import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.cache.Cache.TimeCache;
 
 public class Lights extends SubsystemBase {
@@ -38,6 +39,8 @@ public class Lights extends SubsystemBase {
     /** Timer for the temporary flash effect, restarting when the effect is applied */
     private final Timer effectTimer = new Timer();
 
+    /**Util for measuring how long till hub switch */
+    RebuiltUtils rebuiltUtils = new RebuiltUtils();
     
     //Robot State Varriables 
 
@@ -156,6 +159,11 @@ public class Lights extends SubsystemBase {
             }
 
             LightUtils.solid(strip, solidColor);
+
+            if(rebuiltUtils.timeToAcivationSwitch() < 5){
+              runEffect(LightEffects.timePulse);
+            }
+
             break;
           case Climbing:
             //Displays blue light when climb is active to remind the drivers to chill
@@ -217,7 +225,9 @@ public class Lights extends SubsystemBase {
 
           break;
         case timePulse:
-          //TODO, make the lights pulse (varry brightness) faster and faster as you approach active hub switch
+          final double minBrightness = 0.3;
+          final double totalTime = 5.0;
+          LightUtils.dopplerEffect(strip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToHubActive(), 1);
 
           break;
         case none:
