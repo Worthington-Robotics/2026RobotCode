@@ -34,9 +34,9 @@ public class ShooterAuto extends Command {
     pose = drive.getPose();
     ShootingParams params;
     if(AllianceFlipUtil.apply(pose).getX()< FieldConstants.hubPosition.getX()){
-      params = shotCalculator.getParamsToHub(pose, drive.getMeasuredSpeeds()); //TODO add a method to drive to get robot velocity
+      params = shotCalculator.getParamsToHub(pose, drive.getMeasuredSpeeds());
     } else {
-      params = shotCalculator.getPassParams(pose, drive.getMeasuredSpeeds()); //TODO add a method to drive to get robot velocity
+      params = shotCalculator.getPassParams(pose, drive.getMeasuredSpeeds());
     }
     if(params.isValid()){
       shooter.setShooterParams(params);
