@@ -11,14 +11,18 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import frc.WorBots.CanIDs;
 import frc.WorBots.subsystems.turret.Turret.turretControlMode;
 import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
+import frc.WorBots.Constants;
 
-public class TurretIOTalon {
+import frc.WorBots.subsystems.turret.Turret.turretControlMode;
+
+public class TurretIOTalon implements TurretIO{
     
 
     //electronics
@@ -27,6 +31,12 @@ public class TurretIOTalon {
   private TurretIOInputs turretInputs;
   private double fusEncoderOffset;
   private boolean shouldReadAbsEncoder = true;
+  private double setpointPosition;
+  turretControlMode controlMode = turretControlMode.Disabled;
+  public static final double MIN_ANGLE = Units.degreesToRadians(-270.0);
+  public static final double MAX_ANGLE = Units.degreesToRadians(270.0);
+  public static final double MIN_VOLTAGE = 0.0;
+  public static final double MAX_VOLTAGE = 0.0;
     
 
   private final StatusSignal<Angle> turretAbsEncoderSignal;
@@ -47,7 +57,7 @@ public class TurretIOTalon {
     turretInputs = new TurretIOInputs();
     turretMotor = new TalonFX(CanIDs.TURRET_ID);
     //TODO make device ID a constant in the CanIDs file
-    turretAbsEncoder = new CANcoder(0);
+    turretAbsEncoder = new CANcoder(CanIDs.TURRET_ABS_ENCODER_ID);
 
     turretAbsEncoderSignal = turretAbsEncoder.getAbsolutePosition();
     turretRelEncoderSignal = turretMotor.getRotorPosition();
@@ -55,9 +65,9 @@ public class TurretIOTalon {
     motorCurrentSignal = turretMotor.getSupplyCurrent();
         
     //TODO set update frequency to the frequency of the robot, which is stored in constants 
-    turretAbsEncoderSignal.setUpdateFrequency(0.0);
-    turretRelEncoderSignal.setUpdateFrequency(0.0);
-    turretMotorSignal.setUpdateFrequency(0.0);
+    turretAbsEncoderSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
+    turretRelEncoderSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
+    turretMotorSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
     turretMotor.optimizeBusUtilization();
         
     motorSignal = new TalonSignalsPositional(turretMotor);
@@ -83,22 +93,17 @@ public class TurretIOTalon {
     }
 
     
-    public void updateInputs(){
+    public void updateInputs(TurretIOInputs inputs){
       turretMotorSignal.refresh();
       turretAbsEncoderSignal.refresh();
       turretRelEncoderSignal.refresh();
       motorCurrentSignal.refresh();
       double volts = 0.0;
-       
-      //TODO redundant check, can be removed
-      if(turretInputs.controlMode == turretControlMode.Disabled){
-        volts = 0.0;
-      }
 
       if(turretInputs.controlMode == turretControlMode.Voltage){
         
         volts = turretInputs.debugVoltage;
-        MathUtil.clamp(volts, -5, 5);
+        MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
         turretMotor.setVoltage(volts);
       }
 
@@ -110,7 +115,7 @@ public class TurretIOTalon {
         volts = feedback + feedforward;
 
         //TODO tune min and max voltage and make them constants or local constants
-        MathUtil.clamp(volts, -5, 5);
+        MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
         turretMotor.setVoltage(volts);
         
         final double relReading = turretRelEncoderSignal.getValue().in(edu.wpi.first.units.Units.Radians);
@@ -140,7 +145,7 @@ public class TurretIOTalon {
 
           
           //TODO remove angle modulus because the turret can turn more the 360 degrees and rotation beyond that point is significant
-          turretInputs.turretFusedAngle = MathUtil.angleModulus(relReading + fusEncoderOffset);
+          turretInputs.turretFusedAngle = relReading + fusEncoderOffset;
 
           } 
 
@@ -150,7 +155,33 @@ public class TurretIOTalon {
      turretInputs.absEncoderConnected = turretAbsEncoder.isConnected();
 
     }
+
+  private double clampSetpoint(double setpoint) {
+      return MathUtil.clamp(setpoint, MIN_ANGLE, MAX_ANGLE);
+  }
+
+  public void setPosition(double positionRads){
+   
+    positionRads = clampSetpoint(positionRads);
+    if (controlMode != controlMode.Position) {
+      turretFeedBack.reset(turretInputs.turretFusedAngle);
+    }
+
+    if (positionRads != setpointPosition) {
+      //TODO command the pid in turretIOTalon
+      turretFeedBack.setGoal(positionRads);
+    }
+   
+    setpointPosition = positionRads;
+    controlMode = turretControlMode.Position;
       
+  }
+
+  public boolean atSetPoint() {
+    //TODO move all interactions with pid to turretIOTalon
+    return turretFeedBack.atGoal();
+  }
+
          
 
 

@@ -19,11 +19,11 @@ public interface TurretIO {
 
   public void setVoltage(double volts);
 
-  public void resetZero(TurretIOInputs inputs, double position);
-
   public void updateInputs(TurretIOInputs inputs);
 
-  public void setControlMode(Turret turretControlMode);
+  public void setPosition(double positionRads);
+
+  public boolean atSetPoint();
   
   //TODO add a set position method
   //TODO add a method to get if the turret is at setpoint

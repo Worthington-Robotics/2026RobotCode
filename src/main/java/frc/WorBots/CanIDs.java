@@ -25,4 +25,5 @@ public class CanIDs {
 
   public static final int TURRET_ID = 0;
   public static final int TURRET_ENCODER_ID = 0;
+  public static final int TURRET_ABS_ENCODER_ID = 0;
 }
