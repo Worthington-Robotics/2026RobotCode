@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.WorBots.util.HardwareUtils.TalonInputsPositional;
 
 public interface ShooterIO {
-
+//a
     public static class ShooterIOInputs{
       boolean isConnected = false;
       double leaderCurrent;
