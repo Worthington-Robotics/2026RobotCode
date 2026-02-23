@@ -56,7 +56,7 @@ public class Lights extends SubsystemBase {
     private Optional<Boolean> turretAtGoal = Optional.empty();
 
     /**Vision Status */
-    private Optional<Boolean> visionDown = Optional.empty();
+    private Optional<Boolean> visionStatus = Optional.empty();
 
     /**Has a system fault been detected */
     private Optional<Boolean> sysFault = Optional.empty();
@@ -120,7 +120,7 @@ public class Lights extends SubsystemBase {
           //Priority from lowest to hightest, Turret Display, Vision Down, Spin Jam, Climbing, Sys Fault
           currentMode = LightModes.TurretDisplay;
 
-          if(visionDown.isPresent() && visionDown.get() == true){
+          if(visionStatus.isPresent() && visionStatus.get() == false){
             currentMode = LightModes.VisionLost;
           }
 
@@ -147,13 +147,15 @@ public class Lights extends SubsystemBase {
             //Display turret status, yellow for aiming, green for hub lock, purple for passing
             if(turretAtGoal.isPresent() && turretAtGoal.get() == true){
               if(currentTarget == Target.Hub){
-              LightUtils.solid(strip, Color.kGreen);
+                solidColor = Color.kGreen;
               } else {
-                LightUtils.solid(strip, Color.kPurple);
+                solidColor = Color.kPurple;
               } 
             } else {
-              LightUtils.solid(strip, Color.kGold);
+              solidColor = Color.kGold;
             }
+
+            LightUtils.solid(strip, solidColor);
             break;
           case Climbing:
             //Displays blue light when climb is active to remind the drivers to chill
@@ -235,28 +237,114 @@ public class Lights extends SubsystemBase {
     this.currentMode = mode;
   }
 
+  /**
+   * Sets the effect of the lights
+   * @param effect the effect to be played
+   */
   public void setEffect(LightEffects effect) {
     this.currentEffect = effect;
     effectTimer.restart();
   }
 
+  /**
+   * Sets the target the lights believe the turret to be aiming at
+   * @param target the target (Hub or passing)
+   */
+  public void setTarget(Target target){
+    this.currentTarget = target;
+  }
+
+  /**
+   * Tells the lights the robot has started climbing
+   */
+  public void startClimb(){
+    this.climbing = true;
+  }
+
+  /**
+   * Tells the lights the climb has been aborted
+   */
+  public void stopClimb(){
+    this.climbing = false;
+  }
+
+  /**
+   * Passes the turret's status to the lights
+   * @param turretStatus is the turret at it's goal point
+   */
+  public void addTurretStatus(boolean turretStatus){
+    this.turretAtGoal = Optional.of(turretStatus);
+  }
+
+  /**
+   * Passes the spindexer's status to the lights
+   * @param jammed Is the spindexer jammed
+   */
+  public void addSpinStatus(boolean jammed){
+    this.spinJammed = Optional.of(jammed);
+  }
+
+  /**
+   * Passes visions status to the lights
+   * @param visionStatus Is vision operational
+   */
+  public void addVisionStatus(boolean visionStatus){
+    this.visionStatus = Optional.of(visionStatus);
+  }
+
+  /**
+   * Alerts the lights of a SysFault
+   * @param status Is a SysFault occuring (True if yes, False if everythings fine)
+   */
+  public void sysFault(boolean status){
+    this.sysFault = Optional.of(status);
+  }
+
+  /**
+   * Sets a Override for the lights
+   * @param mode the override mode the lights will display reguardless of input
+   */
   public void setOverride(LightModes mode) {
     this.modeOverride = Optional.of(mode);
   }
 
+  /**
+   * Sets a Override for the lights
+   * @param effect the override effect the lights will play reguardless of other instructions
+   */
   public void setOverride(LightEffects effect) {
     this.effectOverride = Optional.of(effect);
     effectTimer.reset();
   }
 
+  /**
+   * Sets a Override for the lights
+   * @param mode the override mode the lights will display reguardless of input
+   * @param effect the override effect the lights will play reguardless of other instructions
+   */
+  public void setOverride(LightModes mode, LightEffects effect){
+    this.modeOverride = Optional.of(mode);
+    this.effectOverride = Optional.of(effect);
+    effectTimer.reset();
+  }
+
+  /**
+   * Clears the mode override for the lights
+   */
   public void clearModeOverride() {
     this.modeOverride = Optional.empty();
   }
 
+  /**
+   * Clears the effect override for the lights
+   */
   public void clearEffectOverride(){
     this.effectOverride = Optional.empty();
   }
 
+  /**
+   * Clears all overrides for the lights
+   */
   public void clearOverride(){
     this.modeOverride = Optional.empty();
     this.effectOverride = Optional.empty();
