@@ -88,6 +88,7 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic(){
       io.updateInputs(inputs);
+      //TODO we don't need to use software defined PIDS if we are using motor pids
       leaderPIDController.update();
       hoodPIDController.update();
 
@@ -107,7 +108,6 @@ public class Shooter extends SubsystemBase {
         io.setLeaderVolts(0);
       }
       else{
-        //TODO actually set the motor's voltages
         leaderPIDController.pid.setGoal(setpointVelocity);
         double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
         double leaderVolts = leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec, setpointVelocity +leaderPID);

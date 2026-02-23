@@ -6,6 +6,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
 import frc.WorBots.util.HardwareUtils;
@@ -23,6 +24,7 @@ public class ShooterIOTalon implements ShooterIO {
   private final TalonSignalsPositional hoodSignals;
 
   public ShooterIOTalon(){
+    //TODO set motor PID values
     leader.setNeutralMode(NeutralModeValue.Brake);
     hood.setNeutralMode(NeutralModeValue.Brake);
 
@@ -67,14 +69,16 @@ public class ShooterIOTalon implements ShooterIO {
     hood.setPosition(0.0);
   }
 
+
   @Override  
   public void updateInputs(ShooterIOInputs inputs){
     inputs.isConnected = true;
     leaderSignals.update(inputs.leader, leader);
     hoodSignals.update(inputs.hood, hood);
 
-    inputs.actualHoodPosition = hood.getPosition().getValueAsDouble();
-    inputs.actualLeaderVelocityRadPerSec = leader.getVelocity().getValueAsDouble();
+    //TODO these return position in rotations and velocity as rps
+    inputs.actualHoodPosition = Units.rotationsToRadians(hood.getPosition().getValueAsDouble());
+    inputs.actualLeaderVelocityRadPerSec = leader.getVelocity().getValueAsDouble() * 2 * Math.PI;
     
     inputs.hoodCurrent = hood.getSupplyCurrent().getValueAsDouble();
     inputs.leaderCurrent = leader.getSupplyCurrent().getValueAsDouble();
