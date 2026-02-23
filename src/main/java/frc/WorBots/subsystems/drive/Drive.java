@@ -2,6 +2,7 @@ package frc.WorBots.subsystems.drive;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix6.sim.ChassisReference;
 import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.VecBuilder;
@@ -322,5 +323,12 @@ public class Drive extends SubsystemBase{
    */
   public Pose2d getPose(){
     return poseEstimator.getLatestPose();
+  }
+
+  /**
+   * Returns the robot's measured speeds
+   */
+  public ChassisSpeeds getMeasuredSpeeds(){
+    return measuredSpeeds;
   }
 }
