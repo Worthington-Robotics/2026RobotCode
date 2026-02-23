@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.shooter.ShooterIO.ShooterIOInputs;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
-import frc.WorBots.util.debug.TunablePIDController;
-import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 
 public class Shooter extends SubsystemBase {
@@ -112,11 +110,15 @@ public class Shooter extends SubsystemBase {
         //TODO actually set the motor's voltages
         leaderPIDController.pid.setGoal(setpointVelocity);
         double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
-        leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec, setpointVelocity +leaderPID);
+        double leaderVolts = leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec, setpointVelocity +leaderPID);
+      
 
         hoodPIDController.pid.setGoal(setpointPosition);
         double hoodPID = hoodPIDController.pid.calculate(inputs.actualHoodPosition);
-        hoodFeedForwardController.calculate(hoodPID);
+        double hoodVolts = hoodFeedForwardController.calculate(hoodPID);
+
+        io.setHoodVolts(hoodVolts);
+        io.setLeaderVolts(leaderVolts);
 
       }
     }
