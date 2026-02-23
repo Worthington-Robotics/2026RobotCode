@@ -77,4 +77,34 @@ public class RebuiltUtils {
     }
     return 999; // This should never trigger
   }
+
+  /**
+   * @return The time until the next hub switch
+   */
+  public double timeToAcivationSwitch(){
+    double matchTime = DriverStation.getMatchTime();
+    if(DriverStation.isTeleop()){
+      if(matchTime > 130){
+        return matchTime - 130;
+        
+      }else if (matchTime > 105) {
+        return matchTime - 105;
+
+      } else if (matchTime > 80) {
+        return matchTime - 80;
+        
+      } else if (matchTime > 55) {
+        return matchTime - 55;
+
+      } else if (matchTime > 30) {
+        return matchTime - 30;
+      } else {
+        //This really shouldn't trigger
+        return 999;
+      }
+    }
+    else{
+      return matchTime - 20;
+    }
+  } 
 }
