@@ -38,7 +38,6 @@ public class Turret {
 
 
   public final TurretIO io;
-  //TODO don't use turretIOTalon in turret.java, instead just use io which will be either a Talon or Sim depending on the state
   private TurretIOInputs inputs = new TurretIOInputs();
   private turretControlMode controlMode = turretControlMode.Disabled;
   
@@ -82,5 +81,8 @@ public class Turret {
     return inputs.turretFusedAngle;
   }
 
+  public boolean atGoal(){
+    return io.atSetPoint();
+  }
   
 }

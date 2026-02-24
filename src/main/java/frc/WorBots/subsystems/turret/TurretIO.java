@@ -25,7 +25,6 @@ public interface TurretIO {
 
   public boolean atSetPoint();
   
-  //TODO add a set position method
   //TODO add a method to get if the turret is at setpoint
 
   

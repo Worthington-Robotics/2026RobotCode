@@ -16,11 +16,9 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import frc.WorBots.CanIDs;
 import frc.WorBots.subsystems.turret.Turret.turretControlMode;
-import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.Constants;
 
-import frc.WorBots.subsystems.turret.Turret.turretControlMode;
 
 public class TurretIOTalon implements TurretIO{
     
@@ -36,7 +34,7 @@ public class TurretIOTalon implements TurretIO{
   public static final double MIN_ANGLE = Units.degreesToRadians(-270.0);
   public static final double MAX_ANGLE = Units.degreesToRadians(270.0);
   public static final double MIN_VOLTAGE = 0.0;
-  public static final double MAX_VOLTAGE = 0.0;
+  public static final double MAX_VOLTAGE = 10.0;
     
 
   private final StatusSignal<Angle> turretAbsEncoderSignal;
@@ -64,7 +62,6 @@ public class TurretIOTalon implements TurretIO{
     turretMotorSignal = turretMotor.getPosition();
     motorCurrentSignal = turretMotor.getSupplyCurrent();
         
-    //TODO set update frequency to the frequency of the robot, which is stored in constants 
     turretAbsEncoderSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
     turretRelEncoderSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
     turretMotorSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
@@ -93,68 +90,65 @@ public class TurretIOTalon implements TurretIO{
     }
 
     
-    public void updateInputs(TurretIOInputs inputs){
-      turretMotorSignal.refresh();
-      turretAbsEncoderSignal.refresh();
-      turretRelEncoderSignal.refresh();
-      motorCurrentSignal.refresh();
-      double volts = 0.0;
-
-      if(turretInputs.controlMode == turretControlMode.Voltage){
-        
-        volts = turretInputs.debugVoltage;
-        MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
-        turretMotor.setVoltage(volts);
-      }
-
-      if(turretInputs.controlMode == turretControlMode.Position){
-
-        final double feedback = turretFeedBack.calculate(turretInputs.turretFusedAngle, turretInputs.goalAngle); 
-        final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);  //send feedback to feedforward to get the velocity for feedforward
-
-        volts = feedback + feedforward;
-
-        //TODO tune min and max voltage and make them constants or local constants
-        MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
-        turretMotor.setVoltage(volts);
-        
-        final double relReading = turretRelEncoderSignal.getValue().in(edu.wpi.first.units.Units.Radians);
-            turretInputs.turretRelAngle = relReading;
-
-        final Optional<Double> absReading = Optional.ofNullable(turretAbsEncoderSignal.getValue())
-            .map(
-              reading -> {
-                return MathUtil.angleModulus(
-                  reading.in(edu.wpi.first.units.Units.Radians));
-              }
-            );
-        
-        
-          if(absReading.isPresent()){
-          turretInputs.turretAbsAngle = absReading.get();
-        }
-
-        if (shouldReadAbsEncoder) {
-          if(absReading.isPresent()){
-            fusEncoderOffset = absReading.get() - relReading;
-            shouldReadAbsEncoder = false;
-
-          } else if (absReading.isEmpty()){
-            fusEncoderOffset = 0.0;
-          }
-
+  public void updateInputs(TurretIOInputs inputs){
+        turretMotorSignal.refresh();
+        turretAbsEncoderSignal.refresh();
+        turretRelEncoderSignal.refresh();
+        motorCurrentSignal.refresh();
+        double volts = 0.0;
+  
+        if(turretInputs.controlMode == turretControlMode.Voltage){
           
-   
-          turretInputs.turretFusedAngle = relReading + fusEncoderOffset;
-
-          } 
-
+          volts = turretInputs.debugVoltage;
+          MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
+          turretMotor.setVoltage(volts);
         }
-
+  
+        if(turretInputs.controlMode == turretControlMode.Position){
+  
+          final double feedback = turretFeedBack.calculate(turretInputs.turretFusedAngle, turretInputs.goalAngle); 
+          final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);  //send feedback to feedforward to get the velocity for feedforward
+  
+          volts = feedback + feedforward;
+  
+          MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
+          turretMotor.setVoltage(volts);
+          
+          final double relReading = turretRelEncoderSignal.getValue().in(edu.wpi.first.units.Units.Radians);
+              turretInputs.turretRelAngle = relReading;
+  
+          final Optional<Double> absReading = Optional.ofNullable(turretAbsEncoderSignal.getValue())
+              .map(
+                reading -> {
+                  return MathUtil.angleModulus(
+                    reading.in(edu.wpi.first.units.Units.Radians));
+                }
+              );
+          
+          
+            if(absReading.isPresent()){
+            turretInputs.turretAbsAngle = absReading.get();
+          }
+  
+          if (shouldReadAbsEncoder) {
+            if(absReading.isPresent()){
+              fusEncoderOffset = absReading.get() - relReading;
+              shouldReadAbsEncoder = false;
+  
+            } else if (absReading.isEmpty()){
+              fusEncoderOffset = 0.0;
+            }
+  
+            
+     
+            }          
+            turretInputs.turretFusedAngle = relReading + fusEncoderOffset;
+  
+        }
+  
       
-     turretInputs.absEncoderConnected = turretAbsEncoder.isConnected();
-
-    }
+        turretInputs.absEncoderConnected = turretAbsEncoder.isConnected();
+      }
 
   private double clampSetpoint(double setpoint) {
       return MathUtil.clamp(setpoint, MIN_ANGLE, MAX_ANGLE);
@@ -195,6 +189,7 @@ public class TurretIOTalon implements TurretIO{
  
 
 }
+
 // 1. Make Abs Encoder Optional COMPLETE
 // 2. Finish setPoint Method 
 // 3. Create setVoltage 
