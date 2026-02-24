@@ -7,6 +7,8 @@
 
 package frc.WorBots.util.math;
 
+import org.ejml.equation.IntegerSequence.Range;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -39,6 +41,18 @@ public class AllianceFlipUtil {
     }
   }
 
+  public static Translation2d[] apply(Translation2d[] translation){
+    if (shouldFlip()) {
+      Translation2d[] out = new Translation2d[translation.length];
+      for (int i = 0; i < translation.length; i++){
+        out[i] = applyAgnostic(translation[i]);
+      }
+      return out;
+    } else {
+      return translation;
+    }
+  }
+
   /**
    * Flips a translation to the other side of the field not based on the current alliance color.
    *
@@ -50,6 +64,7 @@ public class AllianceFlipUtil {
         FieldConstants.fieldLength - translation.getX(),
         FieldConstants.fieldWidth - translation.getY());
   }
+
 
   public static Pose2d applyAgnostic(Pose2d pose) {
     return new Pose2d(
