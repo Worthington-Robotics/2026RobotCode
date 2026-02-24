@@ -23,6 +23,9 @@ public class CanIDs {
     public static final int BACK_RIGHT_ENCODER_ID = 12;
   }
 
+  public static final int TURRET_ID = 0;
+  public static final int TURRET_ENCODER_ID = 0;
+  public static final int TURRET_ABS_ENCODER_ID = 0;
   public class SuperStructure{
     public static final int HOOD_ID = 0;
     public static final int LEADER_ID = 1;
