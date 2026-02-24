@@ -16,11 +16,9 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import frc.WorBots.CanIDs;
 import frc.WorBots.subsystems.turret.Turret.turretControlMode;
-import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.Constants;
 
-import frc.WorBots.subsystems.turret.Turret.turretControlMode;
 
 public class TurretIOTalon implements TurretIO{
     
@@ -36,7 +34,7 @@ public class TurretIOTalon implements TurretIO{
   public static final double MIN_ANGLE = Units.degreesToRadians(-270.0);
   public static final double MAX_ANGLE = Units.degreesToRadians(270.0);
   public static final double MIN_VOLTAGE = 0.0;
-  public static final double MAX_VOLTAGE = 0.0;
+  public static final double MAX_VOLTAGE = 10.0;
     
 
   private final StatusSignal<Angle> turretAbsEncoderSignal;
@@ -56,7 +54,6 @@ public class TurretIOTalon implements TurretIO{
 
     turretInputs = new TurretIOInputs();
     turretMotor = new TalonFX(CanIDs.TURRET_ID);
-    //TODO make device ID a constant in the CanIDs file
     turretAbsEncoder = new CANcoder(CanIDs.TURRET_ABS_ENCODER_ID);
 
     turretAbsEncoderSignal = turretAbsEncoder.getAbsolutePosition();
@@ -64,7 +61,6 @@ public class TurretIOTalon implements TurretIO{
     turretMotorSignal = turretMotor.getPosition();
     motorCurrentSignal = turretMotor.getSupplyCurrent();
         
-    //TODO set update frequency to the frequency of the robot, which is stored in constants 
     turretAbsEncoderSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
     turretRelEncoderSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
     turretMotorSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
@@ -114,7 +110,6 @@ public class TurretIOTalon implements TurretIO{
 
         volts = feedback + feedforward;
 
-        //TODO tune min and max voltage and make them constants or local constants
         MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
         turretMotor.setVoltage(volts);
         
@@ -141,10 +136,7 @@ public class TurretIOTalon implements TurretIO{
 
           } else if (absReading.isEmpty()){
             fusEncoderOffset = 0.0;
-          }
-
-          
-          //TODO remove angle modulus because the turret can turn more the 360 degrees and rotation beyond that point is significant
+          }          
           turretInputs.turretFusedAngle = relReading + fusEncoderOffset;
 
           } 
@@ -178,7 +170,6 @@ public class TurretIOTalon implements TurretIO{
   }
 
   public boolean atSetPoint() {
-    //TODO move all interactions with pid to turretIOTalon
     return turretFeedBack.atGoal();
   }
 
