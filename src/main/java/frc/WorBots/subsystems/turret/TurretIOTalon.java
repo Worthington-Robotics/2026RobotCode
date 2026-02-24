@@ -56,7 +56,7 @@ public class TurretIOTalon implements TurretIO{
 
     turretInputs = new TurretIOInputs();
     turretMotor = new TalonFX(CanIDs.TURRET_ID);
-    //TODO make device ID a constant in the CanIDs file
+
     turretAbsEncoder = new CANcoder(CanIDs.TURRET_ABS_ENCODER_ID);
 
     turretAbsEncoderSignal = turretAbsEncoder.getAbsolutePosition();
@@ -144,7 +144,7 @@ public class TurretIOTalon implements TurretIO{
           }
 
           
-          //TODO remove angle modulus because the turret can turn more the 360 degrees and rotation beyond that point is significant
+   
           turretInputs.turretFusedAngle = relReading + fusEncoderOffset;
 
           } 
@@ -168,7 +168,6 @@ public class TurretIOTalon implements TurretIO{
     }
 
     if (positionRads != setpointPosition) {
-      //TODO command the pid in turretIOTalon
       turretFeedBack.setGoal(positionRads);
     }
    
@@ -178,7 +177,6 @@ public class TurretIOTalon implements TurretIO{
   }
 
   public boolean atSetPoint() {
-    //TODO move all interactions with pid to turretIOTalon
     return turretFeedBack.atGoal();
   }
 
