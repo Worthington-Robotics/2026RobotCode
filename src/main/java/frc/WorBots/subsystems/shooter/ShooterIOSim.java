@@ -6,10 +6,10 @@ import frc.WorBots.Constants;
 
 public class ShooterIOSim implements ShooterIO {
   //TODO: Update these values in accordance to the actual robot.
-  public SingleJointedArmSim hood = 
-    new SingleJointedArmSim(null, 0, 0, 0, 0, 0, false, 0, null);
-  public FlywheelSim flyLeader =
-    new FlywheelSim(null, null, null);
+  //public SingleJointedArmSim hood = 
+  //  new SingleJointedArmSim(null, 0, 0, 0, 0, 0, false, 0, null);
+  //public FlywheelSim flyLeader =
+  //  new FlywheelSim(null, null, null);
 
   //Empty constructor   
   public ShooterIOSim(){}
@@ -18,24 +18,24 @@ public class ShooterIOSim implements ShooterIO {
   public void updateInputs(ShooterIOInputs inputs){
     inputs.isConnected = true;
 
-    hood.update(Constants.ROBOT_PERIOD);
-    flyLeader.update(Constants.ROBOT_PERIOD);
+    //hood.update(Constants.ROBOT_PERIOD);
+    //flyLeader.update(Constants.ROBOT_PERIOD);
 
-    inputs.actualLeaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
-    inputs.actualHoodPosition = hood.getAngleRads();
+    //inputs.actualLeaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
+    //inputs.actualHoodPosition = hood.getAngleRads();
         
-    inputs.leaderCurrent = flyLeader.getCurrentDrawAmps();
-    inputs.hoodCurrent = hood.getCurrentDrawAmps();
+    //inputs.leaderCurrent = flyLeader.getCurrentDrawAmps();
+    //inputs.hoodCurrent = hood.getCurrentDrawAmps();
     }
 
     @Override
     public void setLeaderVolts(double volts){
-      flyLeader.setInputVoltage(volts);
+      //flyLeader.setInputVoltage(volts);
     }
 
     @Override
     public void setHoodVolts(double volts){
-      hood.setInputVoltage(volts);
+      //hood.setInputVoltage(volts);
     }
 
     
