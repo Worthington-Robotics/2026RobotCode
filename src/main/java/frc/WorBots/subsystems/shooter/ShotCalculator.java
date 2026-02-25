@@ -159,8 +159,8 @@ public class ShotCalculator {
     if (GeomUtil.translation2dInBoundingBox(turretPose, AllianceFlipUtil.apply(FieldConstants.allianceZone))) {
       return new ShootingParams(false, new Rotation2d(), 0, 0);
     }
-    if (pose.getY() < FieldConstants.hubPosition.getY()){
-      targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), FieldConstants.passTarget.getY()+ (FieldConstants.fieldWidth / 2)));
+    if (pose.getY() > AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && !AllianceFlipUtil.shouldFlip() || pose.getY() < AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && AllianceFlipUtil.shouldFlip()){
+      targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), (FieldConstants.fieldWidth - FieldConstants.passTarget.getY())));
     } else {
       targetPose = AllianceFlipUtil.apply(FieldConstants.passTarget);
     }
