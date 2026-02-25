@@ -59,10 +59,6 @@ public class TurretIOTalon implements TurretIO{
         
     //TODO use hardware utils to do this
     turretMotor.setNeutralMode(NeutralModeValue.Brake);
-
-
-    //TODO figure out how to implement the right time to wrap around 
-
   }
 
 

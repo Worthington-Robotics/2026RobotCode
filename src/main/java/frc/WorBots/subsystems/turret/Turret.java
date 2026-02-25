@@ -1,5 +1,7 @@
 package frc.WorBots.subsystems.turret;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -15,7 +17,7 @@ import frc.WorBots.Constants;
 import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
 
 public class Turret {
-
+  //TODO figure out how to implement the right time to wrap around 
 
   private final NetworkTable turret = NetworkTableInstance.getDefault().getTable("Turret");
   private final BooleanPublisher absConnectedPub =
@@ -36,9 +38,6 @@ public class Turret {
      turret.getDoubleTopic("DebugVoltage").publish();
   private final DoublePublisher positionPub =
      turret.getDoubleTopic("Position").publish();
-  
-
-
 
   public final TurretIO io;
 
@@ -56,11 +55,11 @@ public class Turret {
   }
 
   private double debugVoltage = 0;
-  private double setpointPosition = 0;
+  private double goalPosition = 0;
 
-
-  public static final double MIN_ANGLE = Units.degreesToRadians(-270.0);
-  public static final double MAX_ANGLE = Units.degreesToRadians(270.0);
+  //TODO move these
+  public static final double MIN_ANGLE = Units.degreesToRadians(-260.0);
+  public static final double MAX_ANGLE = Units.degreesToRadians(260.0);
   public static final double MIN_VOLTAGE = 0.0;
   public static final double MAX_VOLTAGE = 10.0;
 
@@ -82,12 +81,43 @@ public class Turret {
       io.setVoltage(debugVoltage);
     }
     if(controlMode == turretControlMode.Position){
-      //TODO add logic to stop turret from going out of bounds while still taking the best path
-      /*Probably will need a true heading (-270 to 270) and a relative heading
-      relative heading can be used to calculate fastest path, while true heading can be used to check if a adjustment is needed
-      This upgrade should also probably include softlimiting velocity as 270 is approached just in case, though limits should probably be closer to 260 to prevent damage*/
+
+      //Bounding logic starts here
+
+      ArrayList<Double> dThetas = new ArrayList<>();
+      //Calculates the adjustment for each of the three paths we can take
+      double dTheta = goalPosition - inputs.turretAbsAngle;
+      double dTheta2 = dTheta + Units.degreesToRadians(360);
+      double dTheta3 = dTheta + Units.degreesToRadians(-360);
+      dThetas.add(dTheta);
+      dThetas.add(dTheta2);
+      dThetas.add(dTheta3);
+
+      //Removes any paths that take us beyond our limits
+      for(int i = 0; i < dThetas.size(); i++){
+        double endPos = inputs.turretAbsAngle + dThetas.get(i);
+        if(endPos > Units.degreesToRadians(MAX_ANGLE) || endPos < MIN_ANGLE){
+          dThetas.remove(i);
+          i--;
+        }
+      }
+
+      //finds the shortest path
+      double shortestPathLength = Double.MAX_VALUE;
+      double shortestPath = 0;
+
+      for(double i : dThetas){
+        if(Math.abs(i) < shortestPathLength){
+          shortestPath = i; 
+          shortestPathLength = Math.abs(i);
+        }
+      }
+
+      goalPosition = inputs.turretAbsAngle + shortestPath;
       
-      final double feedback = turretFeedBack.calculate(inputs.turretFusedAngle, setpointPosition);
+      //End of bounding logic
+
+      final double feedback = turretFeedBack.calculate(inputs.turretAbsAngle, goalPosition);
       final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);
 
       double volts = feedback + feedforward;
@@ -101,7 +131,7 @@ public class Turret {
     relAnglePub.set(inputs.turretRelAngle);
     fusedAnglePub.set(inputs.turretFusedAngle);
     shouldReadAbsEncoderPub.set(inputs.shouldReadAbsEncoder);
-    controlModePub.set(inputs.controlMode.toString());
+    controlModePub.set(controlMode.toString());
     atsetpointPub.set(atGoal());
     debugVoltagePub.set(debugVoltage);
     positionPub.set(getPosition());
@@ -130,11 +160,11 @@ public class Turret {
       turretFeedBack.reset(inputs.turretFusedAngle);
     }
 
-    if (positionRads != setpointPosition) {
+    if (positionRads != goalPosition) {
       turretFeedBack.setGoal(positionRads);
     }
    
-    setpointPosition = positionRads;
+    goalPosition = positionRads;
     controlMode = turretControlMode.Position;
   }
 

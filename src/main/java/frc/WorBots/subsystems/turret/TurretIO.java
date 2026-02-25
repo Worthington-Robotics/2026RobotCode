@@ -1,7 +1,5 @@
 package frc.WorBots.subsystems.turret;
 
-import frc.WorBots.subsystems.turret.Turret.turretControlMode;
-
 public interface TurretIO {
 
     public class TurretIOInputs{
@@ -11,9 +9,6 @@ public interface TurretIO {
       public double goalAngle;
       public boolean absEncoderConnected = false;
       public boolean shouldReadAbsEncoder = false;
-
-      turretControlMode controlMode = turretControlMode.Disabled; 
-
     }
 
   public void setVoltage(double volts);
