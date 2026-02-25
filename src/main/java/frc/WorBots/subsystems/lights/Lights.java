@@ -227,9 +227,9 @@ public class Lights extends SubsystemBase {
 
           break;
         case timePulse:
-          final double minBrightness = 0.3;
+          final double minBrightness = 0.4;
           final double totalTime = 5.0;
-          LightUtils.dopplerEffect(strip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToHubActive(), 1);
+          LightUtils.dopplerEffect(strip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
 
           break;
         case none:

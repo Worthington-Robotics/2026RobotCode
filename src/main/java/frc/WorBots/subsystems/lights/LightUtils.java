@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.WorBots.util.MatchTime;
 import frc.WorBots.util.cache.Cache.AllianceCache;
@@ -159,8 +160,10 @@ public class LightUtils {
    */
   public static void dopplerEffect(LightsIO io, Color color, double minBrightness, double totalTime, double timeUntilEvent, double scale){
     double brightnessScale = 1 - minBrightness;
-    double brightnessMod = brightnessScale * Math.abs(Math.sin(scale * (totalTime - timeUntilEvent) * (totalTime -timeUntilEvent)));
-    LightUtils.solid(io, color, minBrightness + brightnessMod);
+    double brightnessMod = brightnessScale * Math.abs(TrigLookup.cos(scale * (totalTime - timeUntilEvent) * (totalTime - timeUntilEvent)));
+    double brightness = minBrightness + brightnessMod;
+    Color newColor = new Color(color.red * brightness, color.green * brightness, color.blue * brightness);
+    LightUtils.solid(io, newColor);
   }
 
   /**
