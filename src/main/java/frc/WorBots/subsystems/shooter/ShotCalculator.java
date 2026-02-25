@@ -151,7 +151,6 @@ public class ShotCalculator {
    * @param Pose          The robot's position
    * @param robotVelocity The robot's velocity
    */
-  //TODO finish fixing get pass params
   public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity) {
     boolean isValid = true;
     Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
