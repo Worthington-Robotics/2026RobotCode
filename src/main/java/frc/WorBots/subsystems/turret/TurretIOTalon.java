@@ -23,19 +23,10 @@ import frc.WorBots.Constants;
 public class TurretIOTalon implements TurretIO{
     
 
-    //electronics
+  //   //electronics
   private TalonFX turretMotor;
   private CANcoder turretAbsEncoder; 
-  private TurretIOInputs turretInputs;
-  private double fusEncoderOffset;
-  private boolean shouldReadAbsEncoder = true;
-  private double setpointPosition;
-  turretControlMode controlMode = turretControlMode.Disabled;
-  public static final double MIN_ANGLE = Units.degreesToRadians(-270.0);
-  public static final double MAX_ANGLE = Units.degreesToRadians(270.0);
-  public static final double MIN_VOLTAGE = 0.0;
-  public static final double MAX_VOLTAGE = 10.0;
-    
+  private TurretIOInputs inputs;
 
   private final StatusSignal<Angle> turretAbsEncoderSignal;
   private final StatusSignal<Angle> turretRelEncoderSignal;
@@ -44,15 +35,12 @@ public class TurretIOTalon implements TurretIO{
   private final StatusSignal<Current> motorCurrentSignal;
   private final TalonSignalsPositional motorSignal;
 
-
-  public final SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0.0, 0.0);
-  public  ProfiledPIDController turretFeedBack = new ProfiledPIDController(2, 0, 0,
-    new TrapezoidProfile.Constraints(0.0, 0.0));
-
+  private double fusEncoderOffset;
+  private boolean shouldReadAbsEncoder = true;
 
   public TurretIOTalon(){
 
-    turretInputs = new TurretIOInputs();
+    inputs = new TurretIOInputs();
     turretMotor = new TalonFX(CanIDs.TURRET_ID);
 
     turretAbsEncoder = new CANcoder(CanIDs.TURRET_ABS_ENCODER_ID);
@@ -75,120 +63,57 @@ public class TurretIOTalon implements TurretIO{
 
     //TODO figure out how to implement the right time to wrap around 
 
-    }
+  }
 
 
     
-    public void setVoltage(double volts) {
-      turretInputs.controlMode = turretControlMode.Voltage;
-      turretInputs.debugVoltage = volts;
-      
-    }
+  public void setVoltage(double volts) {
+    turretMotor.setVoltage(volts);
+  }
 
-    public void resetZero(TurretIOInputs inputs, double position) {
-      fusEncoderOffset += position - turretInputs.turretFusedAngle;
-    }
+  //TODO figure out how we're implementing this
+  //public void resetZero(TurretIOInputs inputs, double position) {
+  //   fusEncoderOffset += position - turretInputs.turretFusedAngle;
+  //}
 
     
   public void updateInputs(TurretIOInputs inputs){
-        turretMotorSignal.refresh();
-        turretAbsEncoderSignal.refresh();
-        turretRelEncoderSignal.refresh();
-        motorCurrentSignal.refresh();
-        double volts = 0.0;
+    turretMotorSignal.refresh();
+    turretAbsEncoderSignal.refresh();
+    turretRelEncoderSignal.refresh();
+    motorCurrentSignal.refresh();
+        
+    final double relReading = turretRelEncoderSignal.getValue().in(edu.wpi.first.units.Units.Radians);
+    inputs.turretRelAngle = relReading;
   
-        if(turretInputs.controlMode == turretControlMode.Voltage){
-          
-          volts = turretInputs.debugVoltage;
-          MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
-          turretMotor.setVoltage(volts);
+    final Optional<Double> absReading = Optional.ofNullable(turretAbsEncoderSignal.getValue())
+      .map(
+        reading -> {
+          return MathUtil.angleModulus(
+            reading.in(edu.wpi.first.units.Units.Radians));
         }
+      );
+      
+    //TODO take a look at this
+    if(absReading.isPresent()){
+      inputs.turretAbsAngle = absReading.get();
+    }
   
-        if(turretInputs.controlMode == turretControlMode.Position){
+    if (shouldReadAbsEncoder) {
+        if(absReading.isPresent()){
+            fusEncoderOffset = absReading.get() - relReading;
+            shouldReadAbsEncoder = false;
   
-          final double feedback = turretFeedBack.calculate(turretInputs.turretFusedAngle, turretInputs.goalAngle); 
-          final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);  //send feedback to feedforward to get the velocity for feedforward
-  
-          volts = feedback + feedforward;
-  
-          MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
-          turretMotor.setVoltage(volts);
-          
-          final double relReading = turretRelEncoderSignal.getValue().in(edu.wpi.first.units.Units.Radians);
-              turretInputs.turretRelAngle = relReading;
-  
-          final Optional<Double> absReading = Optional.ofNullable(turretAbsEncoderSignal.getValue())
-              .map(
-                reading -> {
-                  return MathUtil.angleModulus(
-                    reading.in(edu.wpi.first.units.Units.Radians));
-                }
-              );
-          
-          
-            if(absReading.isPresent()){
-            turretInputs.turretAbsAngle = absReading.get();
-          }
-  
-          if (shouldReadAbsEncoder) {
-            if(absReading.isPresent()){
-              fusEncoderOffset = absReading.get() - relReading;
-              shouldReadAbsEncoder = false;
-  
-            } else if (absReading.isEmpty()){
-              fusEncoderOffset = 0.0;
-            }
-  
-            
-     
-            }          
-            turretInputs.turretFusedAngle = relReading + fusEncoderOffset;
-  
+        } else if (absReading.isEmpty()){
+            fusEncoderOffset = 0.0;
         }
-  
-      
-        turretInputs.absEncoderConnected = turretAbsEncoder.isConnected();
-      }
+    } 
 
-  private double clampSetpoint(double setpoint) {
-      return MathUtil.clamp(setpoint, MIN_ANGLE, MAX_ANGLE);
+    inputs.turretFusedAngle = relReading + fusEncoderOffset; 
+    inputs.absEncoderConnected = turretAbsEncoder.isConnected();
   }
+} 
 
-  public void setPosition(double positionRads){
-   
-    positionRads = clampSetpoint(positionRads);
-    if (controlMode != controlMode.Position) {
-      turretFeedBack.reset(turretInputs.turretFusedAngle);
-    }
-
-    if (positionRads != setpointPosition) {
-      turretFeedBack.setGoal(positionRads);
-    }
-   
-    setpointPosition = positionRads;
-    controlMode = turretControlMode.Position;
-      
-  }
-
-  public boolean atSetPoint() {
-    return turretFeedBack.atGoal();
-  }
-
-         
-
-
-    
-  
-
-      
-      
-    
-
-
-  
- 
-
-}
 
 // 1. Make Abs Encoder Optional COMPLETE
 // 2. Finish setPoint Method 

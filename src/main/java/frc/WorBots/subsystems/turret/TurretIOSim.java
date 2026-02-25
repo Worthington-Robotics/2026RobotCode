@@ -21,18 +21,5 @@ public class TurretIOSim implements TurretIO {
     throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
   }
 
-  @Override
-  public void setPosition(double positionRads) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setPosition'");
-  }
-
-
-  @Override
-  public boolean atSetPoint() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'atSetPoint'");
-  }
-
     //TODO add turretIOSim
 }

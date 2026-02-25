@@ -9,7 +9,6 @@ public interface TurretIO {
       public double turretRelAngle;
       public double turretFusedAngle;
       public double goalAngle;
-      public double debugVoltage; 
       public boolean absEncoderConnected = false;
       public boolean shouldReadAbsEncoder = false;
 
@@ -21,13 +20,5 @@ public interface TurretIO {
 
   public void updateInputs(TurretIOInputs inputs);
 
-  public void setPosition(double positionRads);
-
-  public boolean atSetPoint();
-  
-  //TODO add a method to get if the turret is at setpoint
-
-  
-
-
+  //public void resetZero(){}
 }

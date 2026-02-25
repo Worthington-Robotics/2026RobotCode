@@ -1,6 +1,9 @@
 package frc.WorBots.subsystems.turret;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -38,16 +41,28 @@ public class Turret {
 
 
   public final TurretIO io;
+
   private TurretIOInputs inputs = new TurretIOInputs();
   private turretControlMode controlMode = turretControlMode.Disabled;
   
-  
+  private final SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0.0, 0.0);
+  private  ProfiledPIDController turretFeedBack = new ProfiledPIDController(2, 0, 0,
+    new TrapezoidProfile.Constraints(0.0, 0.0));
 
   public enum turretControlMode {
     Disabled,
     Position,
     Voltage;
   }
+
+  private double debugVoltage = 0;
+  private double setpointPosition = 0;
+
+
+  public static final double MIN_ANGLE = Units.degreesToRadians(-270.0);
+  public static final double MAX_ANGLE = Units.degreesToRadians(270.0);
+  public static final double MIN_VOLTAGE = 0.0;
+  public static final double MAX_VOLTAGE = 10.0;
 
   public Turret(TurretIO io) {
     this.io = io;
@@ -59,7 +74,22 @@ public class Turret {
 
   public void periodic() {
     io.updateInputs(inputs);
-    //TODO update voltage in periodic instead of updateInputs
+    if(controlMode == turretControlMode.Disabled){
+      io.setVoltage(0);
+    }
+    if(controlMode == turretControlMode.Voltage){
+      debugVoltage = MathUtil.clamp(debugVoltage, MIN_VOLTAGE, MAX_ANGLE);
+      io.setVoltage(debugVoltage);
+    }
+    if(controlMode == turretControlMode.Position){
+      final double feedback = turretFeedBack.calculate(inputs.turretFusedAngle, setpointPosition);
+      final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);
+
+      double volts = feedback + feedforward;
+
+      MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
+      io.setVoltage(volts);
+    }
 
     absConnectedPub.set(inputs.absEncoderConnected);
     absAnglePub.set(inputs.turretAbsAngle);
@@ -67,9 +97,13 @@ public class Turret {
     fusedAnglePub.set(inputs.turretFusedAngle);
     shouldReadAbsEncoderPub.set(inputs.shouldReadAbsEncoder);
     controlModePub.set(inputs.controlMode.toString());
-    atsetpointPub.set(io.atSetPoint());
-    debugVoltagePub.set(inputs.debugVoltage);
+    atsetpointPub.set(atGoal());
+    debugVoltagePub.set(debugVoltage);
     positionPub.set(getPosition());
+  }
+
+  private double clampSetpoint(double setpoint) {
+     return MathUtil.clamp(setpoint, MIN_ANGLE, MAX_ANGLE);
   }
 
 
@@ -82,7 +116,28 @@ public class Turret {
   }
 
   public boolean atGoal(){
-    return io.atSetPoint();
+    return turretFeedBack.atGoal();
+  }
+
+  public void setPosition(double positionRads){
+    positionRads = clampSetpoint(positionRads);
+    if (controlMode != controlMode.Position) {
+      turretFeedBack.reset(inputs.turretFusedAngle);
+    }
+
+    if (positionRads != setpointPosition) {
+      turretFeedBack.setGoal(positionRads);
+    }
+   
+    setpointPosition = positionRads;
+    controlMode = turretControlMode.Position;
+  }
+
+  public void setVoltage(double volts){
+    debugVoltage = volts;
+    if(controlMode != turretControlMode.Voltage){
+      controlMode = turretControlMode.Voltage;
+    }
   }
   
 }
