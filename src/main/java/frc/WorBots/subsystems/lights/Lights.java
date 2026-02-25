@@ -160,8 +160,6 @@ public class Lights extends SubsystemBase {
 
             LightUtils.solid(strip, solidColor);
 
-            SmartDashboard.putNumber("Time until activation", rebuiltUtils.timeToAcivationSwitch());
-
             if(rebuiltUtils.timeToAcivationSwitch() < 5){
               runEffect(LightEffects.timePulse);
             }
