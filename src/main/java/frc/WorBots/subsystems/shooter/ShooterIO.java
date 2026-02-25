@@ -7,8 +7,7 @@ public interface ShooterIO {
 //a
     public static class ShooterIOInputs{
       boolean isConnected = false;
-      double leaderCurrent;
-      double hoodCurrent;
+      
       
       public final TalonInputsPositional leader = 
         new TalonInputsPositional("Shooter", "Flywheel Leader");

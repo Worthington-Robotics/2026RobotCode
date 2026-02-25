@@ -76,8 +76,6 @@ public class Shooter extends SubsystemBase {
           leaderPIDController.setConstraints(0, 0);
           hoodPIDController.setGains(0.0, 0.0, 0.0);
           hoodPIDController.setConstraints(0.0, 0.0);
-
-
         }
     }  
 
@@ -118,7 +116,6 @@ public class Shooter extends SubsystemBase {
 
         io.setHoodVolts(hoodVolts);
         io.setLeaderVolts(leaderVolts);
-
       }
     }
 
@@ -156,7 +153,7 @@ public class Shooter extends SubsystemBase {
      * @return true/false.
      */
     public boolean getIsDesiredHoodPosition(){
-      return setpointPosition == inputs.actualHoodPosition;
+      return hoodPIDController.pid.atGoal();
     }
 
     /***
@@ -164,7 +161,7 @@ public class Shooter extends SubsystemBase {
      * @return true/false. 
      */
     public boolean getIsDesiredLeaderVelocity(){
-      return setpointVelocity == inputs.actualLeaderVelocityRadPerSec;
+      return leaderPIDController.pid.atGoal();
     }
 
     /***
@@ -191,8 +188,7 @@ public class Shooter extends SubsystemBase {
     public void setHoodPose(double pose){
       setpointPosition = pose;
     }
-
-      }
+}
 
 
 

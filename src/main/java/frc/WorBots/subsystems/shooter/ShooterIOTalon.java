@@ -79,9 +79,6 @@ public class ShooterIOTalon implements ShooterIO {
     //TODO these return position in rotations and velocity as rps
     inputs.actualHoodPosition = Units.rotationsToRadians(hood.getPosition().getValueAsDouble());
     inputs.actualLeaderVelocityRadPerSec = leader.getVelocity().getValueAsDouble() * 2 * Math.PI;
-    
-    inputs.hoodCurrent = hood.getSupplyCurrent().getValueAsDouble();
-    inputs.leaderCurrent = leader.getSupplyCurrent().getValueAsDouble();
   }
 
 
