@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
+import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
 
 public class Turret extends SubsystemBase{
@@ -178,6 +179,24 @@ public class Turret extends SubsystemBase{
   }
 
   /**
+   * Sets the position of the turret
+   * @param params The shooting params to get turret angle from
+   * @param robotPose The position of the robot
+   */
+  public void setPosition(ShootingParams params, Pose2d robotPose){
+    setFieldRelativePosition(params.turretAngle(), robotPose.getRotation());
+  }
+
+  /**
+   * Sets the position of the turret
+   * @param params The shooting params to get the turret angle from
+   * @param robotAngle The angle of the robot
+   */
+  public void setPosition(ShootingParams params, Rotation2d robotAngle){
+    setFieldRelativePosition(params.turretAngle(), robotAngle);
+  }
+
+  /**
    * Sets the position of the turret.
    * @param position The field relative angle to set the turret to 
    * @param robotAngle The robot's angle
@@ -228,4 +247,5 @@ public class Turret extends SubsystemBase{
   public void setPositionMinDistFromZeroFieldRel(Rotation2d position, Pose2d robotPose){
     goalPosition = MathUtil.angleModulus(position.getRadians()-robotPose.getRotation().getRadians());
   }
+
 }
