@@ -15,5 +15,7 @@ public interface TurretIO {
 
   public void updateInputs(TurretIOInputs inputs);
 
+  public void resetOffset();
+
   //public void resetZero(){}
 }

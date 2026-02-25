@@ -21,5 +21,9 @@ public class TurretIOSim implements TurretIO {
     throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
   }
 
+  public void resetOffset(){
+    //TODO make this
+  }
+
     //TODO add turretIOSim
 }
