@@ -7,12 +7,13 @@ import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.shooter.Shooter;
 import frc.WorBots.subsystems.shooter.ShotCalculator;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
+import frc.WorBots.subsystems.turret.Turret;
 import frc.WorBots.util.math.AllianceFlipUtil;
 
 /** A command to aim and prepare shots automatically */
 public class ShooterAuto extends Command {
   private final Shooter shooter;
-  //TODO add turret to this code
+  private final Turret turret;
   private final Drive drive;
   private ShotCalculator shotCalculator = new ShotCalculator();
 
@@ -20,13 +21,15 @@ public class ShooterAuto extends Command {
 
   /** A command to aim and prepare shots automatically
    * @param shooter The shooter to use
+   * @param turret The turret to use
    * @param drive The robot's drivetrain, used for fetching pose.
    */
-  public ShooterAuto(Shooter shooter, Drive drive){
+  public ShooterAuto(Shooter shooter, Turret turret, Drive drive){
     addRequirements(shooter);
+    addRequirements(turret);
+    this.turret = turret;
     this.shooter = shooter;
     this.drive = drive;
-    //TODO add turret here
   }
 
   @Override
@@ -40,7 +43,7 @@ public class ShooterAuto extends Command {
     }
     if(params.isValid()){
       shooter.setShooterParams(params);
-      //TODO set turret
+      turret.setPosition(params, pose);
     }
     }
 }
