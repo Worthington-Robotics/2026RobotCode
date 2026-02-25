@@ -90,7 +90,7 @@ public class TurretIOTalon implements TurretIO {
         shouldSetEncoderOffset = false;
 
       } else if (absReading.isEmpty()) {
-        fusEncoderOffset = 0.0;
+        fusEncoderOffset = 0.0; //Make this not reset offset instead of setting it to 0 
       }
     }
 
@@ -109,3 +109,5 @@ public class TurretIOTalon implements TurretIO {
 // 4. Create resetZero
 // 5. Create getPosition
 // 6. Create boolean atSetPoint
+
+// 
