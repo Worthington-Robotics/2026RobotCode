@@ -82,6 +82,11 @@ public class Turret {
       io.setVoltage(debugVoltage);
     }
     if(controlMode == turretControlMode.Position){
+      //TODO add logic to stop turret from going out of bounds while still taking the best path
+      /*Probably will need a true heading (-270 to 270) and a relative heading
+      relative heading can be used to calculate fastest path, while true heading can be used to check if a adjustment is needed
+      This upgrade should also probably include softlimiting velocity as 270 is approached just in case, though limits should probably be closer to 260 to prevent damage*/
+      
       final double feedback = turretFeedBack.calculate(inputs.turretFusedAngle, setpointPosition);
       final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);
 
