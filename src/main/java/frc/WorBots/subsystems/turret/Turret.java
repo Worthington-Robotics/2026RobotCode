@@ -169,15 +169,63 @@ public class Turret extends SubsystemBase{
     }
   }
 
+  /**
+   * Sets the position of the turret.
+   * @param position The position to set the turret to 
+   */
   public void setPosition(Rotation2d position){
     setPosition(position.getRadians());
   }
 
+  /**
+   * Sets the position of the turret.
+   * @param position The field relative angle to set the turret to 
+   * @param robotAngle The robot's angle
+   */
   public void setFieldRelativePosition(Rotation2d position, Rotation2d robotAngle){
     setPosition(position.getRadians() - robotAngle.getRadians());
   }
 
+  /**
+   * Sets the position of the turret
+   * @param position The field relative angle to set the turret to 
+   * @param robotPose The robot's position
+   */
   public void setFieldRelativePosition(Rotation2d position, Pose2d robotPose){
     setPosition(position.getRadians() - robotPose.getRotation().getRadians());
+  }
+
+  /**
+   * Sets the position of the turret, minimizing the distance the turret is from 0 
+   * @param position The position to set the turret to
+   */
+  public void setPositionMinDistFromZero(double position){
+    goalPosition = position;
+  }
+
+  /**
+   * Sets the position of the turret, minimizing the distance the turret is from 0 
+   * @param position The position to set the turret to
+   */
+   public void setPositionMinDistFromZero(Rotation2d position){
+    goalPosition = position.getRadians();
+  }
+
+  /**
+   * Sets the position of the turret, minimizing the distance the turret is from 0 
+   * @param position The position to set the turret to
+   * @param robotAngle The angle of the robot
+   */
+  public void setPositionMinDistFromZeroFieldRel(Rotation2d position, Rotation2d robotAngle){
+    goalPosition = MathUtil.angleModulus(position.getRadians()-robotAngle.getRadians());
+  }
+
+  /**
+   * Sets the position of the turret, minimizing the distance the turret is from 0 
+   * @param position The position to set the turret to
+   * @param robotPose The position of the robot
+   */
+  public void setPositionMinDistFromZeroFieldRel(Rotation2d position, Pose2d robotPose){
+    goalPosition = MathUtil.angleModulus(position.getRadians()-robotPose.getRotation().getRadians());
   }
 }
