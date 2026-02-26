@@ -26,11 +26,10 @@ public class CanIDs {
   public class SuperStructure{
     //Spindexer
     public static final int SPINDEXER_ID = 0;
-  }
-  public static final int TURRET_ID = 0;
-  public static final int TURRET_ENCODER_ID = 0;
-  public static final int TURRET_ABS_ENCODER_ID = 0;
-  public class SuperStructure{
+
+    public static final int TURRET_ID = 0;
+    public static final int TURRET_ENCODER_ID = 0;
+    public static final int TURRET_ABS_ENCODER_ID = 0;
     public static final int HOOD_ID = 0;
     public static final int LEADER_ID = 1;
     public static final int FOLLOWER_ID = 2;
@@ -39,7 +38,8 @@ public class CanIDs {
     public static final int EXTENDING_MOTOR_ID = 3;
     public static final int INTAKE_MOTOR_ID = 4;
     public static final int TOF_ID = 5;
+  }
 
-  }  
+
   
 }
