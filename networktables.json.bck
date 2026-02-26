@@ -1,0 +1,26 @@
+[
+  {
+    "name": "/SmartDashboard/Auto Selector",
+    "type": "string",
+    "value": "Select Autonomous ...",
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/SmartDashboard/Auto Selector/active",
+    "type": "string",
+    "value": "None",
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/SmartDashboard/DB/Button 0",
+    "type": "boolean",
+    "value": false,
+    "properties": {
+      "persistent": true
+    }
+  }
+]
