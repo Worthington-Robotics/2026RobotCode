@@ -7,7 +7,11 @@ package frc.WorBots;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.WorBots.commands.ClimberTestCommands;
 import frc.WorBots.commands.DriveWithJoysticks;
+import frc.WorBots.subsystems.climber.Climber;
+import frc.WorBots.subsystems.climber.ClimberIOSim;
+import frc.WorBots.subsystems.climber.ClimberIOTalon;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.drive.GyroIOPigeon2;
 import frc.WorBots.subsystems.drive.GyroIOSim;
@@ -18,6 +22,7 @@ import frc.WorBots.util.control.DriveController;
 public class RobotContainer {
   //Subsystems
   public final Drive drive;
+  public final Climber climber;
 
   //Joysticks
   public final CommandXboxController driver = new CommandXboxController(0);
@@ -35,6 +40,7 @@ public class RobotContainer {
         new ModuleIOTalon(1), 
         new ModuleIOTalon(2), 
         new ModuleIOTalon(3));
+      climber = new Climber(new ClimberIOTalon());
     } else {
       drive = new Drive(
         new GyroIOSim(), 
@@ -42,6 +48,7 @@ public class RobotContainer {
         new ModuleIOSim(1), 
         new ModuleIOSim(2), 
         new ModuleIOSim(3));
+      climber = new Climber(new ClimberIOSim());
     }
 
     configureBindings();
@@ -51,6 +58,10 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
+
+    driver.a().onTrue(new ClimberTestCommands().climb(climber));
+
+    driver.b().whileTrue(new ClimberTestCommands().voltClimb(climber, 10));
   }
 
   public Command getAutonomousCommand() {
