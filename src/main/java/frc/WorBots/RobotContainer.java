@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.DriveWithJoysticks;
+import frc.WorBots.commands.ShooterCommands;
 import frc.WorBots.commands.ShooterTest;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.drive.GyroIOPigeon2;
@@ -29,6 +30,7 @@ import frc.WorBots.subsystems.drive.ModuleIOTalon;
 import frc.WorBots.subsystems.shooter.Shooter;
 import frc.WorBots.subsystems.shooter.ShooterIOSim;
 import frc.WorBots.subsystems.shooter.ShooterIOTalon;
+import frc.WorBots.subsystems.shooter.ShotCalculator;
 import frc.WorBots.util.control.DriveController;
 
 public class RobotContainer {
@@ -102,6 +104,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
+
+    driver.a().onTrue(new ShooterCommands().setHoodPose(shooter, Math.PI));
+    driver.b().onTrue(new ShooterCommands().setFlyWheel(shooter, 10));
   }
 
   public Command getAutonomousCommand() {

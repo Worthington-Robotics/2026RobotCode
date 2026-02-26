@@ -13,6 +13,18 @@ public class ShooterCommands {
       shooter.resetHoodPosition();
     });
   }
+
+  public Command setHoodPose(Shooter shooter, double hoodPose){
+    return shooter.runOnce(() -> {
+      shooter.setHoodPose(hoodPose);
+    });
+  }
+
+  public Command setFlyWheel(Shooter shooter, double speed){
+    return shooter.runOnce(() -> {
+      shooter.setFlywheelSpeed(speed);
+    });
+  }
   
   //TODO: Create more commands. 
 

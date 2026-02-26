@@ -72,10 +72,10 @@ public class Shooter extends SubsystemBase {
         }
         //When in Sim
         else{
-          leaderPIDController.setGains(0, 0, 0);
-          leaderPIDController.setConstraints(0, 0);
-          hoodPIDController.setGains(0.0, 0.0, 0.0);
-          hoodPIDController.setConstraints(0.0, 0.0);
+          leaderPIDController.setGains(1, 0, 0);
+          leaderPIDController.setConstraints(5, 5);
+          hoodPIDController.setGains(1.0, 0.0, 0.0);
+          hoodPIDController.setConstraints(5.0, 5.0);
         }
     }  
 
@@ -100,7 +100,7 @@ public class Shooter extends SubsystemBase {
       shooterSpeedDesiredPub.set(setpointVelocity);
 
     
-      if ( controlMode == ControlMode.Disabled){
+      if (controlMode == ControlMode.Disabled){
         io.setHoodVolts(0);
         io.setLeaderVolts(0);
       }
@@ -169,6 +169,7 @@ public class Shooter extends SubsystemBase {
      * @param params
      */
     public void setShooterParams(ShootingParams params){
+      controlMode = ControlMode.Voltage;
       setFlywheelSpeed(params.flywheelspeed());
       setHoodPose(params.hoodAngle());
     }
@@ -178,6 +179,7 @@ public class Shooter extends SubsystemBase {
      * @param speed The speed to set the flywheel to; in m/second
      */
     public void setFlywheelSpeed(double speed){
+      controlMode = ControlMode.Voltage;
       setpointVelocity = speed;
     }
 
@@ -186,6 +188,7 @@ public class Shooter extends SubsystemBase {
      * @param pose The position to set the hood to
      */
     public void setHoodPose(double pose){
+      controlMode = ControlMode.Voltage;
       setpointPosition = pose;
     }
 }

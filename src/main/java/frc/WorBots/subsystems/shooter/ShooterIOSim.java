@@ -17,12 +17,18 @@ public class ShooterIOSim implements ShooterIO {
   //Empty constructor   
   public ShooterIOSim(){}
 
+  double flyVolts = 0;
+  double hoodVolts = 0;
+
   @Override
   public void updateInputs(ShooterIOInputs inputs){
     inputs.isConnected = true;
 
     hood.update(Constants.ROBOT_PERIOD);
     flyLeader.update(Constants.ROBOT_PERIOD);
+
+    flyLeader.setInputVoltage(flyVolts);
+    hood.setInputVoltage(hoodVolts);
 
     inputs.actualLeaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
     inputs.actualHoodPosition = hood.getAngleRads();
@@ -31,12 +37,15 @@ public class ShooterIOSim implements ShooterIO {
 
     @Override
     public void setLeaderVolts(double volts){
-      flyLeader.setInputVoltage(volts);
+      flyVolts = volts;
+
+      //TODO Figure out why this is recieving a constant input of zero
+      System.out.println(volts);
     }
 
     @Override
     public void setHoodVolts(double volts){
-      hood.setInputVoltage(volts);
+      hoodVolts = volts;
     }
 
     
