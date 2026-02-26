@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase {
   private final DoublePublisher setpointExtendingPub = intakeTable.getDoubleTopic("Extending Setpoint Volts").publish();
   private final DoublePublisher currentDrawIntakePub = intakeTable.getDoubleTopic("Intake Current Draw").publish();
   private final DoublePublisher currentDrawExtendingPub = intakeTable.getDoubleTopic("Extending Current Draw")
-      .publish(null);
+      .publish();
 
   public Intake(IntakeIO io) {
     this.io = io;

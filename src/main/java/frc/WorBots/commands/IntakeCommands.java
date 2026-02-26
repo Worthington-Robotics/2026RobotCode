@@ -34,8 +34,7 @@ public class IntakeCommands {
 
   /***
    * Command to retract the intake, works by supplying voltage to the extending
-   * motor in the
-   * opposite direction
+   * motor in the opposite direction.
    * 
    * @param extend
    * @return
