@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
@@ -38,14 +39,16 @@ public class Turret extends SubsystemBase{
      turret.getDoubleTopic("DebugVoltage").publish();
   private final DoublePublisher positionPub =
      turret.getDoubleTopic("Position").publish();
+  private final DoublePublisher goalPosePub = 
+      turret.getDoubleTopic("Goal Position").publish();
 
   public final TurretIO io;
 
   private TurretIOInputs inputs = new TurretIOInputs();
   private turretControlMode controlMode = turretControlMode.Disabled;
   
-  private final SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0.0, 1.0);
-  private  ProfiledPIDController turretFeedBack = new ProfiledPIDController(2, 0, 0,
+  private final SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0.0, 4.0);
+  private  ProfiledPIDController turretFeedBack = new ProfiledPIDController(10, 0, 0,
     new TrapezoidProfile.Constraints(Math.PI , 2 * Math.PI));
 
   public enum turretControlMode {
@@ -62,6 +65,7 @@ public class Turret extends SubsystemBase{
   public static final double MAX_ANGLE = Units.degreesToRadians(260.0);
   public static final double MIN_VOLTAGE = -10.0;
   public static final double MAX_VOLTAGE = 10.0;
+  public static final double TURRET_STOP_TOLERANCE = Units.degreesToRadians(1);
 
   public Turret(TurretIO io) {
     this.io = io;
@@ -98,6 +102,7 @@ public class Turret extends SubsystemBase{
     atsetpointPub.set(atGoal());
     debugVoltagePub.set(debugVoltage);
     positionPub.set(getPosition());
+    goalPosePub.set(goalPosition);
   }
 
   private double clampSetpoint(double setpoint) {
@@ -114,11 +119,11 @@ public class Turret extends SubsystemBase{
   }
 
   public boolean atGoal(){
-    return turretFeedBack.atGoal();
+    return Math.abs(turretFeedBack.getGoal().position - inputs.turretFusedAngle) < TURRET_STOP_TOLERANCE;
   }
 
   public void setPosition(double positionRads){
-    positionRads = clampSetpoint(positionRads);
+    positionRads = MathUtil.angleModulus(positionRads);
     if (controlMode != controlMode.Position) {
       turretFeedBack.reset(inputs.turretFusedAngle);
     }
@@ -196,7 +201,7 @@ public class Turret extends SubsystemBase{
    * @param robotAngle The robot's angle
    */
   public void setFieldRelativePosition(Rotation2d position, Rotation2d robotAngle){
-    setPosition(position.getRadians() - robotAngle.getRadians());
+    setPosition(position.getRadians() - MathUtil.angleModulus(robotAngle.getRadians()));
   }
 
   /**
@@ -205,7 +210,7 @@ public class Turret extends SubsystemBase{
    * @param robotPose The robot's position
    */
   public void setFieldRelativePosition(Rotation2d position, Pose2d robotPose){
-    setPosition(position.getRadians() - robotPose.getRotation().getRadians());
+    setPosition(position.getRadians() - MathUtil.angleModulus(robotPose.getRotation().getRadians()));
   }
 
   /**

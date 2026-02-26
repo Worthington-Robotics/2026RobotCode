@@ -109,8 +109,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
-    shooter.setDefaultCommand(new ShooterTest(shooter, drive));
-    turret.setDefaultCommand(new TurretTest(turret));
+    shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
   }
 
   public Command getAutonomousCommand() {
