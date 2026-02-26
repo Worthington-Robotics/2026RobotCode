@@ -10,7 +10,6 @@ public class ClimberIOTalon implements ClimberIO {
 
   public ClimberIOTalon() {
     climbMotorSignals = new TalonSignalsPositional(climbMotor);
-    // TODO add gains
 
   }
 
