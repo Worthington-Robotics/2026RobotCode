@@ -30,8 +30,6 @@ public class Turret extends SubsystemBase{
      turret.getDoubleTopic("RelAngle").publish();
   private final DoublePublisher fusedAnglePub =
      turret.getDoubleTopic("FusedAngle").publish();
-  private final BooleanPublisher shouldReadAbsEncoderPub =
-     turret.getBooleanTopic("ShouldReadAbsEncoder").publish();
   private final StringPublisher controlModePub =
      turret.getStringTopic("ControlMode").publish();
   private final BooleanPublisher atsetpointPub =
@@ -46,9 +44,9 @@ public class Turret extends SubsystemBase{
   private TurretIOInputs inputs = new TurretIOInputs();
   private turretControlMode controlMode = turretControlMode.Disabled;
   
-  private final SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0.0, 0.0);
+  private final SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0.0, 1.0);
   private  ProfiledPIDController turretFeedBack = new ProfiledPIDController(2, 0, 0,
-    new TrapezoidProfile.Constraints(0.0, 0.0));
+    new TrapezoidProfile.Constraints(Math.PI , 2 * Math.PI));
 
   public enum turretControlMode {
     Disabled,
@@ -83,7 +81,7 @@ public class Turret extends SubsystemBase{
       io.setVoltage(debugVoltage);
     }
     if(controlMode == turretControlMode.Position){
-      final double feedback = turretFeedBack.calculate(inputs.turretAbsAngle, goalPosition);
+      final double feedback = turretFeedBack.calculate(inputs.turretFusedAngle, goalPosition);
       final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);
 
       double volts = feedback + feedforward;
@@ -96,7 +94,6 @@ public class Turret extends SubsystemBase{
     absAnglePub.set(inputs.turretAbsAngle);
     relAnglePub.set(inputs.turretRelAngle);
     fusedAnglePub.set(inputs.turretFusedAngle);
-    shouldReadAbsEncoderPub.set(inputs.shouldReadAbsEncoder);
     controlModePub.set(controlMode.toString());
     atsetpointPub.set(atGoal());
     debugVoltagePub.set(debugVoltage);
@@ -138,7 +135,7 @@ public class Turret extends SubsystemBase{
       //Removes any paths that take us beyond our limits
       for(int i = 0; i < dThetas.size(); i++){
         double endPos = inputs.turretFusedAngle + dThetas.get(i);
-        if(endPos > Units.degreesToRadians(MAX_ANGLE) || endPos < MIN_ANGLE){
+        if(endPos > MAX_ANGLE || endPos < MIN_ANGLE){
           dThetas.remove(i);
           i--;
         }
@@ -146,7 +143,7 @@ public class Turret extends SubsystemBase{
 
       //finds the shortest path
       double shortestPathLength = Double.MAX_VALUE;
-      double shortestPath = 0;
+      double shortestPath = 999;
 
       for(double i : dThetas){
         if(Math.abs(i) < shortestPathLength){
@@ -154,7 +151,6 @@ public class Turret extends SubsystemBase{
           shortestPathLength = Math.abs(i);
         }
       }
-
     goalPosition = inputs.turretFusedAngle + shortestPath;
     turretFeedBack.setGoal(goalPosition);
    

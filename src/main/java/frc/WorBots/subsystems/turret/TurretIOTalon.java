@@ -102,12 +102,3 @@ public class TurretIOTalon implements TurretIO {
     return inputs;
   }
 }
-
-// 1. Make Abs Encoder Optional COMPLETE
-// 2. Finish setPoint Method
-// 3. Create setVoltage
-// 4. Create resetZero
-// 5. Create getPosition
-// 6. Create boolean atSetPoint
-
-// 

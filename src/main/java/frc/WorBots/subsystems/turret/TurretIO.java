@@ -8,7 +8,6 @@ public interface TurretIO {
       public double turretFusedAngle;
       public double goalAngle;
       public boolean absEncoderConnected = false;
-      public boolean shouldReadAbsEncoder = false;
     }
 
   public void setVoltage(double volts);
