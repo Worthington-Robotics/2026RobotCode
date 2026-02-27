@@ -116,12 +116,7 @@ public class RobotContainer {
   private void configureBindings() {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
-        drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
-
-    driver.a().onTrue(new ClimberTestCommands().climb(climber));
-
-    driver.b().whileTrue(new ClimberTestCommands().voltClimb(climber, 10));
-    shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
+        drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), () -> driver.rightTrigger().getAsBoolean()));
   }
 
   public Command getAutonomousCommand() {

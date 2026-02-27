@@ -27,6 +27,8 @@ public class Constants {
   public static final double ROBOT_MOI = 4.7089; //Kg * m^2
   
   //Drive Constants
+  public static final double DRIVE_MULTIPLIER = 1.0;
+  public static final double DRIVE_SLOW_MULTIPLIER = DRIVE_MULTIPLIER * 0.75;
   public static final double DRIVE_MULTIPLIER = 1;
   public static final double DRIVE_CURRENT_LIMIT = 40;
   public static final double DRIVE_GEAR_RATIO = 6.02;
