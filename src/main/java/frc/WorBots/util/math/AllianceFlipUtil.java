@@ -7,9 +7,12 @@
 
 package frc.WorBots.util.math;
 
+import org.ejml.equation.IntegerSequence.Range;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -38,6 +41,18 @@ public class AllianceFlipUtil {
     }
   }
 
+  public static Translation2d[] apply(Translation2d[] translation){
+    if (shouldFlip()) {
+      Translation2d[] out = new Translation2d[translation.length];
+      for (int i = 0; i < translation.length; i++){
+        out[i] = applyAgnostic(translation[i]);
+      }
+      return out;
+    } else {
+      return translation;
+    }
+  }
+
   /**
    * Flips a translation to the other side of the field not based on the current alliance color.
    *
@@ -49,6 +64,7 @@ public class AllianceFlipUtil {
         FieldConstants.fieldLength - translation.getX(),
         FieldConstants.fieldWidth - translation.getY());
   }
+
 
   public static Pose2d applyAgnostic(Pose2d pose) {
     return new Pose2d(
@@ -180,6 +196,23 @@ public class AllianceFlipUtil {
    */
   public static Pose2d flipY(Pose2d pose) {
     return new Pose2d(pose.getX(), FieldConstants.fieldWidth - pose.getY(), pose.getRotation());
+  }
+
+  /**
+   * Flips Field Relative Chasis Speeds to alliance relative chasis speeds
+   * @param speeds The field relative chasis speed
+   * @return The alliance relative chasis speed
+   */
+  public static ChassisSpeeds flipSpeeds(ChassisSpeeds speeds){
+    if(shouldFlip()){
+      ChassisSpeeds output = new ChassisSpeeds();
+      output.vxMetersPerSecond = -speeds.vxMetersPerSecond;
+      output.vyMetersPerSecond = - speeds.vyMetersPerSecond;
+      output.omegaRadiansPerSecond = -speeds.omegaRadiansPerSecond;
+      return output;
+    } else{
+      return speeds;
+    }
   }
 
   /** Gets whether alliance-relative x-values should be flipped, for the red side */
