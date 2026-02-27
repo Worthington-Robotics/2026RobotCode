@@ -11,7 +11,6 @@ import frc.WorBots.Constants;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.math.GeneralMath;
-import frc.WorBots.util.math.GeomUtil;
 
 public class ModuleIOSim implements ModuleIO {
   private ModuleIOInputs inputs;
