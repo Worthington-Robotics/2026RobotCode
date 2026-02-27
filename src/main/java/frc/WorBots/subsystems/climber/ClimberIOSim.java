@@ -3,10 +3,7 @@ package frc.WorBots.subsystems.climber;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import frc.WorBots.Constants;
-import frc.WorBots.subsystems.climber.ClimberIO.ClimberIOInputs;
 
 public class ClimberIOSim implements ClimberIO {
   

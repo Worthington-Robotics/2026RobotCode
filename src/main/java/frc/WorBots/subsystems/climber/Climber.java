@@ -2,13 +2,9 @@ package frc.WorBots.subsystems.climber;
 
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.climber.ClimberIO.ClimberIOInputs;
-import frc.WorBots.util.HardwareUtils.TalonInputsPositional;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
@@ -19,11 +15,6 @@ public class Climber extends SubsystemBase {
   private Rotation2d setpointPosition;
 
   ClimberControlMode controlMode = ClimberControlMode.Disabled;
-
-  private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
-  private static final String TABLE_NAME = "Climber";
-  private final NetworkTable climbTable = instance.getTable(TABLE_NAME);
-
   public enum ClimberControlMode {
     Voltage,
     Position,
