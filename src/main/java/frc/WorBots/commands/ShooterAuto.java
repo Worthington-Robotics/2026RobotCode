@@ -43,7 +43,7 @@ public class ShooterAuto extends Command {
     }
     if(params.isValid()){
       shooter.setShooterParams(params);
-      turret.setPosition(params, pose);
+      turret.setPositionAndVelocity(params, pose);
     }
     }
 }

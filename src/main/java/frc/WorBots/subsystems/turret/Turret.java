@@ -122,7 +122,12 @@ public class Turret extends SubsystemBase{
     return Math.abs(turretFeedBack.getGoal().position - inputs.turretFusedAngle) < TURRET_STOP_TOLERANCE;
   }
 
-  public void setPosition(double positionRads){
+  /**
+   * Optimizes a setpoint to minimize turret movement
+   * @param positionRads The position to optimize
+   * @return The optimized setpoint
+   */
+  public double optimizeSetpoint(double positionRads){
     positionRads = MathUtil.angleModulus(positionRads);
     if (controlMode != controlMode.Position) {
       turretFeedBack.reset(inputs.turretFusedAngle);
@@ -156,10 +161,13 @@ public class Turret extends SubsystemBase{
           shortestPathLength = Math.abs(i);
         }
       }
-    goalPosition = inputs.turretFusedAngle + shortestPath;
-    turretFeedBack.setGoal(goalPosition);
-   
-    controlMode = turretControlMode.Position;
+      goalPosition = inputs.turretFusedAngle + shortestPath;
+      controlMode = turretControlMode.Position;
+      return goalPosition;
+  }
+
+  public void setPosition(double positionRads){
+    turretFeedBack.setGoal(optimizeSetpoint(positionRads));
   }
 
   public void setVoltage(double volts){
@@ -177,6 +185,7 @@ public class Turret extends SubsystemBase{
     setPosition(position.getRadians());
   }
 
+
   /**
    * Sets the position of the turret
    * @param params The shooting params to get turret angle from
@@ -184,6 +193,26 @@ public class Turret extends SubsystemBase{
    */
   public void setPosition(ShootingParams params, Pose2d robotPose){
     setFieldRelativePosition(params.turretAngle(), robotPose.getRotation());
+  }
+
+  /**
+   * Sets the goal position and velocity of the turret
+   * @param position The goal position
+   * @param velocity The goal velocity
+   * @param robotAngle The current angle of the robot
+   * @implNote Field relative by default
+   */
+  public void setPositionAndVelocity(Rotation2d position, double velocity, Rotation2d robotAngle){
+    turretFeedBack.setGoal(new TrapezoidProfile.State(optimizeSetpoint(position.getRadians()- MathUtil.angleModulus(robotAngle.getRadians())), velocity));
+  }
+  //TODO new code; test
+  /**
+   * Sets the goal position and velocity of the turret
+   * @param params The params containing goal position and velocity
+   * @param robotPose The current position of the robot
+   */
+  public void setPositionAndVelocity(ShootingParams params, Pose2d robotPose){
+    setPositionAndVelocity(params.turretAngle(), params.turretVelocity(), robotPose.getRotation());
   }
 
   /**

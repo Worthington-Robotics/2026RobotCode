@@ -48,7 +48,8 @@ public class ShooterTest extends Command {
       SmartDashboard.putBoolean("Pass valid", params.isValid());
     }
     if(params.isValid()){
-      turret.setPosition(params, pose);
+      turret.setPositionAndVelocity(params, pose);
+      SmartDashboard.putNumber("Turret Velocity", params.turretVelocity());
       SmartDashboard.putNumber("Turret Angle", params.turretAngle().getDegrees());
       //Calculate the final position of the shot
       double time = 2*params.flywheelspeed() * Math.sin(params.hoodAngle()) / 9.8;
@@ -58,7 +59,7 @@ public class ShooterTest extends Command {
       field.setRobotPose(new Pose2d(pose.getX()+xVelocity*time, pose.getY()+yVelocity*time, new Rotation2d()));
     } else {
       //field.setRobotPose(new Pose2d());
-      field.setRobotPose(AllianceFlipUtil.apply( new Pose2d(FieldConstants.passTarget.getX(), FieldConstants.passTarget.getY()+(.5* FieldConstants.fieldLength), new Rotation2d())));
+      field.getObject("Predicted Impact Site").setPose(AllianceFlipUtil.apply( new Pose2d(FieldConstants.passTarget.getX(), FieldConstants.passTarget.getY()+(.5* FieldConstants.fieldLength), new Rotation2d())));
     }
     SmartDashboard.putNumberArray("TurretPose", new double[] {pose.getX(),pose.getY(),turret.getPosition()+ pose.getRotation().getRadians()});
 
