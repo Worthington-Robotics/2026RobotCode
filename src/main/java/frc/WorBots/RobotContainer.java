@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.WorBots.commands.ClimberTestCommands;
 import frc.WorBots.commands.DriveWithJoysticks;
+import frc.WorBots.commands.ShooterAuto;
 import frc.WorBots.subsystems.climber.Climber;
 import frc.WorBots.subsystems.climber.ClimberIOSim;
 import frc.WorBots.subsystems.climber.ClimberIOTalon;
@@ -117,6 +118,11 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), () -> driver.rightTrigger().getAsBoolean()));
+    if(Constants.getSim()){
+      shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
+    } else {
+      shooter.setDefaultCommand(new ShooterAuto(shooter, turret, drive));
+    }
   }
 
   public Command getAutonomousCommand() {
