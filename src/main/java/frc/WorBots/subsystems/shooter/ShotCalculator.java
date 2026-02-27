@@ -37,6 +37,7 @@ public class ShotCalculator {
   public record ShootingParams(
       boolean isValid,
       Rotation2d turretAngle,
+      double turretVelocity,
       double hoodAngle,
       double flywheelspeed) {
   }
@@ -151,16 +152,15 @@ public class ShotCalculator {
    * @param Pose          The robot's position
    * @param robotVelocity The robot's velocity
    */
-  //TODO finish fixing get pass params
   public ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity) {
     boolean isValid = true;
     Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
     Translation2d targetPose;
     if (GeomUtil.translation2dInBoundingBox(turretPose, AllianceFlipUtil.apply(FieldConstants.allianceZone))) {
-      return new ShootingParams(false, new Rotation2d(), 0, 0);
+      return new ShootingParams(false, new Rotation2d(), 0, 0, 0);
     }
-    if (pose.getY() < FieldConstants.hubPosition.getY()){
-      targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), FieldConstants.passTarget.getY()+ (FieldConstants.fieldWidth / 2)));
+    if (pose.getY() > AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && !AllianceFlipUtil.shouldFlip() || pose.getY() < AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && AllianceFlipUtil.shouldFlip()){
+      targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), (FieldConstants.fieldWidth - FieldConstants.passTarget.getY())));
     } else {
       targetPose = AllianceFlipUtil.apply(FieldConstants.passTarget);
     }
@@ -220,6 +220,12 @@ public class ShotCalculator {
           turretPosition.getRotation());
       lookaheadTurretToTargetDistance = target.getDistance(lookAheadPose.getTranslation());
     }
+    //Calculate turret velocity
+    double dx = target.getX() - turretPosition.getX();
+    double dy = target.getY() - turretPosition.getY();
+    double vx = turretVelocityX;
+    double vy = turretVelocityY;
+    double turretSpeed = (dx * vy - dy * vx) / (dx * dx + dy * dy);
   
     // Calculate params
     turretAngle = target.minus(lookAheadPose.getTranslation()).getAngle();
@@ -227,6 +233,7 @@ public class ShotCalculator {
     latestParams = new ShootingParams(lookaheadTurretToTargetDistance >= minDistance
         && lookaheadTurretToTargetDistance <= maxDistance && isValid,
         turretAngle,
+        turretSpeed,
         hoodAngle,
         flywheelSpeedMap.get(lookaheadTurretToTargetDistance));
     return latestParams;

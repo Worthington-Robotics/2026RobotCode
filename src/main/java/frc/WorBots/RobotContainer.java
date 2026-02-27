@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.DriveWithJoysticks;
 import frc.WorBots.commands.ShooterTest;
+import frc.WorBots.commands.TurretTest;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.drive.GyroIOPigeon2;
 import frc.WorBots.subsystems.drive.GyroIOSim;
@@ -29,12 +30,16 @@ import frc.WorBots.subsystems.drive.ModuleIOTalon;
 import frc.WorBots.subsystems.shooter.Shooter;
 import frc.WorBots.subsystems.shooter.ShooterIOSim;
 import frc.WorBots.subsystems.shooter.ShooterIOTalon;
+import frc.WorBots.subsystems.turret.Turret;
+import frc.WorBots.subsystems.turret.TurretIOSim;
+import frc.WorBots.subsystems.turret.TurretIOTalon;
 import frc.WorBots.util.control.DriveController;
 
 public class RobotContainer {
   //Subsystems
   public final Drive drive;
   public final Shooter shooter;
+  public final Turret turret; 
 
   //Joysticks
   public final CommandXboxController driver = new CommandXboxController(0);
@@ -61,6 +66,7 @@ public class RobotContainer {
         new ModuleIOTalon(2), 
         new ModuleIOTalon(3));
         shooter = new Shooter(new ShooterIOTalon());
+        turret = new Turret(new TurretIOTalon());
     } else {
       drive = new Drive(
         new GyroIOSim(), 
@@ -69,6 +75,7 @@ public class RobotContainer {
         new ModuleIOSim(2), 
         new ModuleIOSim(3));
       shooter = new Shooter(new ShooterIOSim()); //TODO make shooterIOSim work
+      turret = new Turret(new TurretIOSim());
     }
 
     AutoBuilder.configure(
@@ -102,6 +109,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
+    shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
   }
 
   public Command getAutonomousCommand() {
