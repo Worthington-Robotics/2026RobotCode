@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.WorBots.Constants;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -449,5 +450,64 @@ public class GeomUtil {
     final double x = dot(source, target) / norm;
     final double y = dot(source, target.rotateBy(Rotation2d.kCW_90deg)) / norm;
     return new Translation2d(x, y);
+  }
+
+  /*** Checks if three points are in counterclockwise order. Used for determining if lines intersect. */
+  private static boolean ccw(Translation2d A, Translation2d B, Translation2d C){
+    return (C.getY()-A.getY())*(B.getX()-A.getX()) > (B.getY()-A.getY())*(C.getX()-A.getX());
+  }
+  
+  /*** 
+   * Checks if two lines intersect
+   * @param line1 The two endpoints of the first
+   * @param line2 The two endpoints of the second line
+   * @return Whether the two lines intersect
+   * @implNote Does not support collinearity 
+   */
+  public static boolean doLinesIntersect(Translation2d[] line1, Translation2d[] line2 ){
+    return (ccw(line1[0],line2[0],line2[1]) != ccw(line1[1],line2[0],line2[1])) && (ccw(line1[0],line1[1],line2[0]) != ccw(line1[0],line1[1],line2[1]));
+  }
+  
+  /*** 
+   * Checks if a line segment passes through an area.
+   * @param line A two item Translation2d array containing the two endpoints of the line segment to test.
+   * @param bounds A two item Translation2d array containing the bounding points of the area.
+   * @return Whether the line passes through the area.
+   */
+  public static boolean doesLinePassThroughArea(Translation2d[] line, Translation2d[] bounds){
+    Translation2d[] testLine1 = {new Translation2d(bounds[0].getX(), bounds[0].getY()), new Translation2d(bounds[1].getX(), bounds[1].getY())};
+    Translation2d[] testLine2 = {new Translation2d(bounds[1].getX(), bounds[0].getY()), new Translation2d(bounds[0].getX(), bounds[1].getY())}; 
+    return doLinesIntersect(line, testLine1) ||
+    doLinesIntersect(line, testLine2) ||
+    translation2dInBoundingBox(line[0], bounds) ||
+    translation2dInBoundingBox(line[1], bounds);
+  }
+
+  /**
+   * Checks if a line segment passes through a polygon.
+   * @param line A two item Translation2d array containing the two endpoints of the line segment to test.
+   * @param vertices A Translation2d array containing the cordinates of each vertice of the polygon in sequential order. The order can be CW or CCW.
+   * @return Wether the line passes through the polygon
+   */
+  public static boolean doesLinePassThroughPolygon(Translation2d[] line, Translation2d[] vertices){
+    boolean output = false;
+    if (vertices.length < 3) {
+      throw new InvalidParameterException(
+          "Provided Vertices are insufficent to form a polygon");
+    }
+    if (line.length < 2) {
+      throw new InvalidParameterException(
+          "A insufficient number of endpoints has been provided to create the line segment, please ensure you are providing both endpoints");
+    }
+    //Checks all but first to last edge
+    for(int i = 0; i < vertices.length - 1; i++){
+      if(doLinesIntersect(line, new Translation2d[] {vertices[i], vertices[i + 1]})){
+        output = true;
+      }
+    }
+    if(!output && doLinesIntersect(line, new Translation2d[]{vertices[0], vertices[vertices.length - 1]})){
+      output = true;
+    }
+    return output;
   }
 }

@@ -2,6 +2,9 @@ package frc.WorBots.subsystems.drive;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix6.sim.ChassisReference;
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -84,9 +87,6 @@ public class Drive extends SubsystemBase{
       modules[1] = new Module(frModule, 1);
       modules[2] = new Module(blModule, 2);
       modules[3] = new Module(brModule, 3);
-
-      //TODO remove when we acually have autos to set a real start pose
-      poseEstimator.resetPose(new Pose2d(15, 5, new Rotation2d(Units.degreesToRadians(180))));
   }
 
   public void periodic(){
@@ -153,12 +153,7 @@ public class Drive extends SubsystemBase{
   }
 
   private Translation2d[] getModuleTranslations(){
-    return new Translation2d[] {
-      new Translation2d(Constants.ROBOT_WHEELBASE / 2, Constants.ROBOT_WHEELBASE / 2),
-      new Translation2d(Constants.ROBOT_WHEELBASE / 2, -Constants.ROBOT_WHEELBASE / 2),
-      new Translation2d(-Constants.ROBOT_WHEELBASE / 2, Constants.ROBOT_WHEELBASE / 2),
-      new Translation2d(-Constants.ROBOT_WHEELBASE / 2, -Constants.ROBOT_WHEELBASE / 2)
-    };
+    return Constants.DRIVE_MODULE_OFFSETS;
   }
 
   /**
@@ -215,6 +210,13 @@ public class Drive extends SubsystemBase{
    */
   public Rotation2d getYawVelocity(){
     return new Rotation2d(gyroIOInputs.yawVelocityRadPerSec);
+  }
+
+  /**
+   * Returns the robot relative velocity, mostly for pathPlanner
+   */
+  public ChassisSpeeds getRobotRelativeSpeeds(){
+    return ChassisSpeeds.fromFieldRelativeSpeeds(filter.calculate(), getYaw());
   }
 
   /**
@@ -302,6 +304,14 @@ public class Drive extends SubsystemBase{
   }
 
   /**
+   * sets the robots pose and rotation
+   * @return
+   */
+  public void resetPose(Pose2d pose){
+    poseEstimator.resetPose(pose);
+  }
+
+  /**
    * Returns the robots rotation according to the pose estimator
    */
   public Rotation2d getRotation(){
@@ -313,5 +323,12 @@ public class Drive extends SubsystemBase{
    */
   public Pose2d getPose(){
     return poseEstimator.getLatestPose();
+  }
+
+  /**
+   * Returns the robot's measured speeds
+   */
+  public ChassisSpeeds getMeasuredSpeeds(){
+    return measuredSpeeds;
   }
 }
