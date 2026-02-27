@@ -54,6 +54,6 @@ public class SpindexerIOTalon implements SpindexerIO{
 
   //TODO implement
   private boolean isJammed(){
-    return false;
+    return talon.getStatorCurrent().getValueAsDouble() >= talon.getMotorStallCurrent().getValueAsDouble();
   }
 }
