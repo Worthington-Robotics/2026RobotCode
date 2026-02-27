@@ -29,7 +29,6 @@ public class Constants {
   //Drive Constants
   public static final double DRIVE_MULTIPLIER = 1.0;
   public static final double DRIVE_SLOW_MULTIPLIER = DRIVE_MULTIPLIER * 0.75;
-  public static final double DRIVE_MULTIPLIER = 1;
   public static final double DRIVE_CURRENT_LIMIT = 40;
   public static final double DRIVE_GEAR_RATIO = 6.02;
   public static final double TURN_GEAR_RATIO = 287.0 / 11.0;
