@@ -5,6 +5,8 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
+//TODO make some tool to standize the time data from DriverStation.getMatchTime() across all conditions
+
 public class RebuiltUtils {
   public RebuiltUtils() {
   }
