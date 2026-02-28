@@ -99,8 +99,9 @@ public class Constants {
   public class ClimberConstants{
     public static final double MAX_ROTATIONAL_VELOCITY = 1;
     public static final double MAX_ROTATIONAL_ACCELERATION = 2;
-    public static final Rotation2d READY_CLIMBER_POSITION = new Rotation2d();
-    public static final Rotation2d CLIMB_POSITION = new Rotation2d();
+    //TODO invert the motor
+    public static final double READY_CLIMBER_POSITION = -470;
+    public static final double CLIMB_POSITION = -931.019;
   }
 
   /**Trajectory Constants*/
