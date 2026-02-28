@@ -222,7 +222,7 @@ public class Shooter extends SubsystemBase {
     /**
      * Gets if the current commanded shot is valid
      */
-    public boolean getShotValid(){
+    public boolean isShotValid(){
       return shotValid;
     }
 
@@ -235,9 +235,9 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Returns if the shooter is ready to shoot
+     * Returns if the shooter is ready to shoot and the shot is valid
      */
     public boolean readyToShoot(){
-      return hoodInPosition() && flywheelAtSpeed();
+      return hoodInPosition() && flywheelAtSpeed() && isShotValid();
     }
 }

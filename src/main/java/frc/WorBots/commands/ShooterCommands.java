@@ -30,7 +30,7 @@ public class ShooterCommands {
 
   public Command feedShooter(Spindexer spin, Shooter shooter, Turret turret){
     return spin.runEnd(() -> {
-      if(shooter.getShotValid() && turret.atGoal() && shooter.readyToShoot()){
+      if(turret.atGoal() && shooter.readyToShoot()){
         spin.runSpindexer();
       } else {
         spin.stopSpindexer();
