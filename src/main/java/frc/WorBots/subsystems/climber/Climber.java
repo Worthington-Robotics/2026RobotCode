@@ -34,7 +34,6 @@ public class Climber extends SubsystemBase {
       io.setMotorVolts(0);
     } else {
       if (controlMode == ClimberControlMode.Position) {
-        System.out.println("Climber pose running");
         climberController.pid.setGoal(setpointPosition.getRadians());
         final double feedback = climberController.pid.calculate(inputs.motor.positionRads);
         final double out = climberFeedforward.calculate(feedback);

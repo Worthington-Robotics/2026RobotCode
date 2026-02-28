@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.util.MatchTime;
 import frc.WorBots.util.OdometryThread;
+import frc.WorBots.util.cache.Cache.TimeCache;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
   public void realRobotPeriodic() {
     CommandScheduler.getInstance().run();
     Lights.getInstance().periodic();
+    TimeCache.getInstance().update();
   }
 
   @Override
@@ -51,6 +53,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     MatchTime.getInstance().startAuto();
+    TimeCache.getInstance().update();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {

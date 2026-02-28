@@ -65,7 +65,7 @@ public class Lights extends SubsystemBase {
     private Optional<Boolean> sysFault = Optional.empty();
 
     /**Has a spindexer jam been detected */
-    private Optional<Boolean> spinJammed = Optional.empty();
+    private Optional<Boolean> spinJammed = Optional.of(true);
 
 
     //Mode specific varriables
@@ -150,12 +150,14 @@ public class Lights extends SubsystemBase {
             //Display turret status, yellow for aiming, green for hub lock, purple for passing
             if(turretAtGoal.isPresent() && turretAtGoal.get() == true){
               if(currentTarget == Target.Hub){
-                solidColor = Color.kGreen;
+                Color deepGreen = new Color(0, 255, 10);
+                solidColor = deepGreen;
               } else {
                 solidColor = Color.kPurple;
               } 
             } else {
-              solidColor = Color.kGold;
+              Color orangeYellow = new Color(255, 100, 0);
+              solidColor = orangeYellow;
             }
 
             LightUtils.solid(strip, solidColor);
@@ -167,13 +169,15 @@ public class Lights extends SubsystemBase {
             break;
           case Climbing:
             //Displays blue light when climb is active to remind the drivers to chill
-            solidColor = Color.kCadetBlue;
+            Color deepBlue = new Color(0, 0, 255);
             LightUtils.solid(strip, solidColor);
+            solidColor = deepBlue;
 
             break;
           case SpinJam:
             //Displays orange light when Spindexer jam is detetcted
-            LightUtils.blink(strip, Color.kOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
+            Color trueOrange = new Color(255, 25, 0);
+            LightUtils.blink(strip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case SysFault:
@@ -225,7 +229,7 @@ public class Lights extends SubsystemBase {
 
           break;
         case timePulse:
-          final double minBrightness = 0.4;
+          final double minBrightness = 0.1;
           final double totalTime = 5.0;
           LightUtils.dopplerEffect(strip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
 
@@ -265,17 +269,11 @@ public class Lights extends SubsystemBase {
   }
 
   /**
-   * Tells the lights the robot has started climbing
+   * Tells the lights if the robot is climbing
+   * @param status if the robot is climbing
    */
-  public void startClimb(){
+  public void setClimb(boolean status){
     this.climbing = true;
-  }
-
-  /**
-   * Tells the lights the climb has been aborted
-   */
-  public void stopClimb(){
-    this.climbing = false;
   }
 
   /**
