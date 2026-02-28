@@ -100,8 +100,8 @@ public class Constants {
     public static final double MAX_ROTATIONAL_VELOCITY = 1;
     public static final double MAX_ROTATIONAL_ACCELERATION = 2;
     //TODO invert the motor
-    public static final double READY_CLIMBER_POSITION = -470;
-    public static final double CLIMB_POSITION = -931.019;
+    public static final double READY_CLIMBER_POSITION = Units.rotationsToRadians(470);
+    public static final double CLIMB_POSITION = Units.rotationsToRadians(931.019);
   }
 
   /**Trajectory Constants*/

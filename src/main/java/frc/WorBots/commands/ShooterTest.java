@@ -18,7 +18,7 @@ public class ShooterTest extends Command {
   private final Shooter shooter;
   private final Turret turret;
   private final Drive drive;
-  private ShotCalculator shotCalculator = new ShotCalculator();
+  private ShotCalculator shotCalculator = ShotCalculator.getInstance();
   Field2d field = new Field2d();
 
   private Pose2d pose;

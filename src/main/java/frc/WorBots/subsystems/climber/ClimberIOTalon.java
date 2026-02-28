@@ -1,8 +1,10 @@
 package frc.WorBots.subsystems.climber;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.WorBots.CanIDs;
+import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 
 public class ClimberIOTalon implements ClimberIO {
@@ -11,6 +13,8 @@ public class ClimberIOTalon implements ClimberIO {
 
   public ClimberIOTalon() {
     climbMotorSignals = new TalonSignalsPositional(climbMotor);
+    HardwareUtils.setInverted(climbMotor, true);
+    climbMotor.setNeutralMode(NeutralModeValue.Brake);
 
   }
 
