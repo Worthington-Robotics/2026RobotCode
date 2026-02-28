@@ -26,6 +26,7 @@ import frc.WorBots.subsystems.climber.ClimberIOSim;
 import frc.WorBots.subsystems.climber.ClimberIOTalon;
 import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.DriveWithJoysticks;
+import frc.WorBots.commands.RunSpindexer;
 import frc.WorBots.commands.ShooterCommands;
 import frc.WorBots.commands.ShooterTest;
 import frc.WorBots.commands.TurretTest;
@@ -34,6 +35,9 @@ import frc.WorBots.subsystems.drive.GyroIOPigeon2;
 import frc.WorBots.subsystems.drive.GyroIOSim;
 import frc.WorBots.subsystems.drive.ModuleIOSim;
 import frc.WorBots.subsystems.drive.ModuleIOTalon;
+import frc.WorBots.subsystems.spindexer.Spindexer;
+import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
+import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
 import frc.WorBots.subsystems.shooter.Shooter;
 import frc.WorBots.subsystems.shooter.ShooterIOSim;
 import frc.WorBots.subsystems.shooter.ShooterIOTalon;
@@ -46,6 +50,7 @@ import frc.WorBots.util.control.DriveController;
 public class RobotContainer {
   //Subsystems
   public final Drive drive;
+  public final Spindexer spin;
   public final Climber climber;
   public final Shooter shooter;
   public final Turret turret; 
@@ -74,9 +79,10 @@ public class RobotContainer {
         new ModuleIOTalon(1), 
         new ModuleIOTalon(2), 
         new ModuleIOTalon(3));
-        climber = new Climber(new ClimberIOTalon());
-        shooter = new Shooter(new ShooterIOTalon());
-        turret = new Turret(new TurretIOTalon());
+      spin = new Spindexer(new SpindexerIOTalon());
+      climber = new Climber(new ClimberIOTalon());
+      shooter = new Shooter(new ShooterIOTalon());
+      turret = new Turret(new TurretIOTalon());
     } else {
       drive = new Drive(
         new GyroIOSim(), 
@@ -84,6 +90,7 @@ public class RobotContainer {
         new ModuleIOSim(1), 
         new ModuleIOSim(2), 
         new ModuleIOSim(3));
+      spin = new Spindexer(new SpindexerIOSim());
       climber = new Climber(new ClimberIOSim());
       shooter = new Shooter(new ShooterIOSim()); //TODO make shooterIOSim work
       turret = new Turret(new TurretIOSim());
@@ -120,6 +127,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), () -> driver.rightTrigger().getAsBoolean()));
+      driver.a().toggleOnTrue(new RunSpindexer(spin));
     if(Constants.getSim()){
       shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
     } else {
