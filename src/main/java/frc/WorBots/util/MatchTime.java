@@ -30,13 +30,13 @@ public class MatchTime {
   /** Starts the timer in teleop */
   public void startTeleop() {
     startTime = Timer.getFPGATimestamp();
-    sectionTime = 135.0;
+    sectionTime = 140.0;
   }
 
   /** Starts the timer in auto */
   public void startAuto() {
     startTime = Timer.getFPGATimestamp();
-    sectionTime = 15.0;
+    sectionTime = 20.0;
   }
 
   /** Gets the amount of time remaining in the current match period (auto or teleop) */
