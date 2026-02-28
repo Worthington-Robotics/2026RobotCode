@@ -28,17 +28,18 @@ public class StatusPage {
 
   // System name constants
   public static final String AUTOS = "Autos";
-  public static final String ALL_AUTO_QUESTIONS = "All Auto Questions";
   public static final String AUTO_CHOSEN = "Auto Chosen";
   public static final String ROBOT_CODE = "Robot Code";
   public static final String DRIVE_CONTROLLER = "Drive Controller";
-  public static final String SUPERSTRUCTURE_SUBSYSTEM = "Superstructure Subsystem";
   public static final String DRIVE_SUBSYSTEM = "Drive Subsystem";
-  public static final String INTAKE_SUBSYSTEM = " Intake Subsystem";
-  public static final String SHOOTER_INTAKE_SUBSYSTEM = "Shooter Subsystem";
-  public static final String CLIMBER_SUBSYSTEM = "Algae Intake Subsystem";
+  public static final String INTAKE_SUBSYSTEM = "Intake Subsystem";
+  public static final String SPINDEXER_SUBSYSTEM = "Spindexer Subsystem";
+  public static final String TURRET_SUBSYSTEM = "Turret Subsystem";
+  public static final String SHOOTER_SUBSYSTEM = "Shooter Subsystem";
+  public static final String CLIMBER_SUBSYSTEM = "Climber Subsystem";
   public static final String LIGHTS_SUBSYSTEM = "Lights Subsystem";
-  public static final String TAG_VISION_SUBSYSTEM = "Tag Vision Subsystem";
+  public static final String TAG_VISION_SUBSUBSYSTEM = "Tag Vision Subsubsystem";
+  public static final String BLOB_VISION_SUBSUBSYSTEM = "Blob Detection Subsubsystem";
   public static final String GYROSCOPE = "Gyroscope";
   public static final String SMODULE_PREFIX = "SModule";
   public static final String NETWORK_TABLES = "Network Tables";
@@ -64,7 +65,6 @@ public class StatusPage {
     AUTO_CHOSEN,
     DRIVE_CONTROLLER,
     OPERATOR_CONTROLLER,
-    ALL_AUTO_QUESTIONS,
     INTAKE_CONNECTED,
     GYROSCOPE,
     CAM_PREFIX + "0",
@@ -77,11 +77,13 @@ public class StatusPage {
     SMODULE_PREFIX + "2",
     SMODULE_PREFIX + "3",
     ROBOT_CODE,
-    SUPERSTRUCTURE_SUBSYSTEM,
     DRIVE_SUBSYSTEM,
     INTAKE_SUBSYSTEM,
-    SHOOTER_INTAKE_SUBSYSTEM,
-    TAG_VISION_SUBSYSTEM,
+    SPINDEXER_SUBSYSTEM,
+    TURRET_SUBSYSTEM,
+    SHOOTER_SUBSYSTEM,
+    TAG_VISION_SUBSUBSYSTEM,
+    BLOB_VISION_SUBSUBSYSTEM,
     CLIMBER_SUBSYSTEM,
     DRIVER_CAM,
     DRIVER_STATION,
