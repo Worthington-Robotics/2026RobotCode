@@ -28,8 +28,7 @@ public class ShooterTest extends Command {
    * @param drive The robot's drivetrain, used for fetching pose.
    */
   public ShooterTest(Shooter shooter, Drive drive, Turret turret){
-    addRequirements(shooter);
-    addRequirements(turret);
+    addRequirements(shooter, turret);
     this.shooter = shooter;
     this.drive = drive;
     this.turret = turret;
@@ -51,6 +50,7 @@ public class ShooterTest extends Command {
       turret.setPositionAndVelocity(params, pose);
       SmartDashboard.putNumber("Turret Velocity", params.turretVelocity());
       SmartDashboard.putNumber("Turret Angle", params.turretAngle().getDegrees());
+      shooter.setShooterParams(params);
       //Calculate the final position of the shot
       double time = 2*params.flywheelspeed() * Math.sin(params.hoodAngle()) / 9.8;
       double velocity = params.flywheelspeed() * Math.cos(params.hoodAngle());

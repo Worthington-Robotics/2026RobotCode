@@ -25,8 +25,7 @@ public class ShooterAuto extends Command {
    * @param drive The robot's drivetrain, used for fetching pose.
    */
   public ShooterAuto(Shooter shooter, Turret turret, Drive drive){
-    addRequirements(shooter);
-    addRequirements(turret);
+    addRequirements(shooter, turret);
     this.turret = turret;
     this.shooter = shooter;
     this.drive = drive;
