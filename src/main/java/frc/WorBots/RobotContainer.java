@@ -25,6 +25,7 @@ import frc.WorBots.subsystems.climber.ClimberIOSim;
 import frc.WorBots.subsystems.climber.ClimberIOTalon;
 import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.ShooterTest;
+import frc.WorBots.commands.ShotTuning;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.drive.GyroIOPigeon2;
 import frc.WorBots.subsystems.drive.GyroIOSim;
@@ -117,6 +118,7 @@ public class RobotContainer {
         drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), () -> driver.rightTrigger().getAsBoolean()));
     if(Constants.getSim()){
       shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
+      //shooter.setDefaultCommand(new ShotTuning(shooter, turret, () -> driver.povUp().getAsBoolean(), () -> driver.povDown().getAsBoolean(), () -> driver.a().getAsBoolean(), () -> driver.b().getAsBoolean()));
     } else {
       shooter.setDefaultCommand(new ShooterAuto(shooter, turret, drive));
     }
