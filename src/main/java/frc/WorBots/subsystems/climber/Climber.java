@@ -76,4 +76,8 @@ public class Climber extends SubsystemBase {
   public ClimberControlMode getControlMode() {
     return controlMode;
   }
+
+  public boolean atGoal(){
+    return climberController.pid.atGoal();
+  }
 }
