@@ -12,6 +12,7 @@ import frc.WorBots.subsystems.lights.LightsIO.DummyLights;
 import frc.WorBots.subsystems.lights.LightsIO.LightStrip;
 import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.cache.Cache.TimeCache;
+import frc.WorBots.util.debug.StatusPage;
 
 public class Lights extends SubsystemBase {
     public static Lights instance = new Lights();
@@ -109,6 +110,7 @@ public class Lights extends SubsystemBase {
     private Lights(){
         //TODO Add light Strips here
         strip = new LightStrip(0, 7);
+        StatusPage.reportStatus(StatusPage.LIGHTS_SUBSYSTEM, true);
     }
 
     public void periodic(){

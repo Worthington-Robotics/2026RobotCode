@@ -29,6 +29,8 @@ public class SpindexerIOSim implements SpindexerIO {
     inputs.talon.currentDrawAmps = sim.getCurrentDrawAmps();
     inputs.talon.isConnected = true;
     inputs.spinVelocity = sim.getAngularVelocityRadPerSec();
+
+    inputs.follower.isConnected = true;
   }
 
   @Override

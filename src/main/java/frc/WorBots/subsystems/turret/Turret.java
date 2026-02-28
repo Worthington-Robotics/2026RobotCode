@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
+import frc.WorBots.util.debug.StatusPage;
 
 public class Turret extends SubsystemBase{
   //TODO figure out how to implement the right time to wrap around 
@@ -78,6 +79,7 @@ public class Turret extends SubsystemBase{
 
   public void periodic() {
     io.updateInputs(inputs);
+    StatusPage.reportStatus(StatusPage.TURRET_SUBSYSTEM, inputs.turret.isConnected);
     if(controlMode == turretControlMode.Disabled){
       io.setVoltage(0);
     }

@@ -96,6 +96,7 @@ public class TurretIOTalon implements TurretIO {
 
     inputs.turretFusedAngle = relReading + fusEncoderOffset;
     inputs.absEncoderConnected = turretAbsEncoder.isConnected();
+    motorSignal.update(inputs.turret, turretMotor);
   }
 
   public TurretIOInputs getInputs() {

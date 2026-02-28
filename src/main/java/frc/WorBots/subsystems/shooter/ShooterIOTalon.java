@@ -9,6 +9,7 @@ import edu.wpi.first.math.util.Units;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
 import frc.WorBots.util.HardwareUtils;
+import frc.WorBots.util.HardwareUtils.TalonSignals;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 
 public class ShooterIOTalon implements ShooterIO {
@@ -19,7 +20,8 @@ public class ShooterIOTalon implements ShooterIO {
   
   //Linear filter is excluded for now, pending implementation.
   
-  private final TalonSignalsPositional leaderSignals;
+  private final TalonSignals leaderSignals;
+  private final TalonSignals followerSignals;
   private final TalonSignalsPositional hoodSignals;
 
   public ShooterIOTalon(){
@@ -31,7 +33,8 @@ public class ShooterIOTalon implements ShooterIO {
     //TODO: Make sure that they actually are aligned 
     follower.setControl(new Follower(CanIDs.SuperStructure.LEADER_ID, MotorAlignmentValue.Aligned));
 
-    leaderSignals = new TalonSignalsPositional(leader);
+    leaderSignals = new TalonSignals(leader);
+    followerSignals = new TalonSignals(follower);
     hoodSignals = new TalonSignalsPositional(hood);
 
     //TODO: Actually set these values
@@ -54,6 +57,7 @@ public class ShooterIOTalon implements ShooterIO {
   @Override  
   public void updateInputs(ShooterIOInputs inputs){
     leaderSignals.update(inputs.leader, leader);
+    followerSignals.update(inputs.follower, follower);
     hoodSignals.update(inputs.hood, hood);
     inputs.actualHoodPosition = Units.rotationsToRadians(hood.getPosition().getValueAsDouble()) * Constants.TurretShooterConstants.Hood_GEAR_RATIO;
     inputs.actualLeaderVelocityRadPerSec = leader.getVelocity().getValueAsDouble() * 2 * Math.PI;

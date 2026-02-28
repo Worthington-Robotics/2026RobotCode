@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.shooter.ShooterIO.ShooterIOInputs;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
+import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 
 public class Shooter extends SubsystemBase {
@@ -104,6 +105,8 @@ public class Shooter extends SubsystemBase {
 
       shooterSpeedActualPub.set(inputs.actualLeaderVelocityRadPerSec);
       shooterSpeedDesiredPub.set(setpointVelocity);
+
+      StatusPage.reportStatus(StatusPage.SHOOTER_SUBSYSTEM, inputs.leader.isConnected && inputs.follower.isConnected);
 
     
       if (controlMode == ControlMode.Disabled){
