@@ -14,9 +14,9 @@ import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 
 public class ShooterIOTalon implements ShooterIO {
 
-  private final TalonFX leader = new TalonFX(CanIDs.SuperStructure.HOOD_ID, Constants.SUPERSTRUCTURE_CANBUS);
-  private final TalonFX follower = new TalonFX(CanIDs.SuperStructure.FOLLOWER_ID, Constants.SUPERSTRUCTURE_CANBUS);
-  private final TalonFX hood = new TalonFX(CanIDs.SuperStructure.HOOD_ID, Constants.SUPERSTRUCTURE_CANBUS);
+  private final TalonFX leader = new TalonFX(CanIDs.SuperStructure.HOOD_ID, CanIDs.SuperStructure.CAN_BUS);
+  private final TalonFX follower = new TalonFX(CanIDs.SuperStructure.FOLLOWER_ID, CanIDs.SuperStructure.CAN_BUS);
+  private final TalonFX hood = new TalonFX(CanIDs.SuperStructure.HOOD_ID, CanIDs.SuperStructure.CAN_BUS);
   
   //Linear filter is excluded for now, pending implementation.
   

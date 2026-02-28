@@ -60,8 +60,6 @@ public class Constants {
   public static final double SPINDEXER_STALL_CURRENT = 40;
   public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
 
-  //CAN Bus constants
-  public static final String SUPERSTRUCTURE_CANBUS = "Superstructure CAN Bus";
   //Turret and Shooter Constants
   public static final Transform2d ROBOT_TO_TURRET = new Transform2d(); //TODO add real values
   public static final double SHOOTER_ERROR_THRES = 0.0;
@@ -69,11 +67,6 @@ public class Constants {
   //PathPlanner Constants
   public static final ModuleConfig PATHPLANNER_MODULE_CONFIG = new ModuleConfig(Units.inchesToMeters(2), DRIVE_MAX_VELOCITY, ROBOT_WHEELBASE, DCMotor.getKrakenX60(1).withReduction(TURN_GEAR_RATIO), DRIVE_CURRENT_LIMIT, 1);
   public static final RobotConfig PATHPLANNER_CONFIG = new RobotConfig(ROBOT_MASS, ROBOT_MOI, PATHPLANNER_MODULE_CONFIG, DRIVE_MODULE_OFFSETS);
-  /** The CAN bus name used for swerve devices and pigeon */
-  public static final String SWERVE_CAN_BUS = "rio";
-
-  /** The CAN bus name used for anything other than swerve */
-  public static final String MAIN_CAN_BUS = "Main";
 
   //Intake Constants
   //These values need to be modified

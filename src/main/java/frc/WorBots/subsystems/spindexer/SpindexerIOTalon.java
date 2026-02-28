@@ -13,8 +13,8 @@ import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 public class SpindexerIOTalon implements SpindexerIO{
 
   //TODO name canbus
-  private TalonFX talon = new TalonFX(CanIDs.SuperStructure.SPINDEXER_ID, "temp");
-  private TalonFX kicker = new TalonFX(CanIDs.SuperStructure.KICKER_ID, "temp");
+  private TalonFX talon = new TalonFX(CanIDs.SuperStructure.SPINDEXER_ID, CanIDs.SuperStructure.CAN_BUS);
+  private TalonFX kicker = new TalonFX(CanIDs.SuperStructure.KICKER_ID, CanIDs.SuperStructure.CAN_BUS);
 
   private TalonSignalsPositional spinSignal = new TalonSignalsPositional(talon);
 

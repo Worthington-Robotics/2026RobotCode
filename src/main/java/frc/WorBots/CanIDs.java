@@ -3,7 +3,8 @@ package frc.WorBots;
 public class CanIDs {
   /**A class that contains all of the swerve CANids */
   public class Swerve{
-    public static final String CAN_BUS = "";
+    /**CanBus for swerve and pigeon */
+    public static final String CAN_BUS = "rio";
 
     public static final int PIGEON_ID = 0;
 
@@ -23,22 +24,33 @@ public class CanIDs {
     public static final int BACK_RIGHT_ENCODER_ID = 12;
   }
 
+  /**
+   * A class that contains all superstrucure CanIDs
+   */
   public class SuperStructure{
+    /**CanBus for everything that isn't swerve */
+    public static String CAN_BUS = "Main";
     //Spindexer
     public static final int SPINDEXER_ID = 0;
     public static final int KICKER_ID = 0;
 
+    //Turret
     public static final int TURRET_ID = 0;
     public static final int TURRET_ENCODER_ID = 0;
     public static final int TURRET_ABS_ENCODER_ID = 0;
-    public static final int HOOD_ID = 0;
-    public static final int LEADER_ID = 1;
-    public static final int FOLLOWER_ID = 2;
-  //A class that contains all the Main Can IDS
 
-    public static final int EXTENDING_MOTOR_ID = 3;
-    public static final int INTAKE_MOTOR_ID = 4;
-    public static final int TOF_ID = 5;
+    //Shooter
+    public static final int HOOD_ID = 0;
+    public static final int LEADER_ID = 0;
+    public static final int FOLLOWER_ID = 0;
+
+    //Intake
+    public static final int EXTENDING_MOTOR_ID = 0;
+    public static final int INTAKE_MOTOR_ID = 0;
+    public static final int TOF_ID = 0;
+
+    //Climber
+    public static final int CLIMBER_ID = 0;
   }
 
 
