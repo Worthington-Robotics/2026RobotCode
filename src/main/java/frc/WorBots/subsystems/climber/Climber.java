@@ -63,6 +63,10 @@ public class Climber extends SubsystemBase {
     this.setpointPosition = pos;
   }
 
+  public void setPosition(double pos){
+    setPosition(new Rotation2d(pos));
+  }
+
   public void disable() {
     controlMode = ClimberControlMode.Disabled;
     io.setMotorVolts(0.0);
