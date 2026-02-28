@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
+import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.shooter.ShooterIO.ShooterIOInputs;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
 import frc.WorBots.util.debug.StatusPage;
@@ -126,6 +127,8 @@ public class Shooter extends SubsystemBase {
         io.setHoodVolts(hoodVolts);
         io.setLeaderVolts(leaderVolts);
       }
+
+      Lights.getInstance().addShooterStatus(readyToShoot());
     }
 
     /***
