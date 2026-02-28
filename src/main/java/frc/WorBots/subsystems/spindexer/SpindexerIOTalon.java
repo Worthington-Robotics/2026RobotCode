@@ -1,8 +1,10 @@
 package frc.WorBots.subsystems.spindexer;
 
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
@@ -12,12 +14,17 @@ public class SpindexerIOTalon implements SpindexerIO{
 
   //TODO name canbus
   private TalonFX talon = new TalonFX(CanIDs.SuperStructure.SPINDEXER_ID, "temp");
+  private TalonFX kicker = new TalonFX(CanIDs.SuperStructure.KICKER_ID, "temp");
 
   private TalonSignalsPositional spinSignal = new TalonSignalsPositional(talon);
 
   private double voltage = 0.0;
 
-  public SpindexerIOTalon(){}
+  public SpindexerIOTalon(){
+    talon.setNeutralMode(NeutralModeValue.Brake);
+    kicker.setNeutralMode(NeutralModeValue.Brake);
+    kicker.setControl(new Follower(CanIDs.SuperStructure.SPINDEXER_ID, MotorAlignmentValue.Aligned));
+  }
 
   @Override
   public void updateInputs(SpindexerIOInputs inputs){

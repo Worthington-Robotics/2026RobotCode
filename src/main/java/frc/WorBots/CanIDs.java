@@ -26,6 +26,7 @@ public class CanIDs {
   public class SuperStructure{
     //Spindexer
     public static final int SPINDEXER_ID = 0;
+    public static final int KICKER_ID = 0;
 
     public static final int TURRET_ID = 0;
     public static final int TURRET_ENCODER_ID = 0;
