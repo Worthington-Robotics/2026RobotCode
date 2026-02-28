@@ -225,4 +225,8 @@ public class Shooter extends SubsystemBase {
     public boolean getShotValid(){
       return shotValid;
     }
+
+    public boolean flywheelAtSpeed(){
+      return leaderPIDController.pid.atGoal();
+    }
 }

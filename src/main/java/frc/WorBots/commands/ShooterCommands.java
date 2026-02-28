@@ -2,6 +2,7 @@ package frc.WorBots.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.subsystems.shooter.Shooter;
 import frc.WorBots.subsystems.spindexer.Spindexer;
+import frc.WorBots.subsystems.turret.Turret;
 
 public class ShooterCommands {
   /**
@@ -27,9 +28,9 @@ public class ShooterCommands {
     });
   }
 
-  public Command feedShooter(Spindexer spin, Shooter shooter){
+  public Command feedShooter(Spindexer spin, Shooter shooter, Turret turret){
     return spin.runEnd(() -> {
-      if(shooter.getShotValid()){
+      if(shooter.getShotValid() && turret.atGoal() && shooter.flywheelAtSpeed()){
         spin.runSpindexer();
       } else {
         spin.stopSpindexer();
