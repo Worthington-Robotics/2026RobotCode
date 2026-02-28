@@ -9,7 +9,6 @@ import frc.WorBots.Constants;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 
 public class SpindexerIOTalon implements SpindexerIO{
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SPINDEXER_KS, Constants.SPINDEXER_KV);
 
   //TODO name canbus
   private TalonFX talon = new TalonFX(CanIDs.SuperStructure.SPINDEXER_ID, "temp");
@@ -25,12 +24,9 @@ public class SpindexerIOTalon implements SpindexerIO{
     talon.setVoltage(voltage);
     inputs.active = isActive();
     inputs.jammed = isJammed();
+    //Modifies the talons output velocity to be in radians and be the spindexers velocity
+    inputs.spinVelocity = talon.getVelocity().getValueAsDouble() * 2 * Math.PI * Constants.SPINDEXER_GEAR_RATIO;
     spinSignal.update(inputs.talon, talon);
-  }
-
-  @Override
-  public void setVelocity(double vel){
-    this.voltage = feedforward.calculate(vel);
   }
 
   @Override

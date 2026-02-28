@@ -9,8 +9,6 @@ import frc.WorBots.Constants;
 
 public class SpindexerIOSim implements SpindexerIO {
 
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SPINDEXER_KS, Constants.SPINDEXER_KV);
-
   private FlywheelSim sim = new FlywheelSim(
     LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60(1), 
     Constants.SPINDEXER_JKgMETERSSQUARED, Constants.SPINDEXER_GEAR_RATIO),
@@ -31,11 +29,7 @@ public class SpindexerIOSim implements SpindexerIO {
     inputs.talon.supplyVoltage = voltage;
     inputs.talon.currentDrawAmps = sim.getCurrentDrawAmps();
     inputs.talon.isConnected = true;
-  }
-
-  @Override
-  public void setVelocity(double vel){
-    this.voltage = feedforward.calculate(vel);
+    inputs.spinVelocity = sim.getAngularVelocityRadPerSec();
   }
 
   @Override

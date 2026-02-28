@@ -1,5 +1,6 @@
 package frc.WorBots.subsystems.spindexer;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
+import frc.WorBots.util.debug.TunablePIDController;
 
 public class Spindexer extends SubsystemBase{
   SpindexerIO io;
@@ -18,6 +20,10 @@ public class Spindexer extends SubsystemBase{
   private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
   private static final String TABLE_NAME = "Spindexer";
   private final NetworkTable spinTable = instance.getTable(TABLE_NAME);
+
+  
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SPINDEXER_KS, Constants.SPINDEXER_KV);
+  private TunablePIDController spinPID = new TunablePIDController(TABLE_NAME, "Spin PID");
 
   private final BooleanPublisher activePublisher = spinTable.getBooleanTopic("Active").publish();
   private final BooleanPublisher jammedPublisher = spinTable.getBooleanTopic("Jammed").publish();
@@ -31,6 +37,7 @@ public class Spindexer extends SubsystemBase{
 
   public Spindexer(SpindexerIO spindexerIo){
     io = spindexerIo;
+    spinPID.setGains(1,0,0);
   }
     
   public void periodic(){
@@ -40,11 +47,12 @@ public class Spindexer extends SubsystemBase{
       goalVelocity = 0;
       io.stop();
     } else {
+      final double feedback = spinPID.pid.calculate(inputs.spinVelocity, goalVelocity);
+      final double out = feedforward.calculate(feedback);
       if(inputs.jammed){
-        io.setVelocity(-goalVelocity);
-      }
-      else{
-        io.setVelocity(goalVelocity);
+        io.setVoltage(-out);
+      } else {
+        io.setVoltage(out);
       }
     }
 
