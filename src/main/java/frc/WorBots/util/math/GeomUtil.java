@@ -260,17 +260,17 @@ public class GeomUtil {
     final double correctedOmega = speeds.omegaRadiansPerSecond + driftRate;
     final Pose2d futurePose =
         new Pose2d(
-            speeds.vxMetersPerSecond * Constants.ROBOT_PERIOD,
-            speeds.vyMetersPerSecond * Constants.ROBOT_PERIOD,
-            new Rotation2d(correctedOmega * Constants.ROBOT_PERIOD));
+            speeds.vxMetersPerSecond * Constants.RobotConstants.ROBOT_PERIOD,
+            speeds.vyMetersPerSecond * Constants.RobotConstants.ROBOT_PERIOD,
+            new Rotation2d(correctedOmega * Constants.RobotConstants.ROBOT_PERIOD));
 
     final Twist2d twistForPose = new Pose2d().log(futurePose);
 
     final ChassisSpeeds corrected =
         new ChassisSpeeds(
-            twistForPose.dx / Constants.ROBOT_PERIOD,
-            twistForPose.dy / Constants.ROBOT_PERIOD,
-            twistForPose.dtheta / Constants.ROBOT_PERIOD);
+            twistForPose.dx / Constants.RobotConstants.ROBOT_PERIOD,
+            twistForPose.dy / Constants.RobotConstants.ROBOT_PERIOD,
+            twistForPose.dtheta / Constants.RobotConstants.ROBOT_PERIOD);
     return corrected;
   }
 

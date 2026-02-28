@@ -1,6 +1,5 @@
 package frc.WorBots.subsystems.spindexer;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -11,7 +10,7 @@ public class SpindexerIOSim implements SpindexerIO {
 
   private FlywheelSim sim = new FlywheelSim(
     LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60(1), 
-    Constants.SPINDEXER_JKgMETERSSQUARED, Constants.SPINDEXER_GEAR_RATIO),
+    Constants.SpindexerConstants.SPINDEXER_JKgMETERSSQUARED, Constants.SpindexerConstants.SPINDEXER_GEAR_RATIO),
     DCMotor.getKrakenX60(1));
 
   private double voltage = 0.0;
@@ -21,7 +20,7 @@ public class SpindexerIOSim implements SpindexerIO {
   @Override
   public void updateInputs(SpindexerIOInputs inputs){
     sim.setInputVoltage(voltage);
-    sim.update(Constants.ROBOT_PERIOD);
+    sim.update(Constants.RobotConstants.ROBOT_PERIOD);
     inputs.active = isActive();
     inputs.jammed = isJammed();
     inputs.talon.temperatureCelsius = 40; //arbitrary value, just has to be set bellow max temp

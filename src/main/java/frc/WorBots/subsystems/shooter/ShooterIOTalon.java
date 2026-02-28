@@ -5,7 +5,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
@@ -56,7 +55,7 @@ public class ShooterIOTalon implements ShooterIO {
   public void updateInputs(ShooterIOInputs inputs){
     leaderSignals.update(inputs.leader, leader);
     hoodSignals.update(inputs.hood, hood);
-    inputs.actualHoodPosition = Units.rotationsToRadians(hood.getPosition().getValueAsDouble());
+    inputs.actualHoodPosition = Units.rotationsToRadians(hood.getPosition().getValueAsDouble()) * Constants.TurretShooterConstants.Hood_GEAR_RATIO;
     inputs.actualLeaderVelocityRadPerSec = leader.getVelocity().getValueAsDouble() * 2 * Math.PI;
   }
 

@@ -32,7 +32,7 @@ public class SpindexerIOTalon implements SpindexerIO{
     inputs.active = isActive();
     inputs.jammed = isJammed();
     //Modifies the talons output velocity to be in radians and be the spindexers velocity
-    inputs.spinVelocity = talon.getVelocity().getValueAsDouble() * 2 * Math.PI * Constants.SPINDEXER_GEAR_RATIO;
+    inputs.spinVelocity = talon.getVelocity().getValueAsDouble() * 2 * Math.PI * Constants.SpindexerConstants.SPINDEXER_GEAR_RATIO;
     spinSignal.update(inputs.talon, talon);
   }
 
@@ -57,6 +57,7 @@ public class SpindexerIOTalon implements SpindexerIO{
 
   //TODO implement
   private boolean isJammed(){
-    return talon.getTorqueCurrent().getValueAsDouble() > Constants.SPINDEXER_STALL_CURRENT && talon.getVelocity().getValueAsDouble() < Constants.SPINDEXER_STALL_SPEED;
+    return talon.getTorqueCurrent().getValueAsDouble() > Constants.SpindexerConstants.SPINDEXER_STALL_CURRENT && 
+      talon.getVelocity().getValueAsDouble() < Constants.SpindexerConstants.SPINDEXER_STALL_SPEED;
   }
 }

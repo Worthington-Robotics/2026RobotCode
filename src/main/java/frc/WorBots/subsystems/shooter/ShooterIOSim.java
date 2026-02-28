@@ -22,8 +22,8 @@ public class ShooterIOSim implements ShooterIO {
 
   @Override
   public void updateInputs(ShooterIOInputs inputs){
-    hood.update(Constants.ROBOT_PERIOD);
-    flyLeader.update(Constants.ROBOT_PERIOD);
+    hood.update(Constants.RobotConstants.ROBOT_PERIOD);
+    flyLeader.update(Constants.RobotConstants.ROBOT_PERIOD);
 
     flyLeader.setInputVoltage(leaderVolts);
     hood.setInputVoltage(hoodVolts);  

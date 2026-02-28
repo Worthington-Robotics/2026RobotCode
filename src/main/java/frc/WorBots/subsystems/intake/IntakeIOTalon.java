@@ -46,17 +46,17 @@ public class IntakeIOTalon implements IntakeIO {
 
     // Sets the current draw signal and current limits for intaking and extending
     // motors.
-    intakeCurrentDrawSignal = new OptimalStatusSignal<>(intakeMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
-    extendingCurrentDrawSignal = new OptimalStatusSignal<>(extendingMotor.getStatorCurrent(), Constants.ROBOT_PERIOD);
+    intakeCurrentDrawSignal = new OptimalStatusSignal<>(intakeMotor.getStatorCurrent(), Constants.RobotConstants.ROBOT_PERIOD);
+    extendingCurrentDrawSignal = new OptimalStatusSignal<>(extendingMotor.getStatorCurrent(), Constants.RobotConstants.ROBOT_PERIOD);
 
     HardwareUtils.setCurrentLimit(intakeMotor, 160);
     HardwareUtils.setCurrentLimit(extendingMotor, 160);
 
     //Set up the extending motor PID
     var slot0Configs = new Slot0Configs();
-    slot0Configs.kP = Constants.INTAKE_EXTENDING_KP;
+    slot0Configs.kP = Constants.IntakeConstants.INTAKE_EXTENDING_KP;
     slot0Configs.kI = 0.0;
-    slot0Configs.kD = Constants.INTAKE_EXTENDING_KD;
+    slot0Configs.kD = Constants.IntakeConstants.INTAKE_EXTENDING_KD;
 
     extendingMotor.getConfigurator().apply(slot0Configs);
 

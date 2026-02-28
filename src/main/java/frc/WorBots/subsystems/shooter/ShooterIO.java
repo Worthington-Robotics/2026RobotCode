@@ -1,6 +1,5 @@
 package frc.WorBots.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.WorBots.util.HardwareUtils.TalonInputs;
 import frc.WorBots.util.HardwareUtils.TalonInputsPositional;
 

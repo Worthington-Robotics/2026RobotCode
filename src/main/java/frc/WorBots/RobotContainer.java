@@ -101,8 +101,8 @@ public class RobotContainer {
       new PPHolonomicDriveController( //Holonomic Drive Controller Used by PathPlanner
         new PIDConstants(5.0, 0.0, 0.0), //Translation PID Constants
         new PIDConstants(5.0, 0.0, 0.0), //Rotational PID Constants
-        Constants.ROBOT_PERIOD), //PID Period
-      Constants.PATHPLANNER_CONFIG,
+        Constants.RobotConstants.ROBOT_PERIOD), //PID Period
+      Constants.PathPlannerConstants.PATHPLANNER_CONFIG,
       () -> {
         // Boolean supplier that controls when the path will be mirrored for the red alliance
         // This will flip the path being followed to the red side of the field.

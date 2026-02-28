@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     //Set robot period
-    this.addPeriodic(this::realRobotPeriodic, Constants.ROBOT_PERIOD);
+    this.addPeriodic(this::realRobotPeriodic, Constants.RobotConstants.ROBOT_PERIOD);
 
     //Silences Joystick warning in SIM
     if(Constants.getSim()){

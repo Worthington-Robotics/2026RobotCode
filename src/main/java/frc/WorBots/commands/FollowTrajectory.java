@@ -47,7 +47,7 @@ public class FollowTrajectory extends Command {
       new PIDController(0, 0, 0), //TODO: Add PID Values
       new PIDController(0, 0, 0),
       new ProfiledPIDController(0, 0, 0,
-        new TrapezoidProfile.Constraints(Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_MAX_ACCELERATION)
+        new TrapezoidProfile.Constraints(Constants.DriveConstants.DRIVE_MAX_VELOCITY, Constants.DriveConstants.DRIVE_MAX_ACCELERATION)
       )
     );
   }
@@ -76,14 +76,14 @@ public class FollowTrajectory extends Command {
    */
   @Override
   public boolean isFinished(){
-    if(endWithPosition && (trajectory.getTotalTimeSeconds() - getTimeDelta() <= Constants.MIN_TIME)){
+    if(endWithPosition && (trajectory.getTotalTimeSeconds() - getTimeDelta() <= Constants.TrajectoryConstants.MIN_TIME)){
       Pose2d currentPose = drive.getPose();
       Translation2d goalPosition = trajectory.sample(trajectory.getTotalTimeSeconds()).poseMeters.getTranslation();
       Translation2d currentPosition = currentPose.getTranslation();
       Translation2d distanceVector = goalPosition.minus(currentPosition);
 
       double distance = Math.abs(distanceVector.getNorm());
-      if(distance <= Constants.MIN_DISTANCE){
+      if(distance <= Constants.TrajectoryConstants.MIN_DISTANCE){
         return true;
       }
       return false;

@@ -24,7 +24,7 @@ public class GyroIOPigeon2 implements GyroIO {
     pigeon.getConfigurator().apply(new Pigeon2Configuration());
     yawVelSignal =
         new OptimalStatusSignal<>(
-            pigeon.getAngularVelocityZDevice(), Constants.ROBOT_PERIOD / 2.0);
+            pigeon.getAngularVelocityZDevice(), Constants.RobotConstants.ROBOT_PERIOD / 2.0);
 
     final var yawSignal = pigeon.getYaw();
     yawSignal.setUpdateFrequency(1.0 / OdometryThread.PERIOD);

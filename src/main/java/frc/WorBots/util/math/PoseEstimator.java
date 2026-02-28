@@ -273,7 +273,7 @@ public class PoseEstimator {
   private static Pose2d clampPose(Pose2d pose) {
     // Get the shorter dimension of the robot so that we can clamp poses with the
     // robot inside the wall
-    final double robotSize = Math.min(Constants.ROBOT_WIDTH, Constants.ROBOT_LENGTH) / 2;
+    final double robotSize = Math.min(Constants.RobotConstants.ROBOT_WIDTH, Constants.RobotConstants.ROBOT_LENGTH) / 2;
 
     // Clamp poses off the field
     pose =

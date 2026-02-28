@@ -35,9 +35,9 @@ public class DriveWithJoysticks extends Command {
     double rightX = rightXSupplier.get();
 
     if(slowSupplier.get()){
-      leftX *= Constants.DRIVE_SLOW_MULTIPLIER;
-      leftY *= Constants.DRIVE_SLOW_MULTIPLIER;
-      rightX *= Constants.DRIVE_SLOW_MULTIPLIER;
+      leftX *= Constants.DriveConstants.DRIVE_SLOW_MULTIPLIER;
+      leftY *= Constants.DriveConstants.DRIVE_SLOW_MULTIPLIER;
+      rightX *= Constants.DriveConstants.DRIVE_SLOW_MULTIPLIER;
     }
 
     RobotContainer.driveController.drive(drive, -leftY, leftX, rightX);

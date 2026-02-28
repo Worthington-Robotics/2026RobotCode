@@ -16,7 +16,7 @@ public class ClimberIOSim implements ClimberIO {
   }
 
   public void updateInputs(ClimberIOInputs inputs){
-    climbSim.update(Constants.ROBOT_PERIOD);
+    climbSim.update(Constants.RobotConstants.ROBOT_PERIOD);
 
     climbSim.setInputVoltage(volts);
 

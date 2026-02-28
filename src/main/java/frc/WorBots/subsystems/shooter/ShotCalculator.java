@@ -193,19 +193,19 @@ public class ShotCalculator {
     Pose2d estimatedPose = robotPose
         .exp(ChassisSpeeds.fromFieldRelativeSpeeds(robotVelocity, robotPose.getRotation()).toTwist2d(phaseDelay));
     // Calculate the distance from the turret to the target
-    Pose2d turretPosition = estimatedPose.transformBy(Constants.ROBOT_TO_TURRET);
+    Pose2d turretPosition = estimatedPose.transformBy(Constants.TurretShooterConstants.ROBOT_TO_TURRET);
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
     // Calculate field relative turret velocity
     double robotAngle = estimatedPose.getRotation().getRadians();
     double turretVelocityX = robotVelocity.vxMetersPerSecond
         + robotVelocity.omegaRadiansPerSecond
-            * (Constants.ROBOT_TO_TURRET.getY() * Math.cos(robotAngle)
-                - Constants.ROBOT_TO_TURRET.getX() * Math.sin(robotAngle));
+            * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * Math.cos(robotAngle)
+                - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * Math.sin(robotAngle));
     double turretVelocityY = robotVelocity.vyMetersPerSecond
         + robotVelocity.omegaRadiansPerSecond
-            * (Constants.ROBOT_TO_TURRET.getX() * Math.cos(robotAngle)
-                - Constants.ROBOT_TO_TURRET.getY() * Math.sin(robotAngle));
+            * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * Math.cos(robotAngle)
+                - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * Math.sin(robotAngle));
 
     // Account for imparted velocity by robot to offset
     double timeOfFlight;

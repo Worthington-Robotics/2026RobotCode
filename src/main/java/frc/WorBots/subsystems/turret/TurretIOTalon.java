@@ -40,8 +40,8 @@ public class TurretIOTalon implements TurretIO {
     turretMotorPositionSignal = turretMotor.getPosition();
     motorCurrentSignal = turretMotor.getSupplyCurrent();
 
-    turretAbsEncoderSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
-    turretMotorPositionSignal.setUpdateFrequency(Constants.ROBOT_FREQUENCY);
+    turretAbsEncoderSignal.setUpdateFrequency(Constants.RobotConstants.ROBOT_FREQUENCY);
+    turretMotorPositionSignal.setUpdateFrequency(Constants.RobotConstants.ROBOT_FREQUENCY);
     turretMotor.optimizeBusUtilization();
 
     motorSignal = new TalonSignalsPositional(turretMotor);

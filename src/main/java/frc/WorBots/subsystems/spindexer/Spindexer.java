@@ -22,7 +22,8 @@ public class Spindexer extends SubsystemBase{
   private final NetworkTable spinTable = instance.getTable(TABLE_NAME);
 
   
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SPINDEXER_KS, Constants.SPINDEXER_KV);
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
+    Constants.SpindexerConstants.SPINDEXER_KS, Constants.SpindexerConstants.SPINDEXER_KV);
   private TunablePIDController spinPID = new TunablePIDController(TABLE_NAME, "Spin PID");
 
   private final BooleanPublisher activePublisher = spinTable.getBooleanTopic("Active").publish();
@@ -43,7 +44,7 @@ public class Spindexer extends SubsystemBase{
   public void periodic(){
     io.updateInputs(inputs);
     //TODO add something to try to resolve jamming
-    if(DriverStation.isDisabled() || inputs.talon.temperatureCelsius > Constants.SPINDEXER_MAX_TEMP){
+    if(DriverStation.isDisabled() || inputs.talon.temperatureCelsius > Constants.SpindexerConstants.SPINDEXER_MAX_TEMP){
       goalVelocity = 0;
       io.stop();
     } else {

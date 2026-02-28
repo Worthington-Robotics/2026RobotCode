@@ -40,7 +40,7 @@ public class Module {
    */
   public void runState(SwerveModuleState state, boolean force) {
     // Perform anti-jitter to prevent module rotations for very small motions
-    if (!force && Math.abs(state.speedMetersPerSecond) < 4.5 * Constants.ANTI_JITTER_THRESHOLD) {
+    if (!force && Math.abs(state.speedMetersPerSecond) < 4.5 * Constants.DriveConstants.ANTI_JITTER_THRESHOLD) {
       state.angle = lastSetpoint.angle;
       state.speedMetersPerSecond = 0.0;
     }

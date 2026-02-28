@@ -48,49 +48,68 @@ public class Constants {
     public static final double DRIVE_MAX_ACCELERATION = Units.feetToMeters(40); //m/sec^2
     public static final double DRIVE_MAX_ROTATIONAL_VELOCITY = Units.degreesToRadians(720); //rads/sec
     public static final double DRIVE_MAX_ROTATION_ACCELERATION = Units.degreesToRadians(3000); //rad/sec^2
+
+    /**
+    * The minimum speed percentage of the maximum that can be set before angle changes are ignored
+    */
+    public static final double ANTI_JITTER_THRESHOLD = 0.005;
   }
-/**
- * The minimum speed percentage of the maximum that can be set before angle changes are ignored
- */
-  public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
-  //Spindexer Constants
-  //TODO find all these values
-  public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
-  public static final double SPINDEXER_GEAR_RATIO = 1;
-  public static final double SPINDEXER_JKgMETERSSQUARED = 1;
-  public static final double SPINDEXER_KS = 1;
-  public static final double SPINDEXER_KV = 1;
-  public static final double SPINDEXER_STALL_CURRENT = 40;
-  public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
+  /**Spindexer Constants*/
+  public class SpindexerConstants{
+    //TODO find all these values
+    public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
+    public static final double SPINDEXER_GEAR_RATIO = 1;
+    public static final double SPINDEXER_JKgMETERSSQUARED = 1;
+    public static final double SPINDEXER_KS = 1;
+    public static final double SPINDEXER_KV = 1;
+    public static final double SPINDEXER_STALL_CURRENT = 40;
+    public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
+  }
 
-  //Turret and Shooter Constants
-  public static final Transform2d ROBOT_TO_TURRET = new Transform2d(); //TODO add real values
-  public static final double SHOOTER_ERROR_THRES = 0.0;
-  public static final double SHOOTER_MAX_VOLTS = 0.0;
-  //PathPlanner Constants
-  public static final ModuleConfig PATHPLANNER_MODULE_CONFIG = new ModuleConfig(Units.inchesToMeters(2), DriveConstants.DRIVE_MAX_VELOCITY, RobotConstants.ROBOT_WHEELBASE, DCMotor.getKrakenX60(1).withReduction(DriveConstants.TURN_GEAR_RATIO), DriveConstants.DRIVE_CURRENT_LIMIT, 1);
-  public static final RobotConfig PATHPLANNER_CONFIG = new RobotConfig(RobotConstants.ROBOT_MASS, RobotConstants.ROBOT_MOI, PATHPLANNER_MODULE_CONFIG, DriveConstants.DRIVE_MODULE_OFFSETS);
+  /**Turret and Shooter Constants*/
+    public class TurretShooterConstants{
+    public static final Transform2d ROBOT_TO_TURRET = new Transform2d(); //TODO add real values
+    public static final double SHOOTER_ERROR_THRES = 0.0;
+    public static final double SHOOTER_MAX_VOLTS = 0.0;
+    public static final double Hood_GEAR_RATIO = 79.6;
+  }
 
-  //Intake Constants
-  //These values need to be modified
-  public static final double INTAKE_MAX_TEMP = 80.0;
-  public static final double INTAKE_VOLTS = 4.25;
-  public static final double TIME_OF_FLIGHT_THRES = 0.255;
-  public static final double INTAKE_PIVOT_GR = 1;
-  public static final double MOMENT_OF_INERTIA = 1;
-  public static final double INTAKE_INTAKE_GR = 1;
-  public static final double INTAKE_EXTENDING_KP = 0.0;
-  public static final double INTAKE_EXTENDING_KD = 0.0;
-  //Trajectory Constants
-  /**
-   * How close the robot needs to be to its goal position to stop following the trajectory.
-   */
-  public static final double MIN_DISTANCE = 0.1; //m
-  /**
-   * How close the robot needs to be to the end time of the trajectory before it stops following it.
-   */
-  public static final double MIN_TIME = 0.5; //s
+  /**PathPlanner Constants*/
+  public class PathPlannerConstants{
+    public static final ModuleConfig PATHPLANNER_MODULE_CONFIG = new ModuleConfig(Units.inchesToMeters(2), DriveConstants.DRIVE_MAX_VELOCITY, RobotConstants.ROBOT_WHEELBASE, DCMotor.getKrakenX60(1).withReduction(DriveConstants.TURN_GEAR_RATIO), DriveConstants.DRIVE_CURRENT_LIMIT, 1);
+    public static final RobotConfig PATHPLANNER_CONFIG = new RobotConfig(RobotConstants.ROBOT_MASS, RobotConstants.ROBOT_MOI, PATHPLANNER_MODULE_CONFIG, DriveConstants.DRIVE_MODULE_OFFSETS);
+  }
 
+  /**Intake Constants*/
+  public class IntakeConstants{
+    //These values need to be modified
+    public static final double INTAKE_MAX_TEMP = 80.0;
+    public static final double INTAKE_VOLTS = 4.25;
+    public static final double TIME_OF_FLIGHT_THRES = 0.255;
+    public static final double INTAKE_PIVOT_GR = 1;
+    public static final double MOMENT_OF_INERTIA = 1;
+    public static final double INTAKE_INTAKE_GR = 1;
+    public static final double INTAKE_EXTENDING_KP = 0.0;
+    public static final double INTAKE_EXTENDING_KD = 0.0;
+  }
+
+  public class ClimberConstants{
+    public static final double MAX_ROTATIONAL_VELOCITY = 1;
+    public static final double MAX_ROTATIONAL_ACCELERATION = 2;
+  }
+
+  /**Trajectory Constants*/
+  public class TrajectoryConstants{
+    /**
+    * How close the robot needs to be to its goal position to stop following the trajectory.
+    */
+    public static final double MIN_DISTANCE = 0.1; //m
+
+    /**
+    * How close the robot needs to be to the end time of the trajectory before it stops following it.
+    */
+    public static final double MIN_TIME = 0.5; //s
+  }
 }
 

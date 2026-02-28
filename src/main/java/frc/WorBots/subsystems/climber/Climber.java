@@ -50,7 +50,8 @@ public class Climber extends SubsystemBase {
   public Climber(ClimberIO io) {
     this.io = io;
     climberController.setGains(5, 0, 0);
-    climberController.setConstraints(Constants.DRIVE_MAX_ROTATIONAL_VELOCITY, Constants.DRIVE_MAX_ACCELERATION);
+    climberController.setConstraints(
+      Constants.ClimberConstants.MAX_ROTATIONAL_VELOCITY, Constants.ClimberConstants.MAX_ROTATIONAL_ACCELERATION);
   }
 
   public void setVolts(double volts) {

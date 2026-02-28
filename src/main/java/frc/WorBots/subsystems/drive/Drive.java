@@ -20,11 +20,9 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
-import frc.WorBots.FieldConstants;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
@@ -38,7 +36,9 @@ public class Drive extends SubsystemBase{
   private final GyroIOInputs gyroIOInputs = new GyroIOInputs();
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
-  private DriveFilter filter = new DriveFilter(Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_MAX_ACCELERATION, Constants.DRIVE_MAX_ROTATIONAL_VELOCITY, Constants.DRIVE_MAX_ROTATION_ACCELERATION);
+  private DriveFilter filter = new DriveFilter(Constants.DriveConstants.DRIVE_MAX_VELOCITY, 
+    Constants.DriveConstants.DRIVE_MAX_ACCELERATION, Constants.DriveConstants.DRIVE_MAX_ROTATIONAL_VELOCITY, 
+    Constants.DriveConstants.DRIVE_MAX_ROTATION_ACCELERATION);
 
   private ChassisSpeeds setpointSpeeds = new ChassisSpeeds();
 
@@ -131,7 +131,7 @@ public class Drive extends SubsystemBase{
           forceModules = true;
       } else {
         setpointStates = kinematics.toSwerveModuleStates(setpointSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.DRIVE_MAX_VELOCITY);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.DriveConstants.DRIVE_MAX_VELOCITY);
       }
 
       moduleSetpointPublisher.set(Logger.statesToArray(setpointStates));
@@ -151,7 +151,7 @@ public class Drive extends SubsystemBase{
   }
 
   private Translation2d[] getModuleTranslations(){
-    return Constants.DRIVE_MODULE_OFFSETS;
+    return Constants.DriveConstants.DRIVE_MODULE_OFFSETS;
   }
 
   /**
@@ -179,7 +179,7 @@ public class Drive extends SubsystemBase{
    * @param speeds the robot relative speed being requested of the robot
    */
   public void runVelocity(ChassisSpeeds speeds){
-    ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DRIVE_DRIFT_RATE);
+    ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DriveConstants.DRIVE_DRIFT_RATE);
     goalSetpointPublisher.set(ajusted);
 
     //Calculates a field relative velocity as if we're on blue, then flips it to red if nessesary
@@ -193,7 +193,8 @@ public class Drive extends SubsystemBase{
    */
   public boolean isStopped(){
     double magnitude = Math.hypot(setpointSpeeds.vxMetersPerSecond, setpointSpeeds.vyMetersPerSecond);
-    return magnitude < Constants.DRIVE_STOP_XY_THRESHOLD && Math.abs(setpointSpeeds.omegaRadiansPerSecond) < Constants.DRIVE_THETA_THRESHOLD;
+    return magnitude < Constants.DriveConstants.DRIVE_STOP_XY_THRESHOLD && 
+      Math.abs(setpointSpeeds.omegaRadiansPerSecond) < Constants.DriveConstants.DRIVE_THETA_THRESHOLD;
   }
 
   /**
