@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.util.BuildConstants;
 import java.util.HashMap;
 
@@ -57,6 +58,8 @@ public class StatusPage {
   public static final String CAM_PREFIX = "Cam";
   public static final String LAUNCHPAD = "Launchpad";
   public static final String DRIVER_CAM = "Driver Cam";
+  public static final String CLIMBING = "Climbing";
+  public static final String SPINDEXER_JAM = "Spindexer Jam";
 
   // Sort in order of priority, from highest to lowest
   /** All systems that the StatusPage reports */
@@ -95,6 +98,21 @@ public class StatusPage {
     LAUNCHPAD,
     LIGHTS_SUBSYSTEM,
     NOT_ESTOPPED,
+    CLIMBING,
+    SPINDEXER_JAM,
+  };
+
+  public static String[] CRITICAL_SYSTEMS = {
+    DRIVE_SUBSYSTEM,
+    INTAKE_SUBSYSTEM,
+    SPINDEXER_SUBSYSTEM,
+    TURRET_SUBSYSTEM,
+    SHOOTER_SUBSYSTEM,
+    TAG_VISION_SUBSUBSYSTEM,
+    CLIMBER_SUBSYSTEM,
+    PDP_BREAKERS,
+    PDP_HARDWARE,
+    NOT_ESTOPPED
   };
 
   private StatusPage() {
@@ -140,6 +158,17 @@ public class StatusPage {
     return entry.getBoolean(false);
   }
 
+  public static boolean sysFault(){
+    boolean allClear = true;
+    for(String system : CRITICAL_SYSTEMS){
+      boolean status = getStatus(system);
+      if(!status){
+        allClear = false;
+      }
+    }
+    return !allClear;
+  }
+
   /**
    * Periodic method to run from the robot base to report common statuses
    *
@@ -177,6 +206,10 @@ public class StatusPage {
 
     // Report metadata
     StatusPage.reportMetadata();
+    Lights.getInstance().sysFault(StatusPage.sysFault());
+    Lights.getInstance().addSpinStatus(StatusPage.getStatus(SPINDEXER_JAM));
+    Lights.getInstance().addVisionStatus(StatusPage.getStatus(TAG_VISION_SUBSUBSYSTEM));
+    Lights.getInstance().setClimb(StatusPage.getStatus(CLIMBING));
   }
 
   /** Report metadata for AdvantageScope to use. Also starts the WPILib DataLog */

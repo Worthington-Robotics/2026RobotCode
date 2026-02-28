@@ -59,13 +59,13 @@ public class Lights extends SubsystemBase {
     private Optional<Boolean> turretAtGoal = Optional.empty();
 
     /**Vision Status */
-    private Optional<Boolean> visionStatus = Optional.of(false);
+    private Optional<Boolean> visionStatus = Optional.empty();
 
     /**Has a system fault been detected */
     private Optional<Boolean> sysFault = Optional.empty();
 
     /**Has a spindexer jam been detected */
-    private Optional<Boolean> spinJammed = Optional.empty();
+    private Optional<Boolean> spinJammed = Optional.of(true);
 
 
     //Mode specific varriables
@@ -176,7 +176,8 @@ public class Lights extends SubsystemBase {
             break;
           case SpinJam:
             //Displays orange light when Spindexer jam is detetcted
-            LightUtils.blink(strip, Color.kOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
+            Color trueOrange = new Color(255, 25, 0);
+            LightUtils.blink(strip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case SysFault:
@@ -187,7 +188,6 @@ public class Lights extends SubsystemBase {
             break;
           case VisionLost:
             //Displays blinking white light if vision is lost
-            System.out.println(TimeCache.getInstance().get());
             LightUtils.blink(strip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
@@ -269,17 +269,11 @@ public class Lights extends SubsystemBase {
   }
 
   /**
-   * Tells the lights the robot has started climbing
+   * Tells the lights if the robot is climbing
+   * @param status if the robot is climbing
    */
-  public void startClimb(){
+  public void setClimb(boolean status){
     this.climbing = true;
-  }
-
-  /**
-   * Tells the lights the climb has been aborted
-   */
-  public void stopClimb(){
-    this.climbing = false;
   }
 
   /**

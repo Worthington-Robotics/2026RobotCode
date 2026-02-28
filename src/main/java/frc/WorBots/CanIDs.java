@@ -50,7 +50,7 @@ public class CanIDs {
     public static final int TOF_ID = 0;
 
     //Climber
-    public static final int CLIMBER_ID = 0;
+    public static final int CLIMBER_ID = 13;
   }
 
 

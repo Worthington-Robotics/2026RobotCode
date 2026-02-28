@@ -14,7 +14,7 @@ public class ClimberIOTalon implements ClimberIO {
 
   }
 
-  public void setVolts(double volts) {
+  public void setMotorVolts(double volts) {
     climbMotorSignals.setVoltage(climbMotor, volts, 10);
   }
 
