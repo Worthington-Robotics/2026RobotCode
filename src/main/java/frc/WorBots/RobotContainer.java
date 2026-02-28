@@ -35,6 +35,9 @@ import frc.WorBots.subsystems.drive.GyroIOPigeon2;
 import frc.WorBots.subsystems.drive.GyroIOSim;
 import frc.WorBots.subsystems.drive.ModuleIOSim;
 import frc.WorBots.subsystems.drive.ModuleIOTalon;
+import frc.WorBots.subsystems.intake.Intake;
+import frc.WorBots.subsystems.intake.IntakeIOSim;
+import frc.WorBots.subsystems.intake.IntakeIOTalon;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
 import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
@@ -52,7 +55,8 @@ public class RobotContainer {
   public final Spindexer spin;
   public final Climber climber;
   public final Shooter shooter;
-  public final Turret turret; 
+  public final Turret turret;
+  public final Intake intake;
 
   //Joysticks
   public final CommandXboxController driver = new CommandXboxController(0);
@@ -82,6 +86,8 @@ public class RobotContainer {
       climber = new Climber(new ClimberIOTalon());
       shooter = new Shooter(new ShooterIOTalon());
       turret = new Turret(new TurretIOTalon());
+      intake = new Intake(new IntakeIOTalon());
+
     } else {
       drive = new Drive(
         new GyroIOSim(), 
@@ -93,6 +99,7 @@ public class RobotContainer {
       climber = new Climber(new ClimberIOSim());
       shooter = new Shooter(new ShooterIOSim()); //TODO make shooterIOSim work
       turret = new Turret(new TurretIOSim());
+      intake = new Intake(new IntakeIOSim());
     }
 
     AutoBuilder.configure(

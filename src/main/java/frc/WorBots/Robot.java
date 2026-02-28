@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     Lights.getInstance().periodic();
     TimeCache.getInstance().update();
+    StatusPage.periodic();
   }
 
   @Override

@@ -172,7 +172,8 @@ public class StatusPage {
    *
    * @param pdp The PowerDistribution panel
    */
-  public static void periodic(PowerDistribution pdp) {
+  public static void periodic() {
+    //add "PowerDistribution pdp" as a param to this later
     // Connection of main robot systems
     StatusPage.reportStatus(
         StatusPage.NETWORK_TABLES, NetworkTableInstance.getDefault().isConnected());

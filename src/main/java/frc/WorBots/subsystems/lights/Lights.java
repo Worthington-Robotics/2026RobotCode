@@ -69,7 +69,7 @@ public class Lights extends SubsystemBase {
     private Optional<Boolean> sysFault = Optional.empty();
 
     /**Has a spindexer jam been detected */
-    private Optional<Boolean> spinJammed = Optional.of(true);
+    private Optional<Boolean> spinJammed = Optional.empty();
 
 
     //Mode specific varriables
@@ -278,7 +278,7 @@ public class Lights extends SubsystemBase {
    * @param status if the robot is climbing
    */
   public void setClimb(boolean status){
-    this.climbing = true;
+    this.climbing = status;
   }
 
   /**
