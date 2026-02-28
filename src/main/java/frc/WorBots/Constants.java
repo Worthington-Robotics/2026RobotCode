@@ -1,5 +1,6 @@
 package frc.WorBots;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -73,6 +74,7 @@ public class Constants {
     public static final double SHOOTER_ERROR_THRES = 0.0;
     public static final double SHOOTER_MAX_VOLTS = 0.0;
     public static final double Hood_GEAR_RATIO = 79.6;
+    public static final double TURRET_LOCK_POSITION = 0.0; //TODO add real value
   }
 
   /**PathPlanner Constants*/
@@ -97,6 +99,8 @@ public class Constants {
   public class ClimberConstants{
     public static final double MAX_ROTATIONAL_VELOCITY = 1;
     public static final double MAX_ROTATIONAL_ACCELERATION = 2;
+    public static final Rotation2d READY_CLIMBER_POSITION = new Rotation2d();
+    public static final Rotation2d CLIMB_POSITION = new Rotation2d();
   }
 
   /**Trajectory Constants*/

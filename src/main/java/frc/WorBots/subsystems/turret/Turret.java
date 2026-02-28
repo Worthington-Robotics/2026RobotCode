@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.WorBots.Constants;
 import frc.WorBots.subsystems.shooter.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.turret.TurretIO.TurretIOInputs;
 
@@ -56,6 +57,7 @@ public class Turret extends SubsystemBase{
     Voltage;
   }
 
+  private boolean turretLocked = false;
   private double debugVoltage = 0;
   private double goalPosition = 0;
 
@@ -79,19 +81,27 @@ public class Turret extends SubsystemBase{
     if(controlMode == turretControlMode.Disabled){
       io.setVoltage(0);
     }
-    if(controlMode == turretControlMode.Voltage){
-      debugVoltage = MathUtil.clamp(debugVoltage, MIN_VOLTAGE, MAX_ANGLE);
-      io.setVoltage(debugVoltage);
-    }
-    if(controlMode == turretControlMode.Position){
-      final double feedback = turretFeedBack.calculate(inputs.turretFusedAngle, goalPosition);
+    if(turretLocked){
+      turretFeedBack.setGoal(Constants.TurretShooterConstants.TURRET_LOCK_POSITION);
+      final double feedback = turretFeedBack.calculate(inputs.turretFusedAngle, Constants.TurretShooterConstants.TURRET_LOCK_POSITION);
       final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);
-
       double volts = feedback + feedforward;
-
       MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
       io.setVoltage(volts);
-    }
+    } else {
+      if(controlMode == turretControlMode.Voltage){
+        debugVoltage = MathUtil.clamp(debugVoltage, MIN_VOLTAGE, MAX_ANGLE);
+        io.setVoltage(debugVoltage);
+      }
+      if(controlMode == turretControlMode.Position){
+        final double feedback = turretFeedBack.calculate(inputs.turretFusedAngle, goalPosition);
+        final double feedforward = turretFeedForward.calculate(turretFeedBack.getSetpoint().velocity);
+
+        double volts = feedback + feedforward;
+
+        MathUtil.clamp(volts, MIN_VOLTAGE, MAX_VOLTAGE);
+        io.setVoltage(volts);
+      }}
 
     absConnectedPub.set(inputs.absEncoderConnected);
     absAnglePub.set(inputs.turretAbsAngle);
@@ -275,4 +285,11 @@ public class Turret extends SubsystemBase{
     goalPosition = MathUtil.angleModulus(position.getRadians()-robotPose.getRotation().getRadians());
   }
 
+  public void lockTurret(){
+    turretLocked = true;
+  }
+  
+  public void unlockTurret(){
+    turretLocked = false;
+  }
 }
