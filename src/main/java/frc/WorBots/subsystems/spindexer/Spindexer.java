@@ -40,7 +40,12 @@ public class Spindexer extends SubsystemBase{
       goalVelocity = 0;
       io.stop();
     } else {
-      io.setVelocity(goalVelocity);
+      if(inputs.jammed){
+        io.setVelocity(-goalVelocity);
+      }
+      else{
+        io.setVelocity(goalVelocity);
+      }
     }
 
     activePublisher.set(inputs.active);
