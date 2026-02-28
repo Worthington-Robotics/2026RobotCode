@@ -27,6 +27,7 @@ import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
 import frc.WorBots.util.debug.Logger;
+import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.math.GeomUtil;
 import frc.WorBots.util.math.PoseEstimator;
 
@@ -85,6 +86,7 @@ public class Drive extends SubsystemBase{
       modules[1] = new Module(frModule, 1);
       modules[2] = new Module(blModule, 2);
       modules[3] = new Module(brModule, 3);
+      StatusPage.reportStatus(StatusPage.DRIVE_SUBSYSTEM, true);
   }
 
   public void periodic(){
@@ -105,6 +107,9 @@ public class Drive extends SubsystemBase{
     gyroVelocityPublisher.set(gyroIOInputs.yawVelocityRadPerSec);
     stopModePublisher.set(stopMode.toString());
     measuredStopPublisher.set(isStopped());
+
+    //Reports to Status page
+    StatusPage.reportStatus(StatusPage.GYROSCOPE, gyroIOInputs.connected);
 
     //makes the robot move
     drive();

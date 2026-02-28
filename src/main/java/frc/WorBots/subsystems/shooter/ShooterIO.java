@@ -8,6 +8,9 @@ public interface ShooterIO {
       public final TalonInputs leader = 
         new TalonInputs("Shooter", "Flywheel Leader");
 
+      public final TalonInputs follower =
+        new TalonInputs("Shooter", "Flywheel Follower");
+
       public double actualLeaderVelocityRadPerSec = 0.0;
   
       public final TalonInputsPositional hood = 

@@ -42,6 +42,8 @@ public class ShooterIOSim implements ShooterIO {
     inputs.leader.supplyVoltage = 12;
     inputs.leader.temperatureCelsius = 20;
 
+    inputs.follower.isConnected = true;
+
     inputs.actualLeaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
 
     inputs.actualHoodPosition = hood.getAngleRads();   

@@ -12,6 +12,7 @@ import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.util.MatchTime;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.cache.Cache.TimeCache;
+import frc.WorBots.util.debug.StatusPage;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -73,6 +74,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    StatusPage.reportStatus("Climbing", false);
   }
 
   @Override

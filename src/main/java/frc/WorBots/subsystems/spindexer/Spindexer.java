@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
+import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunablePIDController;
 
 public class Spindexer extends SubsystemBase{
@@ -43,6 +44,8 @@ public class Spindexer extends SubsystemBase{
     
   public void periodic(){
     io.updateInputs(inputs);
+    StatusPage.reportStatus(StatusPage.SPINDEXER_SUBSYSTEM, inputs.talon.isConnected && inputs.follower.isConnected);
+    StatusPage.reportStatus(StatusPage.SPINDEXER_JAM, inputs.jammed);
     //TODO add something to try to resolve jamming
     if(DriverStation.isDisabled() || inputs.talon.temperatureCelsius > Constants.SpindexerConstants.SPINDEXER_MAX_TEMP){
       goalVelocity = 0;

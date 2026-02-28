@@ -23,6 +23,7 @@ public class TurretIOSim implements TurretIO {
   public void updateInputs(TurretIOInputs inputs) {
     position = position + velocity * Constants.RobotConstants.ROBOT_PERIOD;
     inputs.turretFusedAngle = position;
+    inputs.turret.isConnected = true;
   }
 
   public void resetOffset(){

@@ -2,6 +2,7 @@ package frc.WorBots.subsystems.climber;
 
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.climber.ClimberIO.ClimberIOInputs;
+import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,6 +31,8 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     inputs.motor.publish();
+    StatusPage.reportStatus(StatusPage.CLIMBER_SUBSYSTEM, inputs.motor.isConnected);
+    
     if (controlMode == ClimberControlMode.Disabled) {
       io.setMotorVolts(0);
     } else {

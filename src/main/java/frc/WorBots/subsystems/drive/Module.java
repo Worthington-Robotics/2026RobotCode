@@ -3,6 +3,7 @@ package frc.WorBots.subsystems.drive;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.WorBots.Constants;
+import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.math.GeneralMath;
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public class Module {
     io.updateInputs();
     io.getInputs().drive.publish();
     io.getInputs().turn.publish();
+    StatusPage.reportStatus(StatusPage.SMODULE_PREFIX + index, io.getInputs().isConnected);
   }
 
   /**
