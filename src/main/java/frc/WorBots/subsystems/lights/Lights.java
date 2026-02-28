@@ -108,7 +108,7 @@ public class Lights extends SubsystemBase {
 
     private Lights(){
         //TODO Add light Strips here
-        strip = new LightStrip(1, 100);
+        strip = new LightStrip(0, 7);
     }
 
     public void periodic(){
