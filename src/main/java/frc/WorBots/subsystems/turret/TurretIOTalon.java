@@ -32,9 +32,9 @@ public class TurretIOTalon implements TurretIO {
   public TurretIOTalon() {
 
     inputs = new TurretIOInputs();
-    turretMotor = new TalonFX(CanIDs.TURRET_ID);
+    turretMotor = new TalonFX(CanIDs.SuperStructure.TURRET_ID);
 
-    turretAbsEncoder = new CANcoder(CanIDs.TURRET_ABS_ENCODER_ID);
+    turretAbsEncoder = new CANcoder(CanIDs.SuperStructure.TURRET_ABS_ENCODER_ID);
 
     turretAbsEncoderSignal = turretAbsEncoder.getAbsolutePosition();
     turretMotorPositionSignal = turretMotor.getPosition();
