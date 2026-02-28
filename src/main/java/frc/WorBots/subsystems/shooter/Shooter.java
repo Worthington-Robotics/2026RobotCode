@@ -31,6 +31,7 @@ public class Shooter extends SubsystemBase {
 
     private double leaderFudgeFactor = 0;
 
+    private boolean shotValid = false;
     //Two control modes, one allows you to provide voltage, the other means that the robot is disabled.
     private enum ControlMode{
       Voltage,
@@ -177,6 +178,7 @@ public class Shooter extends SubsystemBase {
       controlMode = ControlMode.Voltage;
       setFlywheelSpeed(params.flywheelspeed());
       setHoodPose(params.hoodAngle());
+      setShotValid(params.isValid());
     }
 
     /***
@@ -211,5 +213,16 @@ public class Shooter extends SubsystemBase {
      */
     public void modFlywheelFudgeFactor(double increment){
       leaderFudgeFactor += increment;
+    }
+
+    public void setShotValid(boolean shotValid){
+      this.shotValid = shotValid;
+    }
+
+    /**
+     * Gets if the current commanded shot is valid
+     */
+    public boolean getShotValid(){
+      return shotValid;
     }
 }
