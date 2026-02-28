@@ -229,4 +229,15 @@ public class Shooter extends SubsystemBase {
     public boolean flywheelAtSpeed(){
       return leaderPIDController.pid.atGoal();
     }
+
+    public boolean hoodInPosition(){
+      return hoodPIDController.pid.atGoal();
+    }
+
+    /**
+     * Returns if the shooter is ready to shoot
+     */
+    public boolean readyToShoot(){
+      return hoodInPosition() && flywheelAtSpeed();
+    }
 }
