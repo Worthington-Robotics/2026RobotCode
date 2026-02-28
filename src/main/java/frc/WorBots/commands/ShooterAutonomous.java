@@ -14,24 +14,27 @@ import frc.WorBots.subsystems.turret.Turret;
 import frc.WorBots.util.math.AllianceFlipUtil;
 
 /** A command to aim and prepare shots automatically */
-public class ShooterAuto extends Command {
+public class ShooterAutonomous extends Command {
   private final Shooter shooter;
   private final Turret turret;
   private final Drive drive;
+  private final Spindexer spin;
   private ShotCalculator shotCalculator = ShotCalculator.getInstance();
 
   private Pose2d pose;
 
-  /** A command to aim and prepare shots automatically
+  /** A command to aim and shoots automatically (specifically for use in autos)
    * @param shooter The shooter to use
    * @param turret The turret to use
    * @param drive The robot's drivetrain, used for fetching pose.
+   * @param spin The spindexer to use
    */
-  public ShooterAuto(Shooter shooter, Turret turret, Drive drive){
-    addRequirements(shooter, turret);
+  public ShooterAutonomous(Shooter shooter, Turret turret, Drive drive, Spindexer spin){
+    addRequirements(shooter, turret, spin);
     this.turret = turret;
     this.shooter = shooter;
     this.drive = drive;
+    this.spin = spin;
   }
 
   @Override
@@ -47,6 +50,11 @@ public class ShooterAuto extends Command {
       shooter.setShooterParams(params);
       turret.setPositionAndVelocity(params, pose);
       //TODO add shot is valid to status page
+    }
+    if(shooter.readyToShoot() && turret.atGoal() && params.isValid()){
+      spin.runSpindexer();
+    } else {
+      spin.stopSpindexer();
     }
     }
 }
