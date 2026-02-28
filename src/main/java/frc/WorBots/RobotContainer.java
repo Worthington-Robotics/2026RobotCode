@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.WorBots.commands.ClimberCommands;
+import frc.WorBots.commands.ClimberTestCommands;
 import frc.WorBots.commands.DriveWithJoysticks;
 import frc.WorBots.commands.ShooterAuto;
 import frc.WorBots.subsystems.climber.Climber;
@@ -131,6 +133,7 @@ public class RobotContainer {
     } else {
       shooter.setDefaultCommand(new ShooterAuto(shooter, turret, drive));
     }
+    climber.setDefaultCommand(new ClimberTestCommands().climbWIthStick(climber, () -> operator.getRightY()));
   }
 
   public Command getAutonomousCommand() {
