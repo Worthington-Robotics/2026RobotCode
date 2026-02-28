@@ -43,18 +43,16 @@ public class ShooterAutonomous extends Command {
     ShootingParams params;
     if(AllianceFlipUtil.apply(pose).getX()< FieldConstants.hubPosition.getX()){
       params = shotCalculator.getParamsToHub(pose, drive.getMeasuredSpeeds());
-    } else {
-      params = shotCalculator.getPassParams(pose, drive.getMeasuredSpeeds());
+      if(params.isValid()){
+        shooter.setShooterParams(params);
+        turret.setPositionAndVelocity(params, pose);
+        //TODO add shot is valid to status page
+      }
+      if(shooter.readyToShoot() && turret.atGoal() && params.isValid()){
+        spin.runSpindexer();
+      } else {
+        spin.stopSpindexer();
+      }
     }
-    if(params.isValid()){
-      shooter.setShooterParams(params);
-      turret.setPositionAndVelocity(params, pose);
-      //TODO add shot is valid to status page
-    }
-    if(shooter.readyToShoot() && turret.atGoal() && params.isValid()){
-      spin.runSpindexer();
-    } else {
-      spin.stopSpindexer();
-    }
-    }
+  }
 }
