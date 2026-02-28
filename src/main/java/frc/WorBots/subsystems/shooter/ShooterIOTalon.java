@@ -25,7 +25,8 @@ public class ShooterIOTalon implements ShooterIO {
 
   public ShooterIOTalon(){
     //TODO set motor PID values
-    leader.setNeutralMode(NeutralModeValue.Brake);
+    leader.setNeutralMode(NeutralModeValue.Coast);
+    follower.setNeutralMode(NeutralModeValue.Coast);
     hood.setNeutralMode(NeutralModeValue.Brake);
 
     //TODO: Make sure that they actually are aligned 
@@ -51,32 +52,10 @@ public class ShooterIOTalon implements ShooterIO {
     hood.setVoltage(volts);
   }
 
-  //Are these 2 actually supposed to be in this class or in Shooter.java?
-
-  @Override
-  public void setHoodPosition(double position){
-    hood.setPosition(position);
-
-  }
-
-  @Override
-  public void setHoodPosition(Rotation2d rotation){
-    hood.setPosition(rotation.getRadians());
-  }
-
-  @Override
-  public void resetHoodPosition(){
-    hood.setPosition(0.0);
-  }
-
-
   @Override  
   public void updateInputs(ShooterIOInputs inputs){
-    inputs.isConnected = true;
     leaderSignals.update(inputs.leader, leader);
     hoodSignals.update(inputs.hood, hood);
-
-    //TODO these return position in rotations and velocity as rps
     inputs.actualHoodPosition = Units.rotationsToRadians(hood.getPosition().getValueAsDouble());
     inputs.actualLeaderVelocityRadPerSec = leader.getVelocity().getValueAsDouble() * 2 * Math.PI;
   }

@@ -26,6 +26,11 @@ public class Shooter extends SubsystemBase {
     private double setpointVelocity;
     private double setpointPosition;
 
+    private double hoodFudgeFactor = 0;
+    private double hoodOffset = 0;
+
+    private double leaderFudgeFactor = 0;
+
     //Two control modes, one allows you to provide voltage, the other means that the robot is disabled.
     private enum ControlMode{
       Voltage,
@@ -61,8 +66,8 @@ public class Shooter extends SubsystemBase {
         leaderPIDController.pid.setTolerance(0.0);
         hoodPIDController.pid.setTolerance(0.0);
 
-        leaderFeedForwardController = new SimpleMotorFeedforward(0.0, 0.0);
-        hoodFeedForwardController = new SimpleMotorFeedforward(0.0, 0.0);
+        leaderFeedForwardController = new SimpleMotorFeedforward(1.0, 1.0);
+        hoodFeedForwardController = new SimpleMotorFeedforward(1.0, 1.0);
 
         //Set PID gains if ! in Sim
         if(!Constants.getSim()){
@@ -93,10 +98,10 @@ public class Shooter extends SubsystemBase {
       inputs.hood.publish();
       inputs.leader.publish();
       controlModePub.set(controlMode.toString());
-      hoodPosePub.set(inputs.actualHoodPosition);
+      hoodPosePub.set(inputs.actualHoodPosition - hoodOffset);
       hoodPoseDesiredPub.set(setpointPosition);
 
-      shooterSpeedActualPub.set(0.0);
+      shooterSpeedActualPub.set(inputs.actualLeaderVelocityRadPerSec);
       shooterSpeedDesiredPub.set(setpointVelocity);
 
     
@@ -110,8 +115,8 @@ public class Shooter extends SubsystemBase {
         double leaderVolts = leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec, setpointVelocity +leaderPID);
       
 
-        hoodPIDController.pid.setGoal(setpointPosition);
-        double hoodPID = hoodPIDController.pid.calculate(inputs.actualHoodPosition);
+        hoodPIDController.pid.setGoal(setpointPosition - hoodOffset);
+        double hoodPID = hoodPIDController.pid.calculate(inputs.actualHoodPosition - hoodOffset);
         double hoodVolts = hoodFeedForwardController.calculate(hoodPID);
 
         io.setHoodVolts(hoodVolts);
@@ -123,9 +128,9 @@ public class Shooter extends SubsystemBase {
      * Resets the hood position.
      */
     public void resetHoodPosition(){
-      disable();
-      io.resetHoodPosition();
+      hoodOffset = inputs.actualHoodPosition;
     }
+
     /***
      * Disables the robot.
      */
@@ -138,7 +143,7 @@ public class Shooter extends SubsystemBase {
      * @return Setpoint Position of the hood.
      */ 
     public double getDesiredHoodPosition(){
-      return setpointPosition;
+      return setpointPosition  - hoodOffset;
     }
     /***
      * Method returning the setpoint velocity of the leader.
@@ -180,7 +185,7 @@ public class Shooter extends SubsystemBase {
      */
     public void setFlywheelSpeed(double speed){
       controlMode = ControlMode.Voltage;
-      setpointVelocity = speed;
+      setpointVelocity = speed + leaderFudgeFactor;
     }
 
     /***
@@ -189,18 +194,22 @@ public class Shooter extends SubsystemBase {
      */
     public void setHoodPose(double pose){
       controlMode = ControlMode.Voltage;
-      setpointPosition = pose;
+      setpointPosition = pose + hoodFudgeFactor;
+    }
+
+    /**
+     * Modifies the fudge factor applied to the hoods desired position
+     * @param increment the amount you want to modify the fudge factor by in radians
+     */
+    public void modHoodFudgeFactor(double increment){
+      hoodFudgeFactor += increment;
+    }
+
+    /**
+     * Modifies the fudge factor applied to the flywheels desired position
+     * @param increment
+     */
+    public void modFlywheelFudgeFactor(double increment){
+      leaderFudgeFactor += increment;
     }
 }
-
-
-
-    
-
-
-
-
-
-
-
-

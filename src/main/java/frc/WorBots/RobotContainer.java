@@ -107,6 +107,7 @@ public class RobotContainer {
 
     driver.a().onTrue(new ShooterCommands().setHoodPose(shooter, Math.PI));
     driver.b().onTrue(new ShooterCommands().setFlyWheel(shooter, 10));
+
   }
 
   public Command getAutonomousCommand() {
