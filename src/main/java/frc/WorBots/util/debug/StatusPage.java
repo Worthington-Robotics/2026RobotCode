@@ -60,6 +60,8 @@ public class StatusPage {
   public static final String DRIVER_CAM = "Driver Cam";
   public static final String CLIMBING = "Climbing";
   public static final String SPINDEXER_JAM = "Spindexer Jam";
+  public static final String SHOOTER_READY = "Shooter Ready";
+  public static final String TURRET_READY = "Turret Ready";
 
   // Sort in order of priority, from highest to lowest
   /** All systems that the StatusPage reports */
@@ -100,6 +102,8 @@ public class StatusPage {
     NOT_ESTOPPED,
     CLIMBING,
     SPINDEXER_JAM,
+    TURRET_READY,
+    SHOOTER_READY
   };
 
   public static String[] CRITICAL_SYSTEMS = {
@@ -167,6 +171,15 @@ public class StatusPage {
     return !allClear;
   }
 
+  public static boolean shotReady(){
+    boolean turretStatus = getStatus(TURRET_READY);
+    boolean shooterStatus = getStatus(SHOOTER_READY);
+    if(turretStatus && shooterStatus){
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Periodic method to run from the robot base to report common statuses
    *
@@ -209,6 +222,7 @@ public class StatusPage {
     Lights.getInstance().addSpinStatus(StatusPage.getStatus(SPINDEXER_JAM));
     Lights.getInstance().addVisionStatus(StatusPage.getStatus(TAG_VISION_SUBSUBSYSTEM));
     Lights.getInstance().setClimb(StatusPage.getStatus(CLIMBING));
+    Lights.getInstance().addShotStatus(shotReady());
   }
 
   /** Report metadata for AdvantageScope to use. Also starts the WPILib DataLog */

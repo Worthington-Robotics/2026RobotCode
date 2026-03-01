@@ -57,10 +57,7 @@ public class Lights extends SubsystemBase {
     private boolean climbing = false;
 
     /**Turret Status */
-    private Optional<Boolean> turretAtGoal = Optional.empty();
-
-    /**Shooter Status */
-    private Optional<Boolean> shooterAtGoal = Optional.empty();
+    private Optional<Boolean> shotPreped = Optional.empty();
 
     /**Vision Status */
     private Optional<Boolean> visionStatus = Optional.empty();
@@ -153,7 +150,7 @@ public class Lights extends SubsystemBase {
         switch (activeMode) {
           case TurretDisplay:
             //Display turret status, yellow for aiming, green for hub lock, purple for passing
-            if(turretAtGoal.isPresent() && turretAtGoal.get() == true && shooterAtGoal.isPresent() && shooterAtGoal.get() == true){
+            if(shotPreped.isPresent() && shotPreped.get() == true){
               if(currentTarget == Target.Hub){
                 Color deepGreen = new Color(0, 255, 10);
                 solidColor = deepGreen;
@@ -285,16 +282,8 @@ public class Lights extends SubsystemBase {
    * Passes the turret's status to the lights
    * @param turretStatus is the turret at it's goal point
    */
-  public void addTurretStatus(boolean turretStatus){
-    this.turretAtGoal = Optional.of(turretStatus);
-  }
-
-  /**
-   * Passes the shooters status to the lights
-   * @param shooterStatus is the shooter set for a shot
-   */
-  public void addShooterStatus(boolean shooterStatus){
-    this.shooterAtGoal = Optional.of(shooterStatus);
+  public void addShotStatus(boolean shotStatus){
+    this.shotPreped = Optional.of(shotStatus);
   }
 
   /**

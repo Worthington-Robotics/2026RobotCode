@@ -128,7 +128,7 @@ public class Shooter extends SubsystemBase {
         io.setLeaderVolts(leaderVolts);
       }
 
-      Lights.getInstance().addShooterStatus(readyToShoot());
+      StatusPage.reportStatus(StatusPage.SHOOTER_READY, readyToShoot());
     }
 
     /***

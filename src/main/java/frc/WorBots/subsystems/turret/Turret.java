@@ -116,7 +116,7 @@ public class Turret extends SubsystemBase{
     positionPub.set(getPosition());
     goalPosePub.set(goalPosition);
 
-    Lights.getInstance().addTurretStatus(atGoal());
+    StatusPage.reportStatus(StatusPage.TURRET_READY, atGoal());
   }
 
   private double clampSetpoint(double setpoint) {
