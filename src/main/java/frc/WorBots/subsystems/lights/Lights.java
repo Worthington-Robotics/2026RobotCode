@@ -21,7 +21,7 @@ public class Lights extends SubsystemBase {
         return instance;
     }
     
-    private LightStrip strip;
+    private LightStrip climbStrip;
 
     //What should be run if no override is present
     private LightModes currentMode = LightModes.Disabled;
@@ -109,7 +109,7 @@ public class Lights extends SubsystemBase {
 
     private Lights(){
         //TODO Add light Strips here
-        strip = new LightStrip(0, 7);
+        climbStrip = new LightStrip(0, 7);
         StatusPage.reportStatus(StatusPage.LIGHTS_SUBSYSTEM, true);
     }
 
@@ -162,7 +162,7 @@ public class Lights extends SubsystemBase {
               solidColor = orangeYellow;
             }
 
-            LightUtils.solid(strip, solidColor);
+            LightUtils.solid(climbStrip, solidColor);
 
             if(rebuiltUtils.timeToAcivationSwitch() < 5){
               runEffect(LightEffects.timePulse);
@@ -172,45 +172,46 @@ public class Lights extends SubsystemBase {
           case Climbing:
             //Displays blue light when climb is active to remind the drivers to chill
             Color deepBlue = new Color(0, 0, 255);
-            LightUtils.solid(strip, solidColor);
+            LightUtils.solid(climbStrip, solidColor);
             solidColor = deepBlue;
 
             break;
           case SpinJam:
             //Displays orange light when Spindexer jam is detetcted
             Color trueOrange = new Color(255, 25, 0);
-            LightUtils.blink(strip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
+            LightUtils.blink(climbStrip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case SysFault:
             //Displays solid red when a System Fault occurs
             solidColor = Color.kRed;
-            LightUtils.solid(strip, solidColor);
+            LightUtils.solid(climbStrip, solidColor);
 
             break;
           case VisionLost:
             //Displays blinking white light if vision is lost
-            LightUtils.blink(strip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
+            LightUtils.blink(climbStrip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case Solid:
             //Diplays a solid light of a set color, mostly a debug mode
-            LightUtils.solid(strip, solidColor);
+            LightUtils.solid(climbStrip, solidColor);
 
             break;
           case PitLight:
             //Displays solid white light to make it easier to see while working on the robot
             solidColor = Color.kWhite;
-            LightUtils.solid(strip, solidColor);
+            LightUtils.solid(climbStrip, solidColor);
 
             break;
           case Disabled:
             //Displays worbots flame while robot is disabled
-            LightUtils.flame(strip, 0.95, WORBOTS_FLAME_COLORS);
+            //LightUtils.flame(climbStrip, 0.95, WORBOTS_FLAME_COLORS); //Use this for larger light strips
+            LightUtils.gradient(climbStrip, Color.kBlue, Color.kRed);
             break;
         }
 
-        strip.periodic();
+        climbStrip.periodic();
     }
 
     public void runEffect(LightEffects effect){
@@ -224,7 +225,7 @@ public class Lights extends SubsystemBase {
         case invalidShotFlash:
           //Flashes the lights yellow if the drivers try to shoot before the robot has a lock
           final double flashPeriod = 0.125;
-          LightUtils.blink(strip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
+          LightUtils.blink(climbStrip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
           if (effectTimer.get() > flashPeriod * 3.0) {
             effectOverride = Optional.empty();
           }
@@ -233,7 +234,7 @@ public class Lights extends SubsystemBase {
         case timePulse:
           final double minBrightness = 0.1;
           final double totalTime = 5.0;
-          LightUtils.dopplerEffect(strip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
+          LightUtils.dopplerEffect(climbStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
 
           break;
         case none:

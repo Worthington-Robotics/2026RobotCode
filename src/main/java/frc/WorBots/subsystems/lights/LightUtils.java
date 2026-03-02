@@ -165,6 +165,16 @@ public class LightUtils {
     LightUtils.solid(io, newColor);
   }
 
+  public static void gradient(LightsIO io, Color color1, Color color2){
+    double redIncrement = (color2.red - color1.red) / io.getCount();
+    double greenIncrement = (color2.green - color1.green) / io.getCount();
+    double blueIncrement = (color2.blue - color1.blue) / io.getCount();
+    
+    for(int i = 0; i < io.getCount(); i++){
+      io.setLED(i, new Color(color1.red + i * (redIncrement), color1.green + i * (greenIncrement), color1.blue + i * (blueIncrement)));
+    }
+  }
+
   /**
    * Does a ripple effect over time
    *

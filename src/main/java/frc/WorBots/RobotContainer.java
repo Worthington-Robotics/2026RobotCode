@@ -97,7 +97,7 @@ public class RobotContainer {
         new ModuleIOSim(3));
       spin = new Spindexer(new SpindexerIOSim());
       climber = new Climber(new ClimberIOSim());
-      shooter = new Shooter(new ShooterIOSim()); //TODO make shooterIOSim work
+      shooter = new Shooter(new ShooterIOSim());
       turret = new Turret(new TurretIOSim());
       intake = new Intake(new IntakeIOSim());
     }
