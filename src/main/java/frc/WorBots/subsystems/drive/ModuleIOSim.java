@@ -11,7 +11,6 @@ import frc.WorBots.Constants;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.math.GeneralMath;
-import frc.WorBots.util.math.GeomUtil;
 
 public class ModuleIOSim implements ModuleIO {
   private ModuleIOInputs inputs;
@@ -54,11 +53,11 @@ public class ModuleIOSim implements ModuleIO {
     driveFeedback.update();
     turnFeedback.update();
 
-    driveSim.update(Constants.ROBOT_PERIOD);
-    turnSim.update(Constants.ROBOT_PERIOD);
+    driveSim.update(Constants.RobotConstants.ROBOT_PERIOD);
+    turnSim.update(Constants.RobotConstants.ROBOT_PERIOD);
 
     final double angleVelocityRadsPerSec = turnSim.getAngularVelocityRadPerSec();
-    final double angleDiffRad = angleVelocityRadsPerSec * Constants.ROBOT_PERIOD;
+    final double angleDiffRad = angleVelocityRadsPerSec * Constants.RobotConstants.ROBOT_PERIOD;
     turnRelativePositionRad += angleDiffRad;
     turnAbsolutePositionRad += angleDiffRad;
     inputs.turnAbsoluteVelocityRadsPerSec = angleVelocityRadsPerSec;
@@ -66,7 +65,7 @@ public class ModuleIOSim implements ModuleIO {
 
     inputs.turnPositionErrorRad = turnFeedback.pid.getError();
 
-    inputs.drive.positionRads += (driveSim.getAngularVelocityRadPerSec() * Constants.ROBOT_PERIOD);
+    inputs.drive.positionRads += (driveSim.getAngularVelocityRadPerSec() * Constants.RobotConstants.ROBOT_PERIOD);
     inputs.drive.velocityRadsPerSec = driveSim.getAngularVelocityRadPerSec();
     inputs.driveDistanceMeters = inputs.drive.positionRads * wheelRadius;
     inputs.driveVelocityMetersPerSec = inputs.drive.velocityRadsPerSec * wheelRadius;

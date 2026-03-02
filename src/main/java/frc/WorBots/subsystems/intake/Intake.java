@@ -47,15 +47,15 @@ public class Intake extends SubsystemBase {
     io.updateInputs(inputs);
 
     // If the heat exceeds the max, turn it off.
-    if (inputs.intakeMotor.temperatureCelsius > Constants.INTAKE_MAX_TEMP || DriverStation.isDisabled()
-        || inputs.extendingMotor.temperatureCelsius > Constants.INTAKE_MAX_TEMP) {
+    if (inputs.intakeMotor.temperatureCelsius > Constants.IntakeConstants.INTAKE_MAX_TEMP || DriverStation.isDisabled()
+        || inputs.extendingMotor.temperatureCelsius > Constants.IntakeConstants.INTAKE_MAX_TEMP) {
       setPointVoltageIntake = 0.0;
 
     }
 
     StatusPage.reportStatus(
         StatusPage.INTAKE_CONNECTED,
-        inputs.isConnected && inputs.intakeMotor.temperatureCelsius <= Constants.INTAKE_MAX_TEMP);
+        inputs.isConnected && inputs.intakeMotor.temperatureCelsius <= Constants.IntakeConstants.INTAKE_MAX_TEMP);
 
     io.setIntakeMotorVolts(setPointVoltageIntake);
     inputs.intakeMotor.publish();

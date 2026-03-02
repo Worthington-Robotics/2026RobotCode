@@ -2,9 +2,6 @@ package frc.WorBots.subsystems.drive;
 
 import java.util.ArrayList;
 
-import com.ctre.phoenix6.sim.ChassisReference;
-import com.pathplanner.lib.config.RobotConfig;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,7 +11,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -31,6 +27,7 @@ import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
 import frc.WorBots.util.debug.Logger;
+import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.math.GeomUtil;
 import frc.WorBots.util.math.PoseEstimator;
 
@@ -40,7 +37,9 @@ public class Drive extends SubsystemBase{
   private final GyroIOInputs gyroIOInputs = new GyroIOInputs();
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
-  private DriveFilter filter = new DriveFilter(Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_MAX_ACCELERATION, Constants.DRIVE_MAX_ROTATIONAL_VELOCITY, Constants.DRIVE_MAX_ROTATION_ACCELERATION);
+  private DriveFilter filter = new DriveFilter(Constants.DriveConstants.DRIVE_MAX_VELOCITY, 
+    Constants.DriveConstants.DRIVE_MAX_ACCELERATION, Constants.DriveConstants.DRIVE_MAX_ROTATIONAL_VELOCITY, 
+    Constants.DriveConstants.DRIVE_MAX_ROTATION_ACCELERATION);
 
   private ChassisSpeeds setpointSpeeds = new ChassisSpeeds();
 
@@ -87,6 +86,7 @@ public class Drive extends SubsystemBase{
       modules[1] = new Module(frModule, 1);
       modules[2] = new Module(blModule, 2);
       modules[3] = new Module(brModule, 3);
+      StatusPage.reportStatus(StatusPage.DRIVE_SUBSYSTEM, true);
   }
 
   public void periodic(){
@@ -107,6 +107,9 @@ public class Drive extends SubsystemBase{
     gyroVelocityPublisher.set(gyroIOInputs.yawVelocityRadPerSec);
     stopModePublisher.set(stopMode.toString());
     measuredStopPublisher.set(isStopped());
+
+    //Reports to Status page
+    StatusPage.reportStatus(StatusPage.GYROSCOPE, gyroIOInputs.connected);
 
     //makes the robot move
     drive();
@@ -133,7 +136,7 @@ public class Drive extends SubsystemBase{
           forceModules = true;
       } else {
         setpointStates = kinematics.toSwerveModuleStates(setpointSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.DRIVE_MAX_VELOCITY);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.DriveConstants.DRIVE_MAX_VELOCITY);
       }
 
       moduleSetpointPublisher.set(Logger.statesToArray(setpointStates));
@@ -153,7 +156,7 @@ public class Drive extends SubsystemBase{
   }
 
   private Translation2d[] getModuleTranslations(){
-    return Constants.DRIVE_MODULE_OFFSETS;
+    return Constants.DriveConstants.DRIVE_MODULE_OFFSETS;
   }
 
   /**
@@ -181,7 +184,7 @@ public class Drive extends SubsystemBase{
    * @param speeds the robot relative speed being requested of the robot
    */
   public void runVelocity(ChassisSpeeds speeds){
-    ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DRIVE_DRIFT_RATE);
+    ChassisSpeeds ajusted = GeomUtil.driftCorrectChassisSpeeds(speeds, Constants.DriveConstants.DRIVE_DRIFT_RATE);
     goalSetpointPublisher.set(ajusted);
 
     //Calculates a field relative velocity as if we're on blue, then flips it to red if nessesary
@@ -195,7 +198,8 @@ public class Drive extends SubsystemBase{
    */
   public boolean isStopped(){
     double magnitude = Math.hypot(setpointSpeeds.vxMetersPerSecond, setpointSpeeds.vyMetersPerSecond);
-    return magnitude < Constants.DRIVE_STOP_XY_THRESHOLD && Math.abs(setpointSpeeds.omegaRadiansPerSecond) < Constants.DRIVE_THETA_THRESHOLD;
+    return magnitude < Constants.DriveConstants.DRIVE_STOP_XY_THRESHOLD && 
+      Math.abs(setpointSpeeds.omegaRadiansPerSecond) < Constants.DriveConstants.DRIVE_THETA_THRESHOLD;
   }
 
   /**

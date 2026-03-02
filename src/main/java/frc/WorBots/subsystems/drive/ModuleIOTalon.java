@@ -121,7 +121,7 @@ public class ModuleIOTalon implements ModuleIO {
     driveSignals = new TalonSignals(driveMotor);
     turnSignals = new TalonSignalsPositional(turnMotor);
     driveVelocitySignal = driveMotor.getVelocity();
-    driveVelocitySignal.setUpdateFrequency(Constants.ROBOT_PERIOD);
+    driveVelocitySignal.setUpdateFrequency(Constants.RobotConstants.ROBOT_PERIOD);
 
     // Odometry queues
     final var driveDistanceSignal = driveMotor.getPosition();
@@ -145,12 +145,12 @@ public class ModuleIOTalon implements ModuleIO {
     turnSignals.update(inputs.turn, turnMotor);
     driveVelocitySignal.refresh();
 
-    inputs.drive.positionRads /= Constants.DRIVE_GEAR_RATIO;
+    inputs.drive.positionRads /= Constants.DriveConstants.DRIVE_GEAR_RATIO;
     inputs.drive.velocityRadsPerSec =
         driveVelocitySignal.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond)
-            / Constants.DRIVE_GEAR_RATIO;
+            / Constants.DriveConstants.DRIVE_GEAR_RATIO;
     inputs.driveVelocityMetersPerSec =
-        inputs.drive.velocityRadsPerSec * wheelRadius * Constants.DRIVE_MULTIPLIER;
+        inputs.drive.velocityRadsPerSec * wheelRadius * Constants.DriveConstants.DRIVE_MULTIPLIER;
 
     // Update odometry from signals into queues
     inputs.driveDistanceUpdates.clear();
@@ -158,12 +158,12 @@ public class ModuleIOTalon implements ModuleIO {
       while (drivePositionQueue.size() > 0) {
         final double distance = drivePositionQueue.poll();
         inputs.driveDistanceUpdates.add(
-            Units.rotationsToRadians(distance) / Constants.DRIVE_GEAR_RATIO * wheelRadius * Constants.DRIVE_MULTIPLIER);
+            Units.rotationsToRadians(distance) / Constants.DriveConstants.DRIVE_GEAR_RATIO * wheelRadius * Constants.DriveConstants.DRIVE_MULTIPLIER);
       }
       final double lastUpdate =
           inputs.driveDistanceUpdates.get(inputs.driveDistanceUpdates.size() - 1);
       inputs.driveDistanceMeters = lastUpdate;
-      inputs.drive.positionRads = lastUpdate / wheelRadius / Constants.DRIVE_MULTIPLIER;
+      inputs.drive.positionRads = lastUpdate / wheelRadius / Constants.DriveConstants.DRIVE_MULTIPLIER;
     }
     inputs.turnPositionUpdates.clear();
     if (!turnPositionQueue.isEmpty()) {
@@ -182,7 +182,7 @@ public class ModuleIOTalon implements ModuleIO {
           "Drive Angles", inputs.turnPositionUpdates.toArray(new Double[0]));
     }
 
-    inputs.turnAbsoluteVelocityRadsPerSec = inputs.turn.velocityRadsPerSec * Constants.TURN_GEAR_RATIO;
+    inputs.turnAbsoluteVelocityRadsPerSec = inputs.turn.velocityRadsPerSec * Constants.DriveConstants.TURN_GEAR_RATIO;
 
     inputs.turnPositionErrorRad = turnFeedback.pid.getPositionError();
 

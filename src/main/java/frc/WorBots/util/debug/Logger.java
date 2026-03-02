@@ -111,7 +111,7 @@ public class Logger {
   public static double[] holonomicTrajectoryToArray(
       Trajectory trajectory, RotationSequence rotations) {
     List<Double> doubles = new ArrayList<>();
-    for (double i = 0.0; i < trajectory.getTotalTimeSeconds(); i += Constants.ROBOT_PERIOD) {
+    for (double i = 0.0; i < trajectory.getTotalTimeSeconds(); i += Constants.RobotConstants.ROBOT_PERIOD) {
       doubles.add(trajectory.sample(i).poseMeters.getX());
       doubles.add(trajectory.sample(i).poseMeters.getY());
       doubles.add(rotations.sample(i).position.getRadians());
@@ -121,7 +121,7 @@ public class Logger {
 
   public static double[] trajectoryToArray(Trajectory trajectory) {
     List<Double> doubles = new ArrayList<>();
-    for (double i = 0.0; i < trajectory.getTotalTimeSeconds(); i += Constants.ROBOT_PERIOD) {
+    for (double i = 0.0; i < trajectory.getTotalTimeSeconds(); i += Constants.RobotConstants.ROBOT_PERIOD) {
       doubles.add(trajectory.sample(i).poseMeters.getX());
       doubles.add(trajectory.sample(i).poseMeters.getY());
       doubles.add(trajectory.sample(i).poseMeters.getRotation().getRadians());

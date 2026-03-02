@@ -74,7 +74,7 @@ public class OdometryThread extends Thread {
       double latencyAverage = 0.0;
       try {
         if (IS_CANFD) {
-          BaseStatusSignal.waitForAll(Constants.ROBOT_PERIOD, signals);
+          BaseStatusSignal.waitForAll(Constants.RobotConstants.ROBOT_PERIOD, signals);
         } else {
           Thread.sleep((long) (PERIOD * 1000.0));
           if (signals.length > 0) {

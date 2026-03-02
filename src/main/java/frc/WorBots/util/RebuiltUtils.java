@@ -5,6 +5,8 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
+//TODO make some tool to standize the time data from DriverStation.getMatchTime() across all conditions
+
 public class RebuiltUtils {
   public RebuiltUtils() {
   }
@@ -32,7 +34,7 @@ public class RebuiltUtils {
       return 99; // TODO log this condition being triggered
     }
 
-    double matchTime = DriverStation.getMatchTime();
+    double matchTime = MatchTime.getInstance().getTimeRemaining();
     if (matchTime > 130 || matchTime < 30) {
       return 0; // If in endgame or transition period the hub is always active
     }
@@ -78,33 +80,36 @@ public class RebuiltUtils {
     return 999; // This should never trigger
   }
 
+  // TODO figure out why this is returning 999
+
   /**
    * @return The time until the next hub switch
    */
-  public double timeToAcivationSwitch(){
-    double matchTime = DriverStation.getMatchTime();
-    if(DriverStation.isTeleop()){
-      if(matchTime > 130){
+  public double timeToAcivationSwitch() {
+    double matchTime = MatchTime.getInstance().getTimeRemaining();
+    if (DriverStation.isTeleop()) {
+      if (matchTime > 130) {
         return matchTime - 130;
-        
-      }else if (matchTime > 105) {
+
+      } else if (matchTime > 105) {
         return matchTime - 105;
 
       } else if (matchTime > 80) {
         return matchTime - 80;
-        
+
       } else if (matchTime > 55) {
         return matchTime - 55;
 
       } else if (matchTime > 30) {
         return matchTime - 30;
       } else {
-        //This really shouldn't trigger
+        // This really shouldn't trigger
         return 999;
       }
+    } else if(DriverStation.isAutonomous()) {
+      return matchTime;
+    } else {
+      return 999;
     }
-    else{
-      return matchTime - 20;
-    }
-  } 
+  }
 }

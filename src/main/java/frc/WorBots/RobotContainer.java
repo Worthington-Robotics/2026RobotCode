@@ -18,23 +18,45 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.WorBots.commands.ClimberCommands;
+import frc.WorBots.commands.ClimberTestCommands;
+import frc.WorBots.commands.DriveWithJoysticks;
+import frc.WorBots.commands.ShooterAuto;
+import frc.WorBots.subsystems.climber.Climber;
+import frc.WorBots.subsystems.climber.ClimberIOSim;
+import frc.WorBots.subsystems.climber.ClimberIOTalon;
 import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.DriveWithJoysticks;
+import frc.WorBots.commands.RunSpindexer;
+import frc.WorBots.commands.ShooterCommands;
 import frc.WorBots.commands.ShooterTest;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.drive.GyroIOPigeon2;
 import frc.WorBots.subsystems.drive.GyroIOSim;
 import frc.WorBots.subsystems.drive.ModuleIOSim;
 import frc.WorBots.subsystems.drive.ModuleIOTalon;
+import frc.WorBots.subsystems.intake.Intake;
+import frc.WorBots.subsystems.intake.IntakeIOSim;
+import frc.WorBots.subsystems.intake.IntakeIOTalon;
+import frc.WorBots.subsystems.spindexer.Spindexer;
+import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
+import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
 import frc.WorBots.subsystems.shooter.Shooter;
 import frc.WorBots.subsystems.shooter.ShooterIOSim;
 import frc.WorBots.subsystems.shooter.ShooterIOTalon;
+import frc.WorBots.subsystems.turret.Turret;
+import frc.WorBots.subsystems.turret.TurretIOSim;
+import frc.WorBots.subsystems.turret.TurretIOTalon;
 import frc.WorBots.util.control.DriveController;
 
 public class RobotContainer {
   //Subsystems
   public final Drive drive;
+  public final Spindexer spin;
+  public final Climber climber;
   public final Shooter shooter;
+  public final Turret turret;
+  public final Intake intake;
 
   //Joysticks
   public final CommandXboxController driver = new CommandXboxController(0);
@@ -60,7 +82,12 @@ public class RobotContainer {
         new ModuleIOTalon(1), 
         new ModuleIOTalon(2), 
         new ModuleIOTalon(3));
-        shooter = new Shooter(new ShooterIOTalon());
+      spin = new Spindexer(new SpindexerIOTalon());
+      climber = new Climber(new ClimberIOTalon());
+      shooter = new Shooter(new ShooterIOTalon());
+      turret = new Turret(new TurretIOTalon());
+      intake = new Intake(new IntakeIOTalon());
+
     } else {
       drive = new Drive(
         new GyroIOSim(), 
@@ -68,7 +95,11 @@ public class RobotContainer {
         new ModuleIOSim(1), 
         new ModuleIOSim(2), 
         new ModuleIOSim(3));
-      shooter = new Shooter(new ShooterIOSim()); //TODO make shooterIOSim work
+      spin = new Spindexer(new SpindexerIOSim());
+      climber = new Climber(new ClimberIOSim());
+      shooter = new Shooter(new ShooterIOSim());
+      turret = new Turret(new TurretIOSim());
+      intake = new Intake(new IntakeIOSim());
     }
 
     AutoBuilder.configure(
@@ -79,8 +110,8 @@ public class RobotContainer {
       new PPHolonomicDriveController( //Holonomic Drive Controller Used by PathPlanner
         new PIDConstants(5.0, 0.0, 0.0), //Translation PID Constants
         new PIDConstants(5.0, 0.0, 0.0), //Rotational PID Constants
-        Constants.ROBOT_PERIOD), //PID Period
-      Constants.PATHPLANNER_CONFIG,
+        Constants.RobotConstants.ROBOT_PERIOD), //PID Period
+      Constants.PathPlannerConstants.PATHPLANNER_CONFIG,
       () -> {
         // Boolean supplier that controls when the path will be mirrored for the red alliance
         // This will flip the path being followed to the red side of the field.
@@ -101,7 +132,15 @@ public class RobotContainer {
   private void configureBindings() {
     drive.setDefaultCommand(
       new DriveWithJoysticks(
-        drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX()));
+        drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), () -> driver.rightTrigger().getAsBoolean()));
+      driver.a().toggleOnTrue(new RunSpindexer(spin));
+    if(Constants.getSim()){
+      shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
+      //shooter.setDefaultCommand(new ShotTuning(shooter, turret, () -> driver.povUp().getAsBoolean(), () -> driver.povDown().getAsBoolean(), () -> driver.a().getAsBoolean(), () -> driver.b().getAsBoolean()));
+    } else {
+      shooter.setDefaultCommand(new ShooterAuto(shooter, turret, drive));
+    }
+    climber.setDefaultCommand(new ClimberTestCommands().climbWIthStick(climber, () -> operator.getRightY()));
   }
 
   public Command getAutonomousCommand() {

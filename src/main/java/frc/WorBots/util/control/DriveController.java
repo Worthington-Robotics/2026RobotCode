@@ -96,7 +96,7 @@ public class DriveController {
             y,
             theta,
             drive.getYaw(),
-            Constants.DRIVE_MAX_VELOCITY,
+            Constants.DriveConstants.DRIVE_MAX_VELOCITY,
             drive.getYawVelocity().getRadians());
 
     drive(drive, speeds);
@@ -210,7 +210,7 @@ public class DriveController {
       // This prevents sudden changes in the rotational target when we are running on
       // blocks or physically blocked
       if (Math.abs(rotationalVelocity) > 0.1) {
-        predicted += speeds.omegaRadiansPerSecond * Constants.ROBOT_PERIOD * TURN_PREDICTION_FACTOR;
+        predicted += speeds.omegaRadiansPerSecond * Constants.RobotConstants.ROBOT_PERIOD * TURN_PREDICTION_FACTOR;
       }
       lastYaw = Optional.of(Rotation2d.fromRadians(predicted));
     } else {

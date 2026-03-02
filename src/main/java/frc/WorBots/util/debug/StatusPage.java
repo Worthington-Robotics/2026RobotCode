@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.util.BuildConstants;
 import java.util.HashMap;
 
@@ -28,17 +29,18 @@ public class StatusPage {
 
   // System name constants
   public static final String AUTOS = "Autos";
-  public static final String ALL_AUTO_QUESTIONS = "All Auto Questions";
   public static final String AUTO_CHOSEN = "Auto Chosen";
   public static final String ROBOT_CODE = "Robot Code";
   public static final String DRIVE_CONTROLLER = "Drive Controller";
-  public static final String SUPERSTRUCTURE_SUBSYSTEM = "Superstructure Subsystem";
   public static final String DRIVE_SUBSYSTEM = "Drive Subsystem";
-  public static final String INTAKE_SUBSYSTEM = " Intake Subsystem";
-  public static final String SHOOTER_INTAKE_SUBSYSTEM = "Shooter Subsystem";
-  public static final String CLIMBER_SUBSYSTEM = "Algae Intake Subsystem";
+  public static final String INTAKE_SUBSYSTEM = "Intake Subsystem";
+  public static final String SPINDEXER_SUBSYSTEM = "Spindexer Subsystem";
+  public static final String TURRET_SUBSYSTEM = "Turret Subsystem";
+  public static final String SHOOTER_SUBSYSTEM = "Shooter Subsystem";
+  public static final String CLIMBER_SUBSYSTEM = "Climber Subsystem";
   public static final String LIGHTS_SUBSYSTEM = "Lights Subsystem";
-  public static final String TAG_VISION_SUBSYSTEM = "Tag Vision Subsystem";
+  public static final String TAG_VISION_SUBSUBSYSTEM = "Tag Vision Subsubsystem";
+  public static final String BLOB_VISION_SUBSUBSYSTEM = "Blob Detection Subsubsystem";
   public static final String GYROSCOPE = "Gyroscope";
   public static final String SMODULE_PREFIX = "SModule";
   public static final String NETWORK_TABLES = "Network Tables";
@@ -56,6 +58,10 @@ public class StatusPage {
   public static final String CAM_PREFIX = "Cam";
   public static final String LAUNCHPAD = "Launchpad";
   public static final String DRIVER_CAM = "Driver Cam";
+  public static final String CLIMBING = "Climbing";
+  public static final String SPINDEXER_JAM = "Spindexer Jam";
+  public static final String SHOOTER_READY = "Shooter Ready";
+  public static final String TURRET_READY = "Turret Ready";
 
   // Sort in order of priority, from highest to lowest
   /** All systems that the StatusPage reports */
@@ -64,7 +70,6 @@ public class StatusPage {
     AUTO_CHOSEN,
     DRIVE_CONTROLLER,
     OPERATOR_CONTROLLER,
-    ALL_AUTO_QUESTIONS,
     INTAKE_CONNECTED,
     GYROSCOPE,
     CAM_PREFIX + "0",
@@ -77,11 +82,13 @@ public class StatusPage {
     SMODULE_PREFIX + "2",
     SMODULE_PREFIX + "3",
     ROBOT_CODE,
-    SUPERSTRUCTURE_SUBSYSTEM,
     DRIVE_SUBSYSTEM,
     INTAKE_SUBSYSTEM,
-    SHOOTER_INTAKE_SUBSYSTEM,
-    TAG_VISION_SUBSYSTEM,
+    SPINDEXER_SUBSYSTEM,
+    TURRET_SUBSYSTEM,
+    SHOOTER_SUBSYSTEM,
+    TAG_VISION_SUBSUBSYSTEM,
+    BLOB_VISION_SUBSUBSYSTEM,
     CLIMBER_SUBSYSTEM,
     DRIVER_CAM,
     DRIVER_STATION,
@@ -93,6 +100,21 @@ public class StatusPage {
     LAUNCHPAD,
     LIGHTS_SUBSYSTEM,
     NOT_ESTOPPED,
+    CLIMBING,
+    SPINDEXER_JAM,
+    TURRET_READY,
+    SHOOTER_READY
+  };
+
+  public static String[] CRITICAL_SYSTEMS = {
+    DRIVE_SUBSYSTEM,
+    INTAKE_CONNECTED,
+    INTAKE_SUBSYSTEM,
+    SPINDEXER_SUBSYSTEM,
+    TURRET_SUBSYSTEM,
+    SHOOTER_SUBSYSTEM,
+    CLIMBER_SUBSYSTEM,
+    NOT_ESTOPPED
   };
 
   private StatusPage() {
@@ -138,12 +160,33 @@ public class StatusPage {
     return entry.getBoolean(false);
   }
 
+  public static boolean sysFault(){
+    boolean allClear = true;
+    for(String system : CRITICAL_SYSTEMS){
+      boolean status = getStatus(system);
+      if(!status){
+        allClear = false;
+      }
+    }
+    return !allClear;
+  }
+
+  public static boolean shotReady(){
+    boolean turretStatus = getStatus(TURRET_READY);
+    boolean shooterStatus = getStatus(SHOOTER_READY);
+    if(turretStatus && shooterStatus){
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Periodic method to run from the robot base to report common statuses
    *
    * @param pdp The PowerDistribution panel
    */
-  public static void periodic(PowerDistribution pdp) {
+  public static void periodic() {
+    //add "PowerDistribution pdp" as a param to this later
     // Connection of main robot systems
     StatusPage.reportStatus(
         StatusPage.NETWORK_TABLES, NetworkTableInstance.getDefault().isConnected());
@@ -175,6 +218,11 @@ public class StatusPage {
 
     // Report metadata
     StatusPage.reportMetadata();
+    Lights.getInstance().sysFault(StatusPage.sysFault());
+    Lights.getInstance().addSpinStatus(StatusPage.getStatus(SPINDEXER_JAM));
+    Lights.getInstance().addVisionStatus(StatusPage.getStatus(TAG_VISION_SUBSUBSYSTEM));
+    Lights.getInstance().setClimb(StatusPage.getStatus(CLIMBING));
+    Lights.getInstance().addShotStatus(shotReady());
   }
 
   /** Report metadata for AdvantageScope to use. Also starts the WPILib DataLog */

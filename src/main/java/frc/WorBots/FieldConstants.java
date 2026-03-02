@@ -30,5 +30,4 @@ public class FieldConstants {
   public static final Translation2d passTarget = new Translation2d(1.9965776218182945, 2.478353240555334);
   public static final Translation2d[] allianceZone = { new Translation2d(0.0, -0.03197875149103657),
       new Translation2d(4.008167105454771, 8.5703053995978) };
-
 }

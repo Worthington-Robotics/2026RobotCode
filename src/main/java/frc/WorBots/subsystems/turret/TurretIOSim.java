@@ -3,35 +3,31 @@ package frc.WorBots.subsystems.turret;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.WorBots.Constants;
 
 public class TurretIOSim implements TurretIO {
+  public double position = 0.0;
+  public double velocity = 0.0;
 
-  
 
-  @Override
+  private final DCMotorSim turretMotor = 
+    new DCMotorSim(
+      LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 1.0, 1.0),
+       DCMotor.getKrakenX60(1));
+
+
   public void setVoltage(double volts) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setVoltage'");
+    velocity = volts;
   }
 
-
-  @Override
   public void updateInputs(TurretIOInputs inputs) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+    position = position + velocity * Constants.RobotConstants.ROBOT_PERIOD;
+    inputs.turretFusedAngle = position;
+    inputs.turret.isConnected = true;
   }
 
-  @Override
-  public void setPosition(double positionRads) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setPosition'");
-  }
-
-
-  @Override
-  public boolean atSetPoint() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'atSetPoint'");
+  public void resetOffset(){
+    position = 0.0;
   }
 
     //TODO add turretIOSim

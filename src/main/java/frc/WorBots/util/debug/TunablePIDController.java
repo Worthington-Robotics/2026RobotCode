@@ -120,7 +120,7 @@ public class TunablePIDController {
      * @param kD The D constant
      */
     public TunablePIDGains(String table, String name, double kP, double kI, double kD) {
-      this(table, name, kP, kI, kD, Constants.ROBOT_PERIOD);
+      this(table, name, kP, kI, kD, Constants.RobotConstants.ROBOT_PERIOD);
     }
 
     /**

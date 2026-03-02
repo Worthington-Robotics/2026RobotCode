@@ -162,8 +162,8 @@ public class HardwareUtils {
       super(motor);
       posSignal = motor.getPosition();
       velSignal = motor.getVelocity();
-      posSignal.setUpdateFrequency(Constants.ROBOT_PERIOD);
-      velSignal.setUpdateFrequency(Constants.ROBOT_PERIOD);
+      posSignal.setUpdateFrequency(Constants.RobotConstants.ROBOT_PERIOD);
+      velSignal.setUpdateFrequency(Constants.RobotConstants.ROBOT_PERIOD);
     }
 
     @Override
@@ -190,7 +190,7 @@ public class HardwareUtils {
       this.signal = signal;
       // Calculate the count based on the ratio between the signal frequency and robot
       // period
-      int count = (int) Math.floor(Constants.ROBOT_PERIOD / frequency);
+      int count = (int) Math.floor(Constants.RobotConstants.ROBOT_PERIOD / frequency);
       // We don't want to limit periods that are only half as that will just introduce
       // too much latency
       if (count <= 2) {

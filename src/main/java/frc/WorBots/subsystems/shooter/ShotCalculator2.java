@@ -66,19 +66,19 @@ public class ShotCalculator2 {
 
   public static void calculateShot(Pose2d robotPose, ChassisSpeeds speeds){
     //Finds the turret pose
-    Pose2d turretPose = robotPose.transformBy(Constants.ROBOT_TO_TURRET);
+    Pose2d turretPose = robotPose.transformBy(Constants.TurretShooterConstants.ROBOT_TO_TURRET);
     double robotAngle = robotPose.getRotation().getRadians();
     turretPose.rotateAround(robotPose.getTranslation(), robotPose.getRotation());
 
     //Calculates the turrets field relative velocity
     double turretVelocityX = speeds.vxMetersPerSecond
         + speeds.omegaRadiansPerSecond
-            * (Constants.ROBOT_TO_TURRET.getY() * Math.cos(robotAngle)
-                - Constants.ROBOT_TO_TURRET.getX() * Math.sin(robotAngle));
+            * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * Math.cos(robotAngle)
+                - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * Math.sin(robotAngle));
     double turretVelocityY = speeds.vyMetersPerSecond
         + speeds.omegaRadiansPerSecond
-            * (Constants.ROBOT_TO_TURRET.getX() * Math.cos(robotAngle)
-                - Constants.ROBOT_TO_TURRET.getY() * Math.sin(robotAngle));    
+            * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * Math.cos(robotAngle)
+                - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * Math.sin(robotAngle));    
 
     //Calculates the hubs position relative to the turret
     Translation2d hubPose = AllianceFlipUtil.apply(FieldConstants.hubPosition);
