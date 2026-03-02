@@ -23,7 +23,7 @@ public class SpindexerIOTalon implements SpindexerIO{
   private double voltage = 0.0;
 
   public SpindexerIOTalon(){
-    talon.setNeutralMode(NeutralModeValue.Brake);
+    talon.setNeutralMode(NeutralModeValue.Coast);
     kicker.setNeutralMode(NeutralModeValue.Brake);
     kicker.setControl(new Follower(CanIDs.SuperStructure.SPINDEXER_ID, MotorAlignmentValue.Aligned));
   }

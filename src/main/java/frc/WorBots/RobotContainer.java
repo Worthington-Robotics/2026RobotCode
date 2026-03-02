@@ -47,83 +47,88 @@ import frc.WorBots.subsystems.shooter.ShooterIOTalon;
 import frc.WorBots.subsystems.turret.Turret;
 import frc.WorBots.subsystems.turret.TurretIOSim;
 import frc.WorBots.subsystems.turret.TurretIOTalon;
+import frc.WorBots.subsystems.vision.apriltags.TagVision;
+import frc.WorBots.subsystems.vision.apriltags.TagVisionIOCustom;
 import frc.WorBots.util.control.DriveController;
 
 public class RobotContainer {
-  //Subsystems
+  // Subsystems
   public final Drive drive;
   public final Spindexer spin;
   public final Climber climber;
   public final Shooter shooter;
   public final Turret turret;
   public final Intake intake;
+  public final TagVision vision;
 
-  //Joysticks
+  // Joysticks
   public final CommandXboxController driver = new CommandXboxController(0);
   public final CommandXboxController operator = new CommandXboxController(1);
 
-  //Drive Controller
+  // Drive Controller
   public static final DriveController driveController = new DriveController();
-  
+
   /** Whether proper autos with a valid alliance have been generated */
   public static boolean validAutosGenerated = false;
 
   public static Optional<Alliance> allianceUsedForAutos = Optional.empty();
 
-  //Auto Selector
+  // Auto Selector
   private AutoSelector selector;
 
   public RobotContainer() {
-    //setup Subsystems
-    if(!Constants.getSim()){
+    // setup Subsystems
+    if (!Constants.getSim()) {
       drive = new Drive(
-        new GyroIOPigeon2(), 
-        new ModuleIOTalon(0), 
-        new ModuleIOTalon(1), 
-        new ModuleIOTalon(2), 
-        new ModuleIOTalon(3));
+          new GyroIOPigeon2(),
+          new ModuleIOTalon(0),
+          new ModuleIOTalon(1),
+          new ModuleIOTalon(2),
+          new ModuleIOTalon(3));
       spin = new Spindexer(new SpindexerIOTalon());
       climber = new Climber(new ClimberIOTalon());
       shooter = new Shooter(new ShooterIOTalon());
       turret = new Turret(new TurretIOTalon());
       intake = new Intake(new IntakeIOTalon());
-
     } else {
       drive = new Drive(
-        new GyroIOSim(), 
-        new ModuleIOSim(0), 
-        new ModuleIOSim(1), 
-        new ModuleIOSim(2), 
-        new ModuleIOSim(3));
+          new GyroIOSim(),
+          new ModuleIOSim(0),
+          new ModuleIOSim(1),
+          new ModuleIOSim(2),
+          new ModuleIOSim(3));
       spin = new Spindexer(new SpindexerIOSim());
       climber = new Climber(new ClimberIOSim());
       shooter = new Shooter(new ShooterIOSim());
       turret = new Turret(new TurretIOSim());
       intake = new Intake(new IntakeIOSim());
     }
+    vision = new TagVision(new TagVisionIOCustom(1));
+    vision.setDataInterfaces(drive::addVisionUpdate, () -> drive.getRotation(), () -> drive.getMeasuredSpeeds());
 
     AutoBuilder.configure(
-      () -> drive.getPose(), //Get Pose Command
-      pose -> drive.resetPose(pose), //Reset Pose Command
-      () -> drive.getRobotRelativeSpeeds(), //Robot Relative Speed Supplier
-      speeds -> driveController.drive(drive, speeds), //Output Command
-      new PPHolonomicDriveController( //Holonomic Drive Controller Used by PathPlanner
-        new PIDConstants(5.0, 0.0, 0.0), //Translation PID Constants
-        new PIDConstants(5.0, 0.0, 0.0), //Rotational PID Constants
-        Constants.RobotConstants.ROBOT_PERIOD), //PID Period
-      Constants.PathPlannerConstants.PATHPLANNER_CONFIG,
-      () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        () -> drive.getPose(), // Get Pose Command
+        pose -> drive.resetPose(pose), // Reset Pose Command
+        () -> drive.getRobotRelativeSpeeds(), // Robot Relative Speed Supplier
+        speeds -> driveController.drive(drive, speeds), // Output Command
+        new PPHolonomicDriveController( // Holonomic Drive Controller Used by PathPlanner
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID Constants
+            new PIDConstants(5.0, 0.0, 0.0), // Rotational PID Constants
+            Constants.RobotConstants.ROBOT_PERIOD), // PID Period
+        Constants.PathPlannerConstants.PATHPLANNER_CONFIG,
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Red;
-        }
-        return false;
-      },
-      drive);
+          }
+          return false;
+        },
+        drive);
 
     registerAutos();
     configureBindings();
@@ -131,12 +136,15 @@ public class RobotContainer {
 
   private void configureBindings() {
     drive.setDefaultCommand(
-      new DriveWithJoysticks(
-        drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), () -> driver.rightTrigger().getAsBoolean()));
-      driver.a().toggleOnTrue(new RunSpindexer(spin));
-    if(Constants.getSim()){
+        new DriveWithJoysticks(
+            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
+            () -> driver.rightTrigger().getAsBoolean()));
+    driver.a().toggleOnTrue(new RunSpindexer(spin));
+    if (Constants.getSim()) {
       shooter.setDefaultCommand(new ShooterTest(shooter, drive, turret));
-      //shooter.setDefaultCommand(new ShotTuning(shooter, turret, () -> driver.povUp().getAsBoolean(), () -> driver.povDown().getAsBoolean(), () -> driver.a().getAsBoolean(), () -> driver.b().getAsBoolean()));
+      // shooter.setDefaultCommand(new ShotTuning(shooter, turret, () ->
+      // driver.povUp().getAsBoolean(), () -> driver.povDown().getAsBoolean(), () ->
+      // driver.a().getAsBoolean(), () -> driver.b().getAsBoolean()));
     } else {
       shooter.setDefaultCommand(new ShooterAuto(shooter, turret, drive));
     }
@@ -158,28 +166,29 @@ public class RobotContainer {
         registerAutos();
         validAutosGenerated = true;
         SmartDashboard.putBoolean("DB/LED 0", true);
-        //StatusPage.reportStatus(StatusPage.AUTOS, true);
+        // StatusPage.reportStatus(StatusPage.AUTOS, true);
       }
     }
     SmartDashboard.putString("DB/String 9", "FMS Says: " + DriverStation.getAlliance().toString());
   }
 
-  private void registerAutos(){
+  private void registerAutos() {
     selector = new AutoSelector("Auto Selector 2");
-    
-    //Fetchs all of the autos from Path Planner
+
+    // Fetchs all of the autos from Path Planner
     List<String> autos = AutoBuilder.getAllAutoNames();
 
-    //For each auto it checks if Its a Comp or Debug auto and modifies the list of registered autos
-    for(String auto: autos){
+    // For each auto it checks if Its a Comp or Debug auto and modifies the list of
+    // registered autos
+    for (String auto : autos) {
       System.out.println(auto.substring(0, 6));
-      if(Constants.IS_COMP){
-        if(!auto.substring(0, 3).equals("COMP")){
+      if (Constants.IS_COMP) {
+        if (!auto.substring(0, 3).equals("COMP")) {
           continue;
         }
       }
-      if(!Constants.ENABLE_DEBUG_ROUTINES){
-        if(auto.substring(0, 5).equals("DEBUG")){
+      if (!Constants.ENABLE_DEBUG_ROUTINES) {
+        if (auto.substring(0, 5).equals("DEBUG")) {
           continue;
         }
       }

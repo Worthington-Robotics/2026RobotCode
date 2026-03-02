@@ -61,7 +61,7 @@ public class TagVision extends SubsystemBase{
   /*TODO: 
    * Update these values
    */
-  /** Transform for the inward-facing camera on the FL module */
+  /** Transform for the outward-facing camera on the left */
   private static final Transform3d LEFT_SWERVE_MODULE_TRANSFORM =
       new Transform3d(
           new Translation3d(
@@ -70,8 +70,8 @@ public class TagVision extends SubsystemBase{
               Units.inchesToMeters(8.5)),
           new Rotation3d(
               Units.degreesToRadians(180),
-              Units.degreesToRadians(-25.0),
-              Units.degreesToRadians(0.0)));
+              Units.degreesToRadians(0),
+              Units.degreesToRadians(90.0)));
          
   /** The transforms for the cameras to robot center */
   private static final Transform3d RIGHT_SWERVE_MODULE_TRANSFORM =
@@ -180,7 +180,7 @@ public class TagVision extends SubsystemBase{
     for (int i = 0; i < io.length; i++) {
       inputs[i] = new TagVisionIOInputs();
     }
-    StatusPage.reportStatus(StatusPage.TAG_VISION_SUBSYSTEM, true);
+    StatusPage.reportStatus(StatusPage.TAG_VISION_SUBSUBSYSTEM, true);
   }
 
   public void periodic() {

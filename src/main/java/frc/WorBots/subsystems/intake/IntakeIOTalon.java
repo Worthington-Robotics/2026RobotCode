@@ -35,7 +35,7 @@ public class IntakeIOTalon implements IntakeIO {
      * Setting the neutral modes and inversion states of both the
      * extending and intaking motors.
      */
-    intakeMotor.setNeutralMode(NeutralModeValue.Brake);
+    intakeMotor.setNeutralMode(NeutralModeValue.Coast);
     HardwareUtils.setInverted(extendingMotor, false);
     extendingMotor.setNeutralMode(NeutralModeValue.Brake);
     HardwareUtils.setInverted(intakeMotor, false);

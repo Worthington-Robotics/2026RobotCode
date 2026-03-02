@@ -1,6 +1,7 @@
 package frc.WorBots.subsystems.drive;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,6 +31,7 @@ import frc.WorBots.util.debug.Logger;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.math.GeomUtil;
 import frc.WorBots.util.math.PoseEstimator;
+import frc.WorBots.util.math.PoseEstimator.TimestampedVisionUpdate;
 
 public class Drive extends SubsystemBase{
   private final Module[] modules = new Module[4];
@@ -334,5 +336,9 @@ public class Drive extends SubsystemBase{
    */
   public ChassisSpeeds getMeasuredSpeeds(){
     return measuredSpeeds;
+  }
+
+  public void addVisionUpdate(List<TimestampedVisionUpdate> update){
+    poseEstimator.addVisionData(update);
   }
 }
