@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Box Auto Path 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Box Auto Path 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Box Auto Path 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Box Auto Path 4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "DEBUG",
+  "choreoAuto": false
+}

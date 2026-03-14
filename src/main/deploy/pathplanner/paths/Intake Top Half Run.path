@@ -1,0 +1,122 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 7.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.466927710843374,
+        "y": 7.2368192771084345
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.3,
+        "y": 6.242
+      },
+      "prevControl": {
+        "x": 7.273912520888503,
+        "y": 6.645464960411538
+      },
+      "nextControl": {
+        "x": 7.317638554216868,
+        "y": 5.969204819277109
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.3,
+        "y": 5.6
+      },
+      "prevControl": {
+        "x": 7.299999999999998,
+        "y": 6.321
+      },
+      "nextControl": {
+        "x": 7.300000000000002,
+        "y": 4.879
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 7.4
+      },
+      "prevControl": {
+        "x": 7.133745378234471,
+        "y": 7.4
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -59.99999999999999
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": -59.99999999999999
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.25359712230216847,
+      "maxWaypointRelativePos": 2.39460431654676,
+      "constraints": {
+        "maxVelocity": 0.75,
+        "maxAcceleration": 12.192,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0.12841726618705074,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Dude Chill",
+      "waypointRelativePos": 2.5974820143884956,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.096,
+    "maxAcceleration": 12.192,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 3000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 1.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

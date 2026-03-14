@@ -1,0 +1,30 @@
+package frc.WorBots.subsystems.drive;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import java.util.ArrayList;
+
+public interface GyroIO {
+  /** The inputs of the gyro */
+  public static class GyroIOInputs {
+    public boolean connected = false;
+    public double yawPositionRad = 0.0;
+    public double yawVelocityRadPerSec = 0.0;
+    public ArrayList<Double> yawPositionUpdates = new ArrayList<>();
+  }
+
+  /**
+   * Updates the current inputs of the selected IO implementation.
+   *
+   * @param inputs The inputs to be modified.
+   */
+  public default void updateInputs(GyroIOInputs inputs) {}
+
+  /**
+   * Set the rotational velocity (in rads/sec) that the drive is expected to be moving at so that
+   * the simulated gyro can work
+   */
+  public default void setExpectedYawVelocity(double vYaw) {}
+
+  /** Resets the gyroscope to a heading (yaw) */
+  public default void resetHeading(Rotation2d heading) {}
+}

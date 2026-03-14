@@ -1,0 +1,81 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.361,
+        "y": 0.794
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.0681067811865486,
+        "y": 1.5011067811865484
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.392,
+        "y": 2.916
+      },
+      "prevControl": {
+        "x": 2.6848932188134524,
+        "y": 2.2088932188134525
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 12.192,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Use the Force",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "Dracarys!",
+      "waypointRelativePos": 0.16942446043165602,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.096,
+    "maxAcceleration": 12.192,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 3000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -45.0
+  },
+  "reversed": false,
+  "folder": "DEBUG",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -45.0
+  },
+  "useDefaultConstraints": true
+}

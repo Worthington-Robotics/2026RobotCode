@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Focus Your Power"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Inward Lateral Shot Calc Test"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "DEBUG",
+  "choreoAuto": false
+}
