@@ -136,7 +136,7 @@ public class Constants {
 
   /**Intake Constants*/
   public class IntakeConstants{
-    public static final double INTAKE_VOLTAGE = 7;
+    public static final double INTAKE_VOLTAGE = 6;
     //These values need to be modified
     public static final double INTAKE_MAX_TEMP = 80.0;
     public static final double TIME_OF_FLIGHT_THRES = 0.255;

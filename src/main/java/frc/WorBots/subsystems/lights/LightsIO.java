@@ -121,7 +121,7 @@ public interface LightsIO {
         return;
       }
 
-      strip.setLED(index - start, color);
+      strip.setLED(index + start, color);
     }
 
     /**
@@ -138,7 +138,7 @@ public interface LightsIO {
         return;
       }
 
-      strip.setHSV(index - start, h, s, v);
+      strip.setHSV(index + start, h, s, v);
     }
 
     /** Gets the number of LEDs in the strip */

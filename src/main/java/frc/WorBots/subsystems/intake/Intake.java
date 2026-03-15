@@ -231,13 +231,13 @@ public class Intake extends SubsystemBase {
   }
 
   public void retract() {
-    controlMode = ControlMode.Agitate;
+    controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.RETRACTED.get();
     extendController.reset(inputs.extendPosition);
   }
 
   public void agitate(){
-    controlMode = ControlMode.Agitate;
+    controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.HALF.get();
     extendController.reset(inputs.extendPosition);
   }
