@@ -109,8 +109,8 @@ public class Intake extends SubsystemBase {
         finalSetpointIntake = setPointVoltageIntake;
       }
       if(isJammed()){
-        pulseCount = (pulseCount+1)%51;
-        if(pulseCount>50){
+        pulseCount = (pulseCount+1)%7;
+        if(pulseCount>5){
           unJamming = false;
           finalSetpointIntake = -Math.abs(finalSetpointIntake);
         } else {
@@ -240,7 +240,7 @@ public class Intake extends SubsystemBase {
     extend();
   }
   public boolean isJammed(){
-    return inputs.extendingMotor.velocityRadsPerSec < Constants.IntakeConstants.INTAKE_JAMMED_THRESHHOLD || unJamming;
+    return ((Math.abs(inputs.intakeMotor.velocityRadsPerSec) < Constants.IntakeConstants.INTAKE_JAMMED_THRESHHOLD && setPointVoltageIntake > 0) && inputs.intakeCurrent > 100)|| unJamming;
   }
 
 }

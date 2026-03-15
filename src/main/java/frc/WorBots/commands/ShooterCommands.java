@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.WorBots.Constants;
+import frc.WorBots.subsystems.drive.Drive;
+import frc.WorBots.subsystems.intake.Intake;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
@@ -105,5 +107,16 @@ public class ShooterCommands {
 
   public Command hoodDown(Superstructure superstructure){
     return Commands.startEnd(()-> superstructure.setHoodDown(true), () -> superstructure.setHoodDown(false));
+  }
+
+  public Command autoSetpointShot(Superstructure superstructure, ShootingParams params){
+    return Commands.runOnce(() -> superstructure.runShot(params));
+  }
+
+  public Command superPass(Superstructure superstructure, Intake intake, Drive drive, Spindexer spin){
+    return Commands.parallel(
+      new IntakeCommands().spit(intake),
+      new ConditionalFireCommand(drive, spin, 8)
+    );
   }
 }

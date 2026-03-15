@@ -54,6 +54,7 @@ public class ShotCalculator {
       { 2.981151807004248, 0.265, 149, 1},
       { 3.8951452800012, 0.375, 163, 1},
       { 4.809293308638241, 0.384, 185.3, 1},
+      { 5.05423, 0.383, 197.5, 1.1},
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (Rads/sec), time of

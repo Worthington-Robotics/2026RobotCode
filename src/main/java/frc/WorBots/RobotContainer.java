@@ -189,6 +189,8 @@ public class RobotContainer {
     // Reset Heading with y button
     driver.y().debounce(0.02).onTrue(new DriveCommands().resetHeading(drive));
 
+    driver.povUp().debounce(0.02).whileTrue(new ShooterCommands().superPass(superstructure, intake, drive, spin));
+
   }
 
   // Testing Ver.
@@ -230,10 +232,10 @@ public class RobotContainer {
     // operator.povDown().debounce(0.02).onTrue(new ShooterCommands().setHoodPose(superstructure, 0));
     // operator.povDown().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.TOWER_SHOT));
     // operator.povLeft().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.LEFT_CORNER_SHOT));
-    // operator.povRight().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
+    operator.povRight().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
     operator.povUp().onTrue(new HoodControlFudgeCommand(superstructure, .005));
     operator.povDown().onTrue(new HoodControlFudgeCommand(superstructure, -.005));
-    operator.povRight().onTrue(new ShotControlFudgeCommand(superstructure, 2));
+    //operator.povRight().onTrue(new ShotControlFudgeCommand(superstructure, 2));
     operator.povLeft().onTrue(new ShotControlFudgeCommand(superstructure, -2));
   }
 
@@ -305,6 +307,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Focus Your Power", new StartAutoAim(superstructure));
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
     NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
+    NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
 
     new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, 8));
     new EventTrigger("Mine Mine Mine").onTrue(new PathplannerIntakeCommands().startIntakeAuto(intake));
@@ -347,6 +350,7 @@ public class RobotContainer {
     if (ranAuto){
       intake.teleopInit();
       superstructure.enableAutoAiming();
+      
     }
   }
 

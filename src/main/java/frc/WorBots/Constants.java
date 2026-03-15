@@ -124,8 +124,8 @@ public class Constants {
     //Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 144,0);
     public final static ShootingParams TOWER_SHOT = new ShootingParams(true, new Rotation2d(), 0.26, 150,0);
-    public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, null, 0, 0,0);
-    public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, null, 0, 0,0);
+    public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(-0.8026), 0.383, 197.5, 0);
+    public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(0.8026), 0.383, 197.5,0);
   }
 
   /**PathPlanner Constants*/
@@ -177,7 +177,7 @@ public class Constants {
 
     public static final double INTAKE_PULSE_INTAKING_SEC = 3.0;
     public static final double INTAKE_PULSE_SPIT_SEC = 0.3;
-    public static final double INTAKE_JAMMED_THRESHHOLD = 1.0;
+    public static final double INTAKE_JAMMED_THRESHHOLD = 0.25;
   }
 
   public class ClimberConstants{

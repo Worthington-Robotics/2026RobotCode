@@ -32,11 +32,11 @@
     },
     {
       "anchor": {
-        "x": 0.7,
+        "x": 1.2,
         "y": 0.65
       },
       "prevControl": {
-        "x": 0.9954824065976839,
+        "x": 1.495482406597684,
         "y": 0.65
       },
       "nextControl": null,
@@ -70,12 +70,18 @@
     {
       "name": "Hit The Deck",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.851851851851849,
+      "endWaypointRelativePos": 0.7644824311491011,
       "command": null
     },
     {
       "name": "Sustained Fire",
-      "waypointRelativePos": 1.0835707502374154,
+      "waypointRelativePos": 1.129154795821462,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Dude Chill",
+      "waypointRelativePos": 1.7103513770180439,
       "endWaypointRelativePos": null,
       "command": null
     }

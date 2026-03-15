@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 6.587974322396576,
-        "y": 2.4758915834522113
+        "x": 6.87262482168331,
+        "y": 2.048915834522112
       },
       "prevControl": {
-        "x": 7.080354900515426,
-        "y": 3.5309928222783196
+        "x": 7.183152639087017,
+        "y": 2.8769900142653353
       },
       "nextControl": {
-        "x": 6.225691868758917,
-        "y": 1.699572039942939
+        "x": 6.571820295690112,
+        "y": 1.2467704318735806
       },
       "isLocked": false,
       "linkedName": null
@@ -121,15 +121,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Dracarys!",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.5960431654676244,
-      "command": null
-    },
-    {
       "name": "Mine Mine Mine",
-      "waypointRelativePos": 1.0003597122302164,
-      "endWaypointRelativePos": 2.001798561151079,
+      "waypointRelativePos": 0.3285849952516565,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
