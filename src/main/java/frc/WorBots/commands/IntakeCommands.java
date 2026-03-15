@@ -1,6 +1,8 @@
 package frc.WorBots.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.WorBots.Constants;
 import frc.WorBots.subsystems.intake.*;
 
 /** A class containing commands to command the intake */
@@ -13,7 +15,7 @@ public class IntakeCommands {
    ***/
   public Command intake(Intake intake) {
     return intake.startEnd(() -> {
-      intake.setVoltsIntake(7);
+      intake.setVoltsIntake(Constants.IntakeConstants.INTAKE_VOLTAGE);
     }, () -> {
       intake.setVoltsIntake(0);
     });
@@ -27,7 +29,7 @@ public class IntakeCommands {
    ***/
   public Command spit(Intake intake) {
     return intake.startEnd(() -> {
-      intake.setVoltsIntake(-7);
+      intake.setVoltsIntake(-Constants.IntakeConstants.INTAKE_VOLTAGE);
     }, () -> {
       intake.setVoltsIntake(0);
     });
@@ -82,5 +84,9 @@ public class IntakeCommands {
         intake.extend();
       }
     });
+  }
+
+  public Command pulse(Intake intake){
+    return Commands.runOnce(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE));
   }
 }

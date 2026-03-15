@@ -136,9 +136,9 @@ public class Constants {
 
   /**Intake Constants*/
   public class IntakeConstants{
+    public static final double INTAKE_VOLTAGE = 7;
     //These values need to be modified
     public static final double INTAKE_MAX_TEMP = 80.0;
-    public static final double INTAKE_VOLTS = 4.25;
     public static final double TIME_OF_FLIGHT_THRES = 0.255;
     public static final double INTAKE_PIVOT_GR = 6.33;
     public static final double MOMENT_OF_INERTIA = 1;
@@ -174,6 +174,8 @@ public class Constants {
     public static final double EXTEND_MULT_DOWNWARD = 1.6; //Controls downward force when extending  //1.6 
     public static final double EXTEND_MULT_UPWARD = 1.53; //Controls upward force when extending //.96
     public static final double RETRACT_MULT = 4.0; // Controls upward force when retracting  //4.0
+
+    public static final int INTAKE_PULSE_INTAKE_CYCLES = 90; //Cycles for the intake to be in intake mode during intake pulse. Out of 100 cycles
   }
 
   public class ClimberConstants{

@@ -25,7 +25,14 @@ public class Intake extends SubsystemBase {
     Position
   }
 
+  private enum IntakeMotorControlMode {
+    Disabled,
+    Voltage,
+    Pulse
+  }
+
   private ControlMode controlMode = ControlMode.Disabled;
+  private IntakeMotorControlMode intakeMotorControlMode = IntakeMotorControlMode.Disabled;
 
   private ProfiledPIDController extendController = new ProfiledPIDController(
       Constants.IntakeConstants.INTAKE_EXTENDING_KP, Constants.IntakeConstants.INTAKE_EXTENDING_KI,
@@ -42,6 +49,8 @@ public class Intake extends SubsystemBase {
   private double setPointVoltageExtending = 0.0;
 
   private double setPointPositionExtending = 0.0;
+
+  private int pulseCount = 0;
 
   // Current draw and setpoint publishers.
   private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -73,6 +82,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
+    inputs.intakeMotor.publish();
 
     // If the heat exceeds the max, turn it off.
     if (inputs.intakeMotor.temperatureCelsius > Constants.IntakeConstants.INTAKE_MAX_TEMP || DriverStation.isDisabled()
@@ -86,48 +96,47 @@ public class Intake extends SubsystemBase {
             && inputs.intakeMotor.temperatureCelsius <= Constants.IntakeConstants.INTAKE_MAX_TEMP);
 
     SmartDashboard.putString("Intake Control Mode", controlMode.toString());
-    if (controlMode == ControlMode.Disabled) {
+    //Control intaking motor
+    if(intakeMotorControlMode == IntakeMotorControlMode.Disabled){
       setPointVoltageIntake = 0;
-      setPointVoltageExtending = 0;
-    } else {
+    } else if (intakeMotorControlMode == IntakeMotorControlMode.Voltage){
       double finalSetpointIntake = 0;
       // Don't try to intake when we are too high, grinds gears
       if (inputs.extendPosition <= IntakePoses.HALF.get()){
         finalSetpointIntake = setPointVoltageIntake;
       }
       io.setIntakeMotorVolts(finalSetpointIntake);
-      inputs.intakeMotor.publish();
       setpointIntakePub.set(finalSetpointIntake);
+    } else {
+      //Pulse control mode
+      double finalSetpointIntake = 0;
+      // Don't try to intake when we are too high, grinds gears
+      if (inputs.extendPosition <= IntakePoses.HALF.get()){
+        finalSetpointIntake = setPointVoltageIntake;
+      }
+      // Don't try to intake when we are too high, grinds gears
+      if (inputs.extendPosition <= IntakePoses.HALF.get()){
+        pulseCount = (pulseCount+1)%100;
+        if(pulseCount < Constants.IntakeConstants.INTAKE_PULSE_INTAKE_CYCLES){
+          io.setIntakeMotorVolts(finalSetpointIntake);
+        } else {
+          io.setExtendingMotorVolts(-finalSetpointIntake);
+        }
+      }
+    }
 
-      if (controlMode == ControlMode.Voltage) {
-        // Setting the voltages of the motors
+    //Control extension
+    if (controlMode == ControlMode.Disabled) {
+      setPointVoltageExtending = 0;
+    } else if (controlMode == ControlMode.Voltage){
+      // Setting the voltages of the motors
         io.setExtendingMotorVolts(setPointVoltageExtending);
         // Publishing the setpoint voltage for extending and intaking motors.
         setpointExtendingPub.set(setPointVoltageExtending);
-
-      } else {
+    }else {
+      //Position control mode
         final double goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
             Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
-        // double feedforward = feedforwardController.calculate(
-        //     extendController.getSetpoint().position,
-        //     extendController.getSetpoint().velocity);
-
-        // if (inputs.extendPosition > Constants.IntakeConstants.EXTENDER_FRICTION_ZONE) {
-        //   feedforward += Constants.IntakeConstants.EXTENDER_FRICTION_ZONE_KS
-        //       * Math.signum(extendController.getSetpoint().velocity);
-        // }
-
-        // SmartDashboard.putNumber("Intake Setpoint", extendController.getSetpoint().position);
-        // SmartDashboard.putNumber("Intake PID output", feedback);
-        // SmartDashboard.putNumber("Intake FF output", feedforward);
-        // double volts = GeneralMath.hardLimitVelocity(feedback + feedforward, inputs.extendPosition,
-        //     Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
-        //     Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
-
-        // if (extendController.atGoal() && extendController.getGoal().position == IntakePoses.EXTENDED.pose){
-        //   volts = 0;
-        // }
-        // io.setExtendingMotorVolts(volts);
         final double feedback = extendController.calculate(inputs.extendPosition, goal);
         double volts;
         if(goal == IntakePoses.RETRACTED.pose){
@@ -147,18 +156,13 @@ public class Intake extends SubsystemBase {
         }
         voltsPublisher.set(volts);
         io.setExtendingMotorVolts(MathUtil.clamp(volts, -8, 8));
-
-        // Publishing the motor signals.
-
       }
-    }
     // Publishing the current draw for extending and intaking motors.
     extendPositionPub.set(inputs.extendPosition);
     currentDrawIntakePub.set(inputs.intakeCurrent);
     currentDrawExtendingPub.set(inputs.extendingCurrent);
     inputs.extendingMotor.publish();
     extendGoalPub.set(setPointPositionExtending);
-
   }
 
   // Getters and Setters
@@ -172,9 +176,14 @@ public class Intake extends SubsystemBase {
   }
 
   public void setVoltsIntake(double voltage) {
-    controlMode = ControlMode.Voltage;
+    intakeMotorControlMode = IntakeMotorControlMode.Voltage;
     setPointVoltageIntake = voltage;
+  }
 
+  
+  public void pulse(double voltage){
+    intakeMotorControlMode = IntakeMotorControlMode.Pulse;
+    setPointVoltageIntake = voltage;
   }
 
   public void setVoltsExtending(double voltage) {
