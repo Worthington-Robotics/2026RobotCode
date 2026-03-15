@@ -102,4 +102,8 @@ public class ShooterCommands {
       superstructure.setAutoPassing(false);
     });
   }
+
+  public Command hoodDown(Superstructure superstructure){
+    return Commands.startEnd(()-> superstructure.setHoodDown(true), () -> superstructure.setHoodDown(false));
+  }
 }

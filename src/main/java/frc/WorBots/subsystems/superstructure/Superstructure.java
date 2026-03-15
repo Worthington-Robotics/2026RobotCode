@@ -50,6 +50,7 @@ public class Superstructure extends SubsystemBase {
   private double hoodVolts = 0.0;
 
   private boolean doAutoPassing = false;
+  private boolean hoodDown = false;
 
   /**
    * Creates a shooter object
@@ -92,6 +93,9 @@ public class Superstructure extends SubsystemBase {
       shooter.setHoodVolts(hoodVolts);
       shooter.setFlywheelVolts(flywheelVolts);
       turret.setVoltage(turretVolts);
+    }
+    if(hoodDown){
+      shooter.setHoodPose(0);
     }
     shooter.periodic();
     turret.periodic();
@@ -207,5 +211,9 @@ public class Superstructure extends SubsystemBase {
 
   public void setAutoPassing(boolean autoPassing){
     doAutoPassing = autoPassing;
+  }
+
+  public void setHoodDown(boolean hoodDown){
+    this.hoodDown = hoodDown;
   }
 }
