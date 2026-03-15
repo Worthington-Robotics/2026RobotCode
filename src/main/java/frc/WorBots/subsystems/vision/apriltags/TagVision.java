@@ -96,7 +96,7 @@ public class TagVision extends SubsystemBase {
    * influence
    */
   // TODO: leave these where they are rn
-  private static final double XY_STD_DEV_COEFFICIENT = 1.1;
+  private static final double XY_STD_DEV_COEFFICIENT = 1.0;
 
   /**
    * How much influence theta data has on the robot pose. Smaller values increase
