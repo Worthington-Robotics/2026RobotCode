@@ -4,6 +4,7 @@
 
 package frc.WorBots;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +51,13 @@ public class Robot extends TimedRobot {
     Lights.getInstance().periodic();
     TimeCache.getInstance().update();
     StatusPage.periodic();
+  }
+
+  @Override
+  public void robotInit(){
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog(), true);
+    super.robotInit();
   }
 
   @Override
