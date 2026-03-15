@@ -176,6 +176,7 @@ public class Constants {
     public static final double RETRACT_MULT = 4.0; // Controls upward force when retracting  //4.0
 
     public static final int INTAKE_PULSE_INTAKE_CYCLES = 90; //Cycles for the intake to be in intake mode during intake pulse. Out of 100 cycles
+    public static final double INTAKE_JAMMED_THRESHHOLD = 1.0;
   }
 
   public class ClimberConstants{

@@ -52,6 +52,8 @@ public class Intake extends SubsystemBase {
 
   private int pulseCount = 0;
 
+  private boolean unJamming = false;
+
   // Current draw and setpoint publishers.
   private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
   private final NetworkTable intakeTable = instance.getTable("Intake");
@@ -104,6 +106,16 @@ public class Intake extends SubsystemBase {
       // Don't try to intake when we are too high, grinds gears
       if (inputs.extendPosition <= IntakePoses.HALF.get()){
         finalSetpointIntake = setPointVoltageIntake;
+      }
+      if(isJammed()){
+        pulseCount = (pulseCount+1)%51;
+        if(pulseCount>50){
+          unJamming = false;
+          finalSetpointIntake = -Math.abs(finalSetpointIntake);
+        } else {
+          unJamming = true;
+          finalSetpointIntake = -Math.abs(finalSetpointIntake);
+        }
       }
       io.setIntakeMotorVolts(finalSetpointIntake);
       setpointIntakePub.set(finalSetpointIntake);
@@ -220,6 +232,10 @@ public class Intake extends SubsystemBase {
   public void disable(){
     controlMode = ControlMode.Disabled;
     io.setIntakeMotorVolts(0);
+  }
+
+  public boolean isJammed(){
+    return inputs.extendingMotor.velocityRadsPerSec < Constants.IntakeConstants.INTAKE_JAMMED_THRESHHOLD || unJamming;
   }
 
 }
