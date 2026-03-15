@@ -51,6 +51,7 @@ public class Superstructure extends SubsystemBase {
 
   private boolean doAutoPassing = false;
   private boolean hoodDown = false;
+  private boolean isPassing = false;
 
   /**
    * Creates a shooter object
@@ -74,8 +75,10 @@ public class Superstructure extends SubsystemBase {
       //Calculate new params
       if (drive.inNeutralZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
         currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+        isPassing = true;
       } else {
         currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+        isPassing = false;
       }
       //Apply params
       shotValid = currentShootingParams.isValid();
@@ -215,5 +218,9 @@ public class Superstructure extends SubsystemBase {
 
   public void setHoodDown(boolean hoodDown){
     this.hoodDown = hoodDown;
+  }
+
+  public boolean isPassing(){
+    return isPassing;
   }
 }

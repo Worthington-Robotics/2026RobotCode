@@ -1,5 +1,6 @@
 package frc.WorBots.util;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.WorBots.subsystems.drive.Drive;
@@ -23,6 +24,10 @@ public class FireController {
 
   public static FireController getInstance() {
     return instance;
+  }
+
+  public boolean shouldAgitate(){
+    return !superstructure.isPassing() && Math.abs(superstructure.getDesiredTurretPose()) > Units.degreesToRadians(90);
   }
 
   /**

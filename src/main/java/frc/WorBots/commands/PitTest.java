@@ -13,6 +13,7 @@ import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.vision.apriltags.TagVision;
+import frc.WorBots.util.UtilCommands;
 
 //TODO implement climber, vision, and lights tests
 /** A class containing commands to be used to perform pit tests. */
@@ -40,6 +41,8 @@ public class PitTest {
         testDrive(drive, nextButtonSupplier),
         // Test intake
         testIntake(intake, nextButtonSupplier),
+        //Test vision
+        testVision(vision),
         // Test shooter and spindexer and take a test shot
         testShooterAndSpindexer(superstructure, spindexer, nextButtonSupplier),
         // Test turret
@@ -71,20 +74,19 @@ public class PitTest {
    *                           test
    */
   public Command testDrive(Drive drive, Supplier<Boolean> nextButtonSupplier) {
-    return Commands.sequence(
-        // Test Drive
-        drive.runOnce(() -> RobotContainer.driveController.drive(drive, new ChassisSpeeds(1.0, 0.0, 0.0))),
-        Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        drive.runOnce(() -> RobotContainer.driveController.drive(drive, new ChassisSpeeds(0.0, 1.0, 0.0))),
-        Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        drive.runOnce(() -> RobotContainer.driveController.drive(drive, new ChassisSpeeds(1.0, 0.0, 1.0))),
-        Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        drive.runOnce(() -> RobotContainer.driveController.drive(drive, new ChassisSpeeds(0.0, 0.0, 0.0))),
-        Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()));
+    return UtilCommands.namedSequence(
+        "Pit Test Drive Progress",
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(2.0, 0.0, 0.0)), drive)
+            .withTimeout(1.0),
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(-2.0, 0.0, 0.0)), drive)
+            .withTimeout(1.0),
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0.0, 2.0, 0.0)), drive)
+            .withTimeout(1.0),
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0.0, -2.0, 0.0)), drive)
+            .withTimeout(1.0),
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0.0, 0.0, 2.0)), drive)
+            .withTimeout(1.0),
+        Commands.runOnce(drive::stop));
   }
 
   /**
@@ -165,4 +167,7 @@ public class PitTest {
         Commands.waitUntil(() -> nextButtonSupplier.get()));
   }
 
+  public Command testVision(TagVision vision) {
+    return Commands.waitUntil(() -> vision.canSeeTag());
+  }
 }
