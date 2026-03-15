@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.lights.LightUtils.ColorSequence;
 import frc.WorBots.subsystems.lights.LightsIO.LightStrip;
-import frc.WorBots.subsystems.lights.LightsIO.DummyLights;
+import frc.WorBots.subsystems.lights.LightsIO.LightSection;
 import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.cache.Cache.TimeCache;
 import frc.WorBots.util.debug.StatusPage;
@@ -22,9 +22,10 @@ public class Lights extends SubsystemBase {
         return instance;
     }
     
-    private LightStrip turretStrip;
-    private DummyLights leftStrip;
-    private DummyLights rightStrip;
+    private LightStrip lights;
+    private LightSection turretStrip;
+    private LightSection leftStrip;
+    private LightSection rightStrip;
 
 
     //What should be run if no override is present
@@ -116,9 +117,10 @@ public class Lights extends SubsystemBase {
 
     private Lights(){
         //TODO Add light Strips here
-        turretStrip = new LightStrip(0, 14);
-        leftStrip = new DummyLights();
-        rightStrip = new DummyLights();
+        lights = new LightStrip(0, 40);
+        turretStrip = new LightSection(lights, 0, 13);
+        leftStrip = new LightSection(lights, 14, 26);
+        rightStrip = new LightSection(lights, 27, 39);
         StatusPage.reportStatus(StatusPage.LIGHTS_SUBSYSTEM, true);
     }
 
@@ -238,16 +240,13 @@ public class Lights extends SubsystemBase {
 
             break;
           case Disabled:
-            //Displays worbots flame while robot is disabled
-            //LightUtils.flame(turretStrip, 0.95, WORBOTS_FLAME_COLORS); //Use this for larger light strips
-            //LightUtils.gradient(turretStrip, new Color(255, 0, 0), new Color(0, 0, 180));
             LightUtils.worbotsBounce(turretStrip);
             LightUtils.worbotsBounce(leftStrip);
             LightUtils.worbotsBounce(rightStrip);
             break;
         }
 
-        turretStrip.periodic();
+        lights.periodic();
     }
 
     public void runEffect(LightEffects effect){
@@ -262,6 +261,8 @@ public class Lights extends SubsystemBase {
           //Flashes the lights yellow if the drivers try to shoot before the robot has a lock
           final double flashPeriod = 0.125;
           LightUtils.blink(turretStrip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
+          LightUtils.blink(leftStrip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
+          LightUtils.blink(rightStrip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
           if (effectTimer.get() > flashPeriod * 3.0) {
             effectOverride = Optional.empty();
           }
@@ -271,12 +272,14 @@ public class Lights extends SubsystemBase {
           final double minBrightness = 0.1;
           final double totalTime = 5.0;
           LightUtils.dopplerEffect(turretStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
+          LightUtils.dopplerEffect(leftStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
+          LightUtils.dopplerEffect(rightStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
 
           break;
         case superStar:
           LightUtils.rainbow(turretStrip, 0.5, 1);
-          LightUtils.rainbow(leftStrip, 0.5, 0.5);
-          LightUtils.rainbow(rightStrip, 0.5, 0.5);
+          LightUtils.rainbow(leftStrip, 0.5, 1);
+          LightUtils.rainbow(rightStrip, 0.5, 1);
 
           break;
         case none:

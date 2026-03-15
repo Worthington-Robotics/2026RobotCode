@@ -32,9 +32,6 @@ import frc.WorBots.commands.ManualTurretTestCommands;
 import frc.WorBots.commands.StartAutoAim;
 import frc.WorBots.commands.ShooterCommands;
 import frc.WorBots.commands.ShotControlFudgeCommand;
-import frc.WorBots.subsystems.climber.Climber;
-import frc.WorBots.subsystems.climber.ClimberIOSim;
-import frc.WorBots.subsystems.climber.ClimberIOTalon;
 import frc.WorBots.auto.AutoSelector;
 import frc.WorBots.commands.RunSpindexer;
 import frc.WorBots.subsystems.drive.Drive;
@@ -63,7 +60,6 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final Spindexer spin;
-  public final Climber climber;
   public final Superstructure superstructure;
   public final Intake intake;
   public final TagVision vision;
@@ -95,7 +91,6 @@ public class RobotContainer {
           new ModuleIOTalon(2),
           new ModuleIOTalon(3));
       spin = new Spindexer(new SpindexerIOTalon());
-      climber = new Climber(new ClimberIOTalon());
       superstructure = new Superstructure(new ShooterIOTalon(), new TurretIOTalon(), drive);
       intake = new Intake(new IntakeIOTalon());
     } else {
@@ -106,7 +101,6 @@ public class RobotContainer {
           new ModuleIOSim(2),
           new ModuleIOSim(3));
       spin = new Spindexer(new SpindexerIOSim());
-      climber = new Climber(new ClimberIOSim());
       superstructure = new Superstructure(new ShooterIOSim(), new TurretIOSim(), drive);
       intake = new Intake(new IntakeIOSim());
     }
@@ -342,7 +336,6 @@ public class RobotContainer {
   public void disableSubsystems() {
     drive.stop();
     intake.disable();
-    climber.disable();
     superstructure.disable();
     spin.disable();
   }

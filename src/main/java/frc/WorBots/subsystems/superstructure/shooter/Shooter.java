@@ -43,6 +43,7 @@ public class Shooter {
   private boolean passing = false;
 
   private double leaderFudgeFactor = 0;
+  private boolean autoHoodDown = false;
 
   // Two control modes, one allows you to provide voltage, the other means that
   // the robot is disabled.
@@ -121,6 +122,9 @@ public class Shooter {
     if (drive.nearTrench()) {
       setpointPosition = 0;
       setHoodPose(setpointPosition);
+      autoHoodDown = true;
+    } else {
+      autoHoodDown = false;
     }
     if (controlMode == ControlMode.Disabled) {
       io.setHoodVolts(0);
@@ -283,7 +287,7 @@ public class Shooter {
 
   public boolean hoodInPosition() {
     return Math.abs(inputs.actualHoodPosition
-        - hoodPIDController.pid.getSetpoint()) < Constants.TurretShooterConstants.HOOD_READY_TOLERANCE;
+        - hoodPIDController.pid.getSetpoint()) < Constants.TurretShooterConstants.HOOD_READY_TOLERANCE && !autoHoodDown;
   }
 
   /**

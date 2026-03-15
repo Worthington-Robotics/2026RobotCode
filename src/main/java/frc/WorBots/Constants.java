@@ -109,7 +109,7 @@ public class Constants {
     //Ready to shoot tolerances
     //TODO set real numbers
     public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(2);
-    public final static double HOOD_READY_TOLERANCE = Units.degreesToRadians(3);
+    public final static double HOOD_READY_TOLERANCE = Units.degreesToRadians(2);
     public final static double FLYWHEEL_READY_VEL_TOLERANCE = 20;
 
     // Feed forward values
