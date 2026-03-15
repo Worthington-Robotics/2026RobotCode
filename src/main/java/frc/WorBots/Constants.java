@@ -162,7 +162,7 @@ public class Constants {
 
     //PID / Feedforward Values
     public static final double INTAKE_EXTEND_TOLERANCE = 0.15;
-    public static final double INTAKE_EXTEND_EXTEND_POSE_TOLERANCE = 0.3;
+    public static final double INTAKE_EXTEND_EXTEND_POSE_TOLERANCE = 0.4;
     public static final double INTAKE_EXTENDING_KP = 3.0; //3
     public static final double INTAKE_EXTENDING_KI = 1.0; //1
     public static final double INTAKE_EXTENDING_KD = 0.00;
@@ -171,11 +171,12 @@ public class Constants {
     public static final double EXTENDER_KV = 0.5;
     
     //New intake controls constants
-    public static final double EXTEND_MULT_DOWNWARD = 1.6; //Controls downward force when extending  //1.6 
-    public static final double EXTEND_MULT_UPWARD = 1.53; //Controls upward force when extending //.96
-    public static final double RETRACT_MULT = 4.0; // Controls upward force when retracting  //4.0
+    public static final double EXTEND_MULT_DOWNWARD = 1.6; //Controls downward force when extending
+    public static final double EXTEND_MULT_UPWARD = 1.53; //Controls upward force when extending
+    public static final double RETRACT_MULT = 7.0; // Controls upward force when retracting
 
-    public static final int INTAKE_PULSE_INTAKE_CYCLES = 90; //Cycles for the intake to be in intake mode during intake pulse. Out of 100 cycles
+    public static final double INTAKE_PULSE_INTAKING_SEC = 3.0;
+    public static final double INTAKE_PULSE_SPIT_SEC = 0.3;
   }
 
   public class ClimberConstants{

@@ -70,7 +70,7 @@ public class IntakeIOTalon implements IntakeIO {
 
     // Redefine input position
     inputs.extendPosition = Units.degreesToRadians(90) + (inputs.extendingMotor.positionRads / Constants.IntakeConstants.INTAKE_PIVOT_GR);
-    inputs.intakeCurrent = intakeCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
+    inputs.intakeCurrent = intakeCurrentDrawSignal.refresh().getValue().in(edu.wpi.first.units.Units.Amps);
     inputs.extendingCurrent = extendingCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
 
   }

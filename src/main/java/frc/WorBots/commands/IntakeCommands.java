@@ -66,7 +66,7 @@ public class IntakeCommands {
    * @param intake The intake to agitate with
    */
   public Command agitate(Intake intake) {
-    return intake.runOnce(() -> {
+    return Commands.runOnce(() -> {
       intake.agitate();
     });
   }
@@ -88,5 +88,9 @@ public class IntakeCommands {
 
   public Command pulse(Intake intake){
     return Commands.runOnce(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE));
+  }
+
+  public Command pulseTeleop(Intake intake){
+    return intake.startEnd(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE), () -> intake.setVoltsIntake(0));
   }
 }

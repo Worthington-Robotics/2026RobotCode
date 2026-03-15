@@ -68,8 +68,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Hit The Deck",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.851851851851849,
+      "command": null
+    },
+    {
       "name": "Sustained Fire",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 1.0835707502374154,
       "endWaypointRelativePos": null,
       "command": null
     }
