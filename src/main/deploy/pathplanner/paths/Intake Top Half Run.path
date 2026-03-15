@@ -48,12 +48,28 @@
     },
     {
       "anchor": {
-        "x": 6.0,
-        "y": 7.4
+        "x": 6.471526390870184,
+        "y": 5.801126961483595
       },
       "prevControl": {
-        "x": 7.133745378234471,
-        "y": 7.4
+        "x": 6.841717218379921,
+        "y": 4.72952193448172
+      },
+      "nextControl": {
+        "x": 6.225691868758916,
+        "y": 6.512753209700428
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 7.5
+      },
+      "prevControl": {
+        "x": 5.970081661810011,
+        "y": 6.904821683309558
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,7 +83,11 @@
     },
     {
       "waypointRelativePos": 2,
-      "rotationDegrees": -59.99999999999999
+      "rotationDegrees": -80.0
+    },
+    {
+      "waypointRelativePos": 3.0147940823670516,
+      "rotationDegrees": 119.99999999999999
     }
   ],
   "constraintZones": [
@@ -83,6 +103,19 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 3.2535612535612524,
+      "maxWaypointRelativePos": 4.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 12.192,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
   "pointTowardsZones": [],
@@ -90,12 +123,6 @@
     {
       "name": "Mine Mine Mine",
       "waypointRelativePos": 0.12841726618705074,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Dude Chill",
-      "waypointRelativePos": 2.5974820143884956,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -110,7 +137,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
