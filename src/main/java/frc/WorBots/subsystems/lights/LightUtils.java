@@ -221,7 +221,7 @@ public class LightUtils {
     final double sin = TrigLookup.sin(TimeCache.getInstance().get() % time / time * GeomUtil.PI2);
     final double percent = Math.pow((sin + 1.0) / 2.0, 0.8);
     final double portion = percent * 0.5;
-    final int width = 6;
+    final int width = 3;
 
     // Indices of the first bouncer
     final int index0 = (int) (portion * (io.getCount() - width * 1.5));

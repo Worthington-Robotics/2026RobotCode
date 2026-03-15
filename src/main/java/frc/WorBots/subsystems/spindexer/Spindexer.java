@@ -105,7 +105,7 @@ public class Spindexer extends SubsystemBase{
   }
 
   public double getVoltage(){
-    return inputs.talon.supplyVoltage;
+    return goalVoltage;
   }
 
   public void setContolMode(ControlMode controlmode){

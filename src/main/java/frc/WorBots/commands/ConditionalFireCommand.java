@@ -21,7 +21,6 @@ public class ConditionalFireCommand extends Command {
    * @param voltage The voltage to run the spindexer at
    */
   public ConditionalFireCommand(Drive drive, Spindexer spin, double voltage) {
-    addRequirements(spin);
     this.spin = spin;
     this.drive = drive;
     this.voltage = voltage;

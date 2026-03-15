@@ -29,6 +29,10 @@ public class IntakeIOSim implements IntakeIO {
     extendingSim.update(Constants.RobotConstants.ROBOT_PERIOD);
     inputs.isConnected = true;
 
+    inputs.extendingMotor.isConnected = true;
+    inputs.intakeMotor.isConnected = true;
+    inputs.intakeMotor.temperatureCelsius = 10;
+
     inputs.extendingMotor.velocityRadsPerSec = extendingSim.getVelocityRadPerSec();
     inputs.intakeMotor.velocityRadsPerSec = intakeSim.getAngularVelocityRadPerSec();
 

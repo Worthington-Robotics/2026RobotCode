@@ -113,7 +113,7 @@ public class RobotContainer {
     vision = new TagVision(new TagVisionIONew("left_cam"), new TagVisionIONew("right_cam"));
     vision.setDataInterfaces(drive::addVisionUpdate, () -> drive.getRotation(), () -> drive.getFieldRelativeSetpointSpeeds());
 
-    FireController fireController = new FireController(superstructure, drive);
+    FireController fireController = new FireController(superstructure, drive, spin);
 
     // TODO make the subsystems target on their own, this means this constructor
     // needs
@@ -305,6 +305,7 @@ public class RobotContainer {
     selector = new AutoSelector("Auto Selector 2");
 
     NamedCommands.registerCommand("Focus Your Power", new StartAutoAim(superstructure));
+    NamedCommands.registerCommand("Sustained Fire", new ConditionalFireCommand(drive, spin, 8));
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
     NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
     NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));

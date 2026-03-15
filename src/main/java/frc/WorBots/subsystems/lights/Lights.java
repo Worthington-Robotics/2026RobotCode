@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.WorBots.Constants;
 import frc.WorBots.subsystems.lights.LightUtils.ColorSequence;
 import frc.WorBots.subsystems.lights.LightsIO.LightStrip;
+import frc.WorBots.subsystems.lights.LightsIO.DummyLights;
 import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.cache.Cache.TimeCache;
 import frc.WorBots.util.debug.StatusPage;
@@ -21,6 +23,9 @@ public class Lights extends SubsystemBase {
     }
     
     private LightStrip turretStrip;
+    private DummyLights leftStrip;
+    private DummyLights rightStrip;
+
 
     //What should be run if no override is present
     private LightModes currentMode = LightModes.Disabled;
@@ -103,16 +108,23 @@ public class Lights extends SubsystemBase {
     public static enum LightEffects{
         none,
         invalidShotFlash,
-        timePulse;
+        timePulse,
+        superStar;
     }
 
     private Lights(){
         //TODO Add light Strips here
         turretStrip = new LightStrip(0, 14);
+        leftStrip = new DummyLights();
+        rightStrip = new DummyLights();
         StatusPage.reportStatus(StatusPage.LIGHTS_SUBSYSTEM, true);
     }
 
     public void periodic(){
+        if(Constants.getSim()){
+          addVisionStatus(true);
+        }
+
         SmartDashboard.putString("Lights Mode", currentMode.toString());
         SmartDashboard.putString("Lights Effect", currentEffect.toString());
         SmartDashboard.putString("Lights Mode Override", modeOverride.toString());
@@ -164,6 +176,8 @@ public class Lights extends SubsystemBase {
             }
 
             LightUtils.solid(turretStrip, solidColor);
+            LightUtils.solid(leftStrip, solidColor);
+            LightUtils.solid(rightStrip, solidColor);
 
             if(rebuiltUtils.timeToAcivationSwitch() < 5){
               runEffect(LightEffects.timePulse);
@@ -173,36 +187,48 @@ public class Lights extends SubsystemBase {
           case Climbing:
             //Displays blue light when climb is active to remind the drivers to chill
             Color deepBlue = new Color(0, 0, 255);
-            LightUtils.solid(turretStrip, solidColor);
             solidColor = deepBlue;
+            LightUtils.solid(turretStrip, solidColor);
+            LightUtils.solid(leftStrip, solidColor);
+            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case SpinJam:
             //Displays orange light when Spindexer jam is detetcted
             Color trueOrange = new Color(255, 25, 0);
             LightUtils.blink(turretStrip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
+            LightUtils.blink(leftStrip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
+            LightUtils.blink(rightStrip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case SysFault:
             //Displays solid red when a System Fault occurs
             solidColor = Color.kRed;
             LightUtils.solid(turretStrip, solidColor);
+            LightUtils.solid(leftStrip, solidColor);
+            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case VisionLost:
             //Displays blinking white light if vision is lost
             LightUtils.blink(turretStrip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
+            LightUtils.blink(leftStrip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
+            LightUtils.blink(rightStrip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case Solid:
             //Diplays a solid light of a set color, mostly a debug mode
             LightUtils.solid(turretStrip, solidColor);
+            LightUtils.solid(leftStrip, solidColor);
+            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case PitLight:
             //Displays solid white light to make it easier to see while working on the robot
-            solidColor = Color.kWhite;
+            solidColor = new Color(100, 100, 100);
             LightUtils.solid(turretStrip, solidColor);
+            LightUtils.solid(leftStrip, solidColor);
+            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case Disabled:
@@ -210,6 +236,8 @@ public class Lights extends SubsystemBase {
             //LightUtils.flame(turretStrip, 0.95, WORBOTS_FLAME_COLORS); //Use this for larger light strips
             //LightUtils.gradient(turretStrip, new Color(255, 0, 0), new Color(0, 0, 180));
             LightUtils.worbotsBounce(turretStrip);
+            LightUtils.worbotsBounce(leftStrip);
+            LightUtils.worbotsBounce(rightStrip);
             break;
         }
 
@@ -237,6 +265,12 @@ public class Lights extends SubsystemBase {
           final double minBrightness = 0.1;
           final double totalTime = 5.0;
           LightUtils.dopplerEffect(turretStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
+
+          break;
+        case superStar:
+          LightUtils.rainbow(turretStrip, 0.5, 10);
+          LightUtils.rainbow(leftStrip, 0.5, 0.5);
+          LightUtils.rainbow(rightStrip, 0.5, 0.5);
 
           break;
         case none:

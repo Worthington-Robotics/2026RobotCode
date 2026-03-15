@@ -162,6 +162,7 @@ public class Intake extends SubsystemBase {
           } else if(setPointPositionExtending == IntakePoses.HALF.pose && atGoal()) {
             setPointPositionExtending = IntakePoses.EXTENDED.pose;
           }
+          io.setIntakeMotorVolts(7);
         } else if (agitatedLast){
           setPointPositionExtending = IntakePoses.EXTENDED.pose;
           agitatedLast = false;
@@ -224,19 +225,19 @@ public class Intake extends SubsystemBase {
   }
 
   public void extend() {
-    controlMode = ControlMode.Position;
+    controlMode = ControlMode.Agitate;
     setPointPositionExtending = IntakePoses.EXTENDED.get();
     extendController.reset(inputs.extendPosition);
   }
 
   public void retract() {
-    controlMode = ControlMode.Position;
+    controlMode = ControlMode.Agitate;
     setPointPositionExtending = IntakePoses.RETRACTED.get();
     extendController.reset(inputs.extendPosition);
   }
 
   public void agitate(){
-    controlMode = ControlMode.Position;
+    controlMode = ControlMode.Agitate;
     setPointPositionExtending = IntakePoses.HALF.get();
     extendController.reset(inputs.extendPosition);
   }

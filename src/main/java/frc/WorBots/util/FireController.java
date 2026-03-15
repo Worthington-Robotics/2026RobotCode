@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.lights.Lights.LightEffects;
+import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.util.debug.StatusPage;
 
@@ -14,8 +15,10 @@ public class FireController {
   private RebuiltUtils utils;
   private static FireController instance;
   private Drive drive;
+  private Spindexer spindexer;
 
-  public FireController(Superstructure superstructure, Drive drive) {
+  public FireController(Superstructure superstructure, Drive drive, Spindexer spindexer) {
+    this.spindexer = spindexer;
     this.superstructure = superstructure;
     this.drive = drive;
     instance = this;
@@ -27,7 +30,7 @@ public class FireController {
   }
 
   public boolean shouldAgitate(){
-    return !superstructure.isPassing() && Math.abs(superstructure.getDesiredTurretPose()) > Units.degreesToRadians(90);
+    return !superstructure.isPassing() && Math.abs(superstructure.getDesiredTurretPose()) > Units.degreesToRadians(90) && spindexer.getVoltage() > 0.0;
   }
 
   /**
@@ -79,8 +82,8 @@ public class FireController {
       output = subsystemsAtGoals();
     }
 
-    if ((DriverStation.getAlliance().get() == Alliance.Red && drive.inRedZone())
-        || (DriverStation.getAlliance().get() == Alliance.Blue && drive.inBlueZone())) {
+    if (DriverStation.getAlliance().isPresent() && ((DriverStation.getAlliance().get() == Alliance.Red && drive.inRedZone())
+        || (DriverStation.getAlliance().get() == Alliance.Blue && drive.inBlueZone()))) {
       output = output && timeAcceptable();
     }
 
