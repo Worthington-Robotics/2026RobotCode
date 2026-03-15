@@ -116,7 +116,8 @@ public class ShooterCommands {
   public Command superPass(Superstructure superstructure, Intake intake, Drive drive, Spindexer spin){
     return Commands.parallel(
       new IntakeCommands().spit(intake),
-      new ConditionalFireCommand(drive, spin, 8)
+      new ConditionalFireCommand(drive, spin, 8),
+      new SuperPassLights()
     );
   }
 }

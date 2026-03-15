@@ -60,6 +60,8 @@ public class Lights extends SubsystemBase {
 
     private boolean climbing = false;
 
+    private boolean superStar = false;
+
     /**Turret Status */
     private Optional<Boolean> shotPreped = Optional.empty();
 
@@ -183,6 +185,10 @@ public class Lights extends SubsystemBase {
               runEffect(LightEffects.timePulse);
             }
 
+            if(superStar){
+              runEffect(LightEffects.superStar);
+            }
+
             break;
           case Climbing:
             //Displays blue light when climb is active to remind the drivers to chill
@@ -268,7 +274,7 @@ public class Lights extends SubsystemBase {
 
           break;
         case superStar:
-          LightUtils.rainbow(turretStrip, 0.5, 10);
+          LightUtils.rainbow(turretStrip, 0.5, 1);
           LightUtils.rainbow(leftStrip, 0.5, 0.5);
           LightUtils.rainbow(rightStrip, 0.5, 0.5);
 
@@ -345,6 +351,10 @@ public class Lights extends SubsystemBase {
    */
   public void sysFault(boolean status){
     this.sysFault = Optional.of(status);
+  }
+
+  public void superStar(boolean superStar){
+    this.superStar = superStar;
   }
 
   /**
