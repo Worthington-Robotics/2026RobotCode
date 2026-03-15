@@ -52,8 +52,8 @@ public class ShotCalculator {
       { 1.528, 0.1542, 133.65, 1},
       { 2.067517874264592, 0.226, 134, 1},
       { 2.981151807004248, 0.265, 149, 1},
-      { 3.8951452800012, 0.375, 161, 1},
-      { 4.809293308638241, 0.384, 183.3, 1},
+      { 3.8951452800012, 0.375, 163, 1},
+      { 4.809293308638241, 0.384, 185.3, 1},
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (Rads/sec), time of
@@ -161,7 +161,7 @@ public class ShotCalculator {
     //turretAngle = lookAheadPose.getTranslation().getAngle();
     //Outputs the angle off by 90 degrees
     SmartDashboard.putNumber("ShotCalc/Range", dist_to_target);
-    double angle_adj = perp_vel * -0.85 / (dist_to_target);
+    double angle_adj = perp_vel * -0.86 / (dist_to_target);
     Rotation2d turretAngle = new Rotation2d(Math.atan2(dy, dx)).rotateBy(new Rotation2d(angle_adj));
     double range_adj = (para_vel > 0 ? Constants.TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN_TOWARDS : Constants.TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN_AWAY) * (para_vel);
     dist_to_target += range_adj;//* TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN);

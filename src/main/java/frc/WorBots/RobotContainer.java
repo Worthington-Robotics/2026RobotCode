@@ -21,8 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.WorBots.commands.ClimberCommands;
-import frc.WorBots.commands.ClimberTestCommands;
 import frc.WorBots.commands.ConditionalFireCommand;
 import frc.WorBots.commands.DriveCommands;
 import frc.WorBots.commands.DriveWithJoysticks;
@@ -79,6 +77,8 @@ public class RobotContainer {
 
   /** Whether proper autos with a valid alliance have been generated */
   public static boolean validAutosGenerated = false;
+
+  private boolean ranAuto = false;
 
   public static Optional<Alliance> allianceUsedForAutos = Optional.empty();
 
@@ -180,8 +180,6 @@ public class RobotContainer {
     // A Key = Extend or retract intake
     // TODO: check if written correctly
     driver.rightBumper().debounce(0.02).onTrue(new IntakeCommands().togglePose(intake));
-    // Dpad Up = Toggles the climb lock off
-    driver.povUp().debounce(0.02).toggleOnTrue(new ClimberCommands().setClimbLockOff(climber));
     // TODO: RT for spin intake, see if that is written correctly
     driver.rightTrigger().debounce(0.02).whileTrue(new IntakeCommands().intake(intake));
     // TODO: hood down
@@ -285,8 +283,6 @@ public class RobotContainer {
     }
 
     return Commands.sequence(
-        new IntakeExtendNoRequirements(intake).withTimeout(1),
-        Commands.waitSeconds(0.15),
         selector.getCommand());
   }
 
@@ -307,10 +303,13 @@ public class RobotContainer {
     selector = new AutoSelector("Auto Selector 2");
 
     NamedCommands.registerCommand("Focus Your Power", new StartAutoAim(superstructure));
+    NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
+    NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
 
     new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, 8));
-    new EventTrigger("Mine Mine Mine").whileTrue(new PathplannerIntakeCommands().startIntakeAuto(intake));
+    new EventTrigger("Mine Mine Mine").onTrue(new PathplannerIntakeCommands().startIntakeAuto(intake));
     new EventTrigger("Dude Chill").onTrue(new PathplannerIntakeCommands().stopIntakeAuto(intake));
+    new EventTrigger("Hit The Deck").whileTrue(new ShooterCommands().hoodDown(superstructure));
     new EventTrigger("Extend Intake").onTrue(new IntakeCommands().extend(intake));
     new EventTrigger("Retract Intake").onTrue(new IntakeCommands().retract(intake));
     new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, 8));
@@ -342,5 +341,16 @@ public class RobotContainer {
     climber.disable();
     superstructure.disable();
     spin.disable();
+  }
+
+  public void teleopInitSubsystems(){
+    if (ranAuto){
+      intake.teleopInit();
+      superstructure.enableAutoAiming();
+    }
+  }
+
+  public void ranAuto(){
+    ranAuto = true;
   }
 }

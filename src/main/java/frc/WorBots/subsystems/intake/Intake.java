@@ -101,6 +101,7 @@ public class Intake extends SubsystemBase {
     //Control intaking motor
     if(intakeMotorControlMode == IntakeMotorControlMode.Disabled){
       setPointVoltageIntake = 0;
+      io.setIntakeMotorVolts(0);
     } else if (intakeMotorControlMode == IntakeMotorControlMode.Voltage){
       double finalSetpointIntake = 0;
       // Don't try to intake when we are too high, grinds gears
@@ -128,8 +129,8 @@ public class Intake extends SubsystemBase {
       }
       // Don't try to intake when we are too high, grinds gears
       if (inputs.extendPosition <= IntakePoses.HALF.get()){
-        pulseCount = (pulseCount+1)%100;
-        if(pulseCount < Constants.IntakeConstants.INTAKE_PULSE_INTAKE_CYCLES){
+        pulseCount = (pulseCount+1)%(int) (100 * (Constants.IntakeConstants.INTAKE_PULSE_INTAKING_SEC + Constants.IntakeConstants.INTAKE_PULSE_SPIT_SEC));
+        if(pulseCount < (int)(100 * Constants.IntakeConstants.INTAKE_PULSE_INTAKING_SEC)){
           io.setIntakeMotorVolts(finalSetpointIntake);
         } else {
           io.setExtendingMotorVolts(-finalSetpointIntake);
@@ -140,6 +141,7 @@ public class Intake extends SubsystemBase {
     //Control extension
     if (controlMode == ControlMode.Disabled) {
       setPointVoltageExtending = 0;
+      io.setExtendingMotorVolts(0);
     } else if (controlMode == ControlMode.Voltage){
       // Setting the voltages of the motors
         io.setExtendingMotorVolts(setPointVoltageExtending);
@@ -231,9 +233,12 @@ public class Intake extends SubsystemBase {
 
   public void disable(){
     controlMode = ControlMode.Disabled;
-    io.setIntakeMotorVolts(0);
+    intakeMotorControlMode = IntakeMotorControlMode.Disabled;
   }
 
+  public void teleopInit(){
+    extend();
+  }
   public boolean isJammed(){
     return inputs.extendingMotor.velocityRadsPerSec < Constants.IntakeConstants.INTAKE_JAMMED_THRESHHOLD || unJamming;
   }

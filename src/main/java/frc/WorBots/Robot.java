@@ -74,6 +74,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_robotContainer.ranAuto();
     m_robotContainer.disableSubsystems();
     MatchTime.getInstance().startAuto();
     TimeCache.getInstance().update();
@@ -90,11 +91,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
+    m_robotContainer.disableSubsystems();
   }
 
   @Override
   public void teleopInit() {
     m_robotContainer.disableSubsystems();
+    m_robotContainer.teleopInitSubsystems();
     MatchTime.getInstance().startTeleop();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
