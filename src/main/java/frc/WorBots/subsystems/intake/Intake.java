@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.WorBots.util.FireController;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.intake.IntakeIO.IntakeIOInputs;
@@ -22,7 +23,8 @@ public class Intake extends SubsystemBase {
   private enum ControlMode {
     Disabled,
     Voltage,
-    Position
+    Position,
+    Agitate
   }
 
   private enum IntakeMotorControlMode {
@@ -53,6 +55,8 @@ public class Intake extends SubsystemBase {
   private int pulseCount = 0;
 
   private boolean unJamming = false;
+  private boolean agitateInAuto = false;
+  private boolean agitatedLast = false;
 
   // Current draw and setpoint publishers.
   private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -149,6 +153,20 @@ public class Intake extends SubsystemBase {
         setpointExtendingPub.set(setPointVoltageExtending);
     }else {
       //Position control mode
+      if(controlMode == ControlMode.Agitate && (agitateInAuto || !DriverStation.isAutonomous())){
+        //Agitate control mode running on top of position control mode
+        if(FireController.getInstance().shouldAgitate() && setPointVoltageIntake == 0){
+          agitatedLast = true;
+          if(setPointPositionExtending == IntakePoses.EXTENDED.pose && atGoal()){
+            setPointPositionExtending = IntakePoses.HALF.pose;
+          } else if(setPointPositionExtending == IntakePoses.HALF.pose && atGoal()) {
+            setPointPositionExtending = IntakePoses.EXTENDED.pose;
+          }
+        } else if (agitatedLast){
+          setPointPositionExtending = IntakePoses.EXTENDED.pose;
+          agitatedLast = false;
+        }
+      }
         final double goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
             Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
         final double feedback = extendController.calculate(inputs.extendPosition, goal);
@@ -241,6 +259,10 @@ public class Intake extends SubsystemBase {
   }
   public boolean isJammed(){
     return inputs.extendingMotor.velocityRadsPerSec < Constants.IntakeConstants.INTAKE_JAMMED_THRESHHOLD || unJamming;
+  }
+
+  public void setAgigateInAuto(boolean agitateInAuto){
+    this.agitateInAuto = agitateInAuto;
   }
 
 }
