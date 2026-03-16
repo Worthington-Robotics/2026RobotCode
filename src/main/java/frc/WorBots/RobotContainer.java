@@ -29,6 +29,7 @@ import frc.WorBots.commands.IntakeCommands;
 import frc.WorBots.commands.pathPlannerCommands.IntakeExtendNoRequirements;
 import frc.WorBots.commands.pathPlannerCommands.PathplannerIntakeCommands;
 import frc.WorBots.commands.ManualTurretTestCommands;
+import frc.WorBots.commands.PitTest;
 import frc.WorBots.commands.StartAutoAim;
 import frc.WorBots.commands.ShooterCommands;
 import frc.WorBots.commands.ShotControlFudgeCommand;
@@ -42,6 +43,7 @@ import frc.WorBots.subsystems.drive.ModuleIOTalon;
 import frc.WorBots.subsystems.intake.Intake;
 import frc.WorBots.subsystems.intake.IntakeIOSim;
 import frc.WorBots.subsystems.intake.IntakeIOTalon;
+import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
 import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
@@ -305,11 +307,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
     NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
 
+    NamedCommands.registerCommand("Pit Test", new PitTest().fullPitTest(drive, superstructure, intake, spin, vision, Lights.getInstance()));
+
     new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, 8));
     new EventTrigger("Mine Mine Mine").onTrue(new PathplannerIntakeCommands().startIntakeAuto(intake));
     new EventTrigger("Dude Chill").onTrue(new PathplannerIntakeCommands().stopIntakeAuto(intake));
     new EventTrigger("Hit The Deck").whileTrue(new ShooterCommands().hoodDown(superstructure));
-    new EventTrigger("Extend Intake").onTrue(new IntakeCommands().extend(intake));
+    new EventTrigger("Deploy Intake").onTrue(new IntakeCommands().extend(intake));
     new EventTrigger("Retract Intake").onTrue(new IntakeCommands().retract(intake));
     new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, 8));
     new EventTrigger("Use the Force").onTrue(new StartAutoAim(superstructure));

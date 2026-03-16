@@ -137,6 +137,9 @@ public class Lights extends SubsystemBase {
         if(DriverStation.isDisabled()){
           currentMode = LightModes.Disabled;
 
+          if(SmartDashboard.getBoolean("DB/Button 1", false)){
+            currentMode = LightModes.PitLight;
+          }
         } else {
           //Priority from lowest to hightest, Turret Display, Vision Down, Spin Jam, Climbing, Sys Fault
           currentMode = LightModes.TurretDisplay;

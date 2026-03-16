@@ -1,0 +1,131 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.6,
+        "y": 4.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.6,
+        "y": 4.0
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.0084216867469884,
+        "y": 5.062204819277108
+      },
+      "prevControl": {
+        "x": 2.2816144578313255,
+        "y": 4.909216867469879
+      },
+      "nextControl": {
+        "x": 1.5944665252481085,
+        "y": 5.294019709716481
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.6752409638554218,
+        "y": 4.887361445783132
+      },
+      "prevControl": {
+        "x": 0.6752409638554218,
+        "y": 4.637361445783132
+      },
+      "nextControl": {
+        "x": 0.6752409638554218,
+        "y": 5.358395221456936
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.6752409638554218,
+        "y": 6.493734939759036
+      },
+      "prevControl": {
+        "x": 0.6752409638554218,
+        "y": 5.761578313253012
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2.0702362204724465,
+      "rotationDegrees": 119.99999999999999
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 2.08381294964029,
+      "constraints": {
+        "maxVelocity": 1.2,
+        "maxAcceleration": 12.192,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.7125899280575552,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 12.192,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 1.2982014388489111,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Sustained Fire",
+      "waypointRelativePos": 2.3902877697841682,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.096,
+    "maxAcceleration": 12.192,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 3000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 119.99999999999999
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

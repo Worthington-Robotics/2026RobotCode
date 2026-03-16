@@ -1,12 +1,8 @@
 package frc.WorBots.commands;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.WorBots.RobotContainer;
-import frc.WorBots.subsystems.climber.Climber;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.intake.Intake;
 import frc.WorBots.subsystems.lights.Lights;
@@ -19,7 +15,7 @@ import frc.WorBots.util.UtilCommands;
 /** A class containing commands to be used to perform pit tests. */
 public class PitTest {
   // The amount to wait in between steps
-  private double wait = 0.5;
+  private double wait = 1.0;
 
   /**
    * Runs a full pit test; testing all subsystems.
@@ -28,42 +24,24 @@ public class PitTest {
    * @param superstructure     The superstructure to test
    * @param intake             The intake to test
    * @param spindexer          The spindexerto test
-   * @param climber            The climber to test (not currently implemented)
    * @param vision             The vision to test(not currently implemented)
    * @param lights             The lights to test (not currently implemented)
    * @param nextButtonSupplier The button used to signal we can move to the next
    *                           test
    */
   public Command fullPitTest(Drive drive, Superstructure superstructure, Intake intake, Spindexer spindexer,
-      Climber climber, TagVision vision, Lights lights, Supplier<Boolean> nextButtonSupplier) {
+      TagVision vision, Lights lights) {
     return Commands.sequence(
         // Test drive
-        testDrive(drive, nextButtonSupplier),
+        testDrive(drive),
         // Test intake
-        testIntake(intake, nextButtonSupplier),
-        //Test vision
+        testIntake(intake),
+        // Test vision
         testVision(vision),
         // Test shooter and spindexer and take a test shot
-        testShooterAndSpindexer(superstructure, spindexer, nextButtonSupplier),
+        testShooterAndSpindexer(superstructure, spindexer),
         // Test turret
-        testTurret(superstructure, nextButtonSupplier)
-
-    // Currently not implemented due to the robot lacking a climber
-    // Test climber
-    // climber.runOnce(() -> climber.setPosition(new
-    // Rotation2d(Constants.ClimberConstants.READY_CLIMBER_POSITION))),
-    // Commands.waitUntil(() -> climber.atGoal()),
-    // Commands.waitSeconds(wait),
-    // Commands.waitUntil(() -> nextButtonSupplier.get()),
-    // climber.runOnce(() -> climber.setPosition(new
-    // Rotation2d(Constants.ClimberConstants.CLIMB_POSITION))),
-    // Commands.waitUntil(() -> climber.atGoal()),
-    // Commands.waitSeconds(wait),
-    // Commands.waitUntil(() -> nextButtonSupplier.get()),
-    // climber.runOnce(() -> climber.setPosition(new Rotation2d(0))),
-    // Commands.waitUntil(() -> climber.atGoal())
-
-    );
+        testTurret(superstructure));
   }
 
   /**
@@ -73,7 +51,7 @@ public class PitTest {
    * @param nextButtonSupplier The button used to signal we can move to the next
    *                           test
    */
-  public Command testDrive(Drive drive, Supplier<Boolean> nextButtonSupplier) {
+  public Command testDrive(Drive drive) {
     return UtilCommands.namedSequence(
         "Pit Test Drive Progress",
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(2.0, 0.0, 0.0)), drive)
@@ -96,21 +74,17 @@ public class PitTest {
    * @param nextButtonSupplier The button used to signal we can move to the next
    *                           test
    */
-  public Command testIntake(Intake intake, Supplier<Boolean> nextButtonSupplier) {
+  public Command testIntake(Intake intake) {
     return Commands.sequence(
         // Test Intake
-        intake.runOnce(() -> intake.extend()),
+        intake.runOnce(() -> intake.extend()).withTimeout(1.5),
         Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        intake.runOnce(() -> intake.setVoltsIntake(2)),
+        intake.runOnce(() -> intake.setVoltsIntake(2)).withTimeout(1.0),
         Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        intake.runOnce(() -> intake.setVoltsIntake(0)),
+        intake.runOnce(() -> intake.setVoltsIntake(0)).withTimeout(1.0),
         Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        intake.runOnce(() -> intake.retract()),
-        Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()));
+        intake.runOnce(() -> intake.retract()).withTimeout(1.5),
+        Commands.waitSeconds(wait));
   }
 
   /**
@@ -121,26 +95,22 @@ public class PitTest {
    * @param nextButtonSupplier The button used to signal we can move to the next
    *                           test
    */
-  public Command testShooterAndSpindexer(Superstructure superstructure, Spindexer spindexer,
-      Supplier<Boolean> nextButtonSupplier) {
+  public Command testShooterAndSpindexer(Superstructure superstructure, Spindexer spindexer) {
     return Commands.sequence(
         // Test Shooter
-        superstructure.runOnce(() -> superstructure.setHoodPose(Math.PI / 3)),
+        superstructure.runOnce(() -> superstructure.setHoodPose(Math.PI / 3)).withTimeout(1.0),
         Commands.waitSeconds(wait),
         Commands.waitUntil(() -> superstructure.hoodInPosition()),
-        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(2)),
+        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(2)).withTimeout(3.0),
         Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
 
         // Test Spindexer and take a test shot
-        spindexer.runOnce(() -> spindexer.runSpindexerVoltage(5)),
+        spindexer.runOnce(() -> spindexer.runSpindexerVoltage(5)).withTimeout(2.0),
         Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        spindexer.runOnce(() -> spindexer.stopSpindexer()),
-        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(0)),
-        superstructure.runOnce(() -> superstructure.setHoodPose(0)),
-        Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()));
+        spindexer.runOnce(() -> spindexer.stopSpindexer()).withTimeout(1.0),
+        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(0)).withTimeout(3.0),
+        superstructure.runOnce(() -> superstructure.setHoodPose(0)).withTimeout(3.0),
+        Commands.waitSeconds(wait));
   }
 
   /**
@@ -150,21 +120,19 @@ public class PitTest {
    * @param nextButtonSupplier The button used to signal we can move to the next
    *                           test
    */
-  public Command testTurret(Superstructure superstructure, Supplier<Boolean> nextButtonSupplier) {
+  public Command testTurret(Superstructure superstructure) {
     return Commands.sequence(
         // Test turret
-        superstructure.runOnce(() -> superstructure.setTurretPose(180)),
-        Commands.waitUntil(() -> superstructure.turretReady()),
+        superstructure.runOnce(() -> superstructure.setTurretPose(180)).withTimeout(1.0),
+        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
         Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        superstructure.runOnce(() -> superstructure.setTurretPose(-180)),
-        Commands.waitUntil(() -> superstructure.turretReady()),
+        superstructure.runOnce(() -> superstructure.setTurretPose(-180)).withTimeout(1.0),
+        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
         Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()),
-        superstructure.runOnce(() -> superstructure.setTurretPose(0)),
-        Commands.waitUntil(() -> superstructure.turretReady()),
-        Commands.waitSeconds(wait),
-        Commands.waitUntil(() -> nextButtonSupplier.get()));
+        superstructure.runOnce(() -> superstructure.setTurretPose(0)).withTimeout(1.0),
+        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
+        Commands.waitSeconds(wait));
+
   }
 
   public Command testVision(TagVision vision) {
