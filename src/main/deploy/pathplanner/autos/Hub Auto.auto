@@ -21,6 +21,12 @@
           "data": {
             "pathName": "Center to Depo"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depo to Center"
+          }
         }
       ]
     }

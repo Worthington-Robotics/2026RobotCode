@@ -29,19 +29,16 @@ public class Shooter {
   private double setpointVelocity;
   private double setpointPosition;
   
-  private double flywheelFudge;
-  private double hoodFudge;
-
   private double flySetpointVolts;
   private double hoodSetpointVolts;
   private Drive drive;
 
-  private double hoodFudgeFactor = 0;
   private final double hoodMaxHeading = 0.525;
   private double timeOfFlight = 0;
   private boolean passing = false;
 
   private double leaderFudgeFactor = 0;
+  private double hoodFudgeFactor = 0;
   private boolean autoHoodDown = false;
 
   // Two control modes, one allows you to provide voltage, the other means that
@@ -63,6 +60,8 @@ public class Shooter {
   private final DoublePublisher shooterSpeedDesiredPub = shooter.getDoubleTopic("Shooter Speed Desired").publish();
   private final DoublePublisher flywheelErrorPub = shooter.getDoubleTopic("Flywheel Error").publish();
   private final DoublePublisher hoodErrorPub = shooter.getDoubleTopic("Hood Error").publish();
+  private final DoublePublisher hoodFudgePub = shooter.getDoubleTopic("Hood Fudge Factor").publish();
+  private final DoublePublisher FlywheelFudgePub = shooter.getDoubleTopic("Flywheel Fudge Factor").publish();
 
   // a
 
@@ -115,6 +114,8 @@ public class Shooter {
     shooterSpeedDesiredPub.set(setpointVelocity);
     flywheelErrorPub.set(setpointVelocity - inputs.actualLeaderVelocityRadPerSec);
     hoodErrorPub.set(setpointPosition - inputs.actualHoodPosition);
+    hoodFudgePub.set(hoodFudgeFactor);
+    FlywheelFudgePub.set(leaderFudgeFactor);
 
     StatusPage.reportStatus(StatusPage.SHOOTER_SUBSYSTEM, inputs.leader.isConnected && inputs.follower.isConnected);
 
@@ -130,7 +131,7 @@ public class Shooter {
       io.setLeaderVolts(0);
     } else if (controlMode == ControlMode.Setpoint) {
       leaderPIDController.pid.setGoal(setpointVelocity);
-      double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec + flywheelFudge);
+      double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
       double leaderVolts = leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec,
           setpointVelocity) + leaderPID;
       double hoodFeedback = hoodPIDController.pid.calculate(inputs.actualHoodPosition, setpointPosition);

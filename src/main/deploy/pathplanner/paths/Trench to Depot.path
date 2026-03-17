@@ -16,15 +16,15 @@
     },
     {
       "anchor": {
-        "x": 0.8,
+        "x": 0.85,
         "y": 7.0
       },
       "prevControl": {
-        "x": 0.8,
+        "x": 0.85,
         "y": 7.5
       },
       "nextControl": {
-        "x": 0.8,
+        "x": 0.85,
         "y": 6.5
       },
       "isLocked": false,
@@ -32,11 +32,11 @@
     },
     {
       "anchor": {
-        "x": 0.8,
+        "x": 0.85,
         "y": 4.947175463623396
       },
       "prevControl": {
-        "x": 0.7999999999999999,
+        "x": 0.8499999999999999,
         "y": 5.87317134738489
       },
       "nextControl": null,
@@ -74,7 +74,7 @@
     {
       "name": "Dracarys!",
       "waypointRelativePos": 0.44919278252611106,
-      "endWaypointRelativePos": 0.8404558404558419,
+      "endWaypointRelativePos": 0.8100664767331435,
       "command": null
     },
     {

@@ -79,12 +79,13 @@ public class PitTest {
         // Test Intake
         intake.runOnce(() -> intake.extend()).withTimeout(1.5),
         Commands.waitSeconds(wait),
-        intake.runOnce(() -> intake.setVoltsIntake(2)).withTimeout(1.0),
-        Commands.waitSeconds(wait),
+        intake.runOnce(() -> intake.setVoltsIntake(7)).withTimeout(1.0),
+        Commands.waitSeconds(3),
         intake.runOnce(() -> intake.setVoltsIntake(0)).withTimeout(1.0),
         Commands.waitSeconds(wait),
-        intake.runOnce(() -> intake.retract()).withTimeout(1.5),
-        Commands.waitSeconds(wait));
+        intake.runOnce(() -> intake.agitate()).withTimeout(1.5),
+        Commands.waitSeconds(wait),
+        intake.runOnce(() -> intake.extend()).withTimeout(1.5));
   }
 
   /**
@@ -101,8 +102,11 @@ public class PitTest {
         superstructure.runOnce(() -> superstructure.setHoodPose(Math.PI / 3)).withTimeout(1.0),
         Commands.waitSeconds(wait),
         Commands.waitUntil(() -> superstructure.hoodInPosition()),
-        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(2)).withTimeout(3.0),
+        superstructure.runOnce(() -> superstructure.setHoodPose(0)).withTimeout(1.0),
         Commands.waitSeconds(wait),
+        Commands.waitUntil(() -> superstructure.hoodInPosition()),
+        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(50)).withTimeout(3.0),
+        Commands.waitSeconds(2.0),
 
         // Test Spindexer and take a test shot
         spindexer.runOnce(() -> spindexer.runSpindexerVoltage(5)).withTimeout(2.0),
@@ -124,13 +128,13 @@ public class PitTest {
     return Commands.sequence(
         // Test turret
         superstructure.runOnce(() -> superstructure.setTurretPose(180)).withTimeout(1.0),
-        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
         superstructure.runOnce(() -> superstructure.setTurretPose(-180)).withTimeout(1.0),
-        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
         superstructure.runOnce(() -> superstructure.setTurretPose(0)).withTimeout(1.0),
-        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait));
 
   }
