@@ -1,5 +1,7 @@
 package frc.WorBots.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 
@@ -8,22 +10,27 @@ public class ShotControlFudgeCommand extends Command {
 
   private Superstructure shooter;
   private double fudgeFactor;
+  private Supplier<Boolean> doRunSupplier;
 
   /**
    * A command that runs once and adjusts the flywheel fudge factor.
    * 
    * @param shooter     The shooter for which to adjest the flywheel fudge factor.
    * @param fudgeFactor The amount to adjust the flywheel fudge factor by.
+   * @param doRunSupplier If true the command will run
    */
-  public ShotControlFudgeCommand(Superstructure shooter, double fudgeFactor) {
+  public ShotControlFudgeCommand(Superstructure shooter, double fudgeFactor, Supplier<Boolean> doRunSupplier) {
     addRequirements(shooter);
     this.shooter = shooter;
     this.fudgeFactor = fudgeFactor;
+    this.doRunSupplier = doRunSupplier;
   }
 
   @Override
   public void execute() {
-    shooter.shooter.modFlywheelFudgeFactor(fudgeFactor);
+    if(doRunSupplier.get()){
+      shooter.shooter.modFlywheelFudgeFactor(fudgeFactor);
+    }
   }
 
   @Override

@@ -222,18 +222,17 @@ public class RobotContainer {
 
     operator.a().debounce(0.02).onTrue(new StartAutoAim(superstructure));
 
-    // Dpad Up = Command to start climbing
-    // operator.povUp().debounce(0.02).onTrue(new ClimberCommands().climb(climber));
-    // operator.povUp().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT));
-    // Dpad Down = Command to manually reset hood pose
-    // operator.povDown().debounce(0.02).onTrue(new ShooterCommands().setHoodPose(superstructure, 0));
-    // operator.povDown().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.TOWER_SHOT));
-    // operator.povLeft().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.LEFT_CORNER_SHOT));
-    operator.povRight().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
-    operator.povUp().onTrue(new HoodControlFudgeCommand(superstructure, .005));
-    operator.povDown().onTrue(new HoodControlFudgeCommand(superstructure, -.005));
-    //operator.povRight().onTrue(new ShotControlFudgeCommand(superstructure, 2));
-    operator.povLeft().onTrue(new ShotControlFudgeCommand(superstructure, -2));
+    //Commands to do setpoint shots: set to d pad
+    operator.povUp().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT, () -> operator.x().getAsBoolean()));
+    operator.povDown().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.TOWER_SHOT, () -> operator.x().getAsBoolean()));
+    operator.povLeft().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.LEFT_CORNER_SHOT, () -> operator.x().getAsBoolean()));
+    operator.povRight().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT, () -> operator.x().getAsBoolean()));
+    //Commands for fudge factors: bound to dpad while x is held
+    operator.povUp().debounce(0.02).onTrue(new HoodControlFudgeCommand(superstructure, 0.005, () -> operator.x().getAsBoolean()));
+    operator.povDown().debounce(0.02).onTrue(new HoodControlFudgeCommand(superstructure, -0.005, () -> operator.x().getAsBoolean()));
+    operator.povLeft().debounce(0.02).onTrue(new ShotControlFudgeCommand(superstructure, -2.0, () -> operator.x().getAsBoolean()));
+    operator.povRight().debounce(0.02).onTrue(new ShotControlFudgeCommand(superstructure, 2.0, () -> operator.x().getAsBoolean()));
+    
   }
 
   // For tuning the shooter--will not be using afterward. -- Yes you will, manual modes are used if vision goes down (And for re-tuning)
@@ -306,7 +305,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
     NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
     NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
-    NamedCommands.registerCommand("Dunk", new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT));
+    NamedCommands.registerCommand("Dunk", new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT, () -> {return false;}));
 
     NamedCommands.registerCommand("Pit Test", new PitTest().fullPitTest(drive, superstructure, intake, spin, vision, Lights.getInstance()));
 

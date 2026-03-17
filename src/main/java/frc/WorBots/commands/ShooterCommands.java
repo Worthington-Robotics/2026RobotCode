@@ -85,11 +85,14 @@ public class ShooterCommands {
    * 
    * @param superstructure The superstructure to use
    * @param params         The shot parameters representing the manual shot
+   * @param doRunSupplier  If true the command will have no effect
    * @apiNote Sets the shooter to manual mode
    */
-  public Command manualShot(Superstructure superstructure, ShootingParams params) {
+  public Command manualShot(Superstructure superstructure, ShootingParams params, Supplier<Boolean> doRunSupplier) {
     return Commands.runOnce(() -> {
-      superstructure.runShot(params);
+      if(!doRunSupplier.get()){
+        superstructure.runShot(params);
+      }
     });
   }
 
