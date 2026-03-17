@@ -8,9 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
-import frc.WorBots.subsystems.lights.LightUtils.ColorSequence;
 import frc.WorBots.subsystems.lights.LightsIO.LightStrip;
-import frc.WorBots.subsystems.lights.LightsIO.LightSection;
 import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.cache.Cache.TimeCache;
 import frc.WorBots.util.debug.StatusPage;
@@ -22,10 +20,7 @@ public class Lights extends SubsystemBase {
         return instance;
     }
     
-    private LightStrip lights;
-    private LightSection turretStrip;
-    private LightSection leftStrip;
-    private LightSection rightStrip;
+    private LightStrip turretStrip;
 
 
     //What should be run if no override is present
@@ -51,13 +46,13 @@ public class Lights extends SubsystemBase {
     //Robot State Varriables 
 
     /**What the turret is aiming at*/
-    public enum Target{
+    public enum LightsTarget{
       Hub,
       Pass,
       None;
     }
     /**Current Target the Turret is aiming at */
-    private Target currentTarget = Target.None;
+    private LightsTarget currentTarget = LightsTarget.None;
 
     private boolean climbing = false;
 
@@ -80,22 +75,6 @@ public class Lights extends SubsystemBase {
     //solid mode
     private Color solidColor = Color.kBlack;
 
-    //Color varriables
-    private static final ColorSequence WORBOTS_FLAME_COLORS =
-      new ColorSequence(
-          Color.kWhite,
-          Color.kCadetBlue,
-          Color.kBlue,
-          Color.kBlue,
-          Color.kIndigo,
-          Color.kIndigo,
-          Color.kRed,
-          Color.kRed,
-          Color.kRed,
-          Color.kRed,
-          Color.kRed,
-          Color.kBlack);
-
     public static enum LightModes{
         TurretDisplay,
         Climbing,
@@ -117,10 +96,8 @@ public class Lights extends SubsystemBase {
 
     private Lights(){
         //TODO Add light Strips here
-        lights = new LightStrip(0, 40);
-        turretStrip = new LightSection(lights, 0, 13);
-        leftStrip = new LightSection(lights, 14, 26);
-        rightStrip = new LightSection(lights, 27, 39);
+        turretStrip = new LightStrip(0, 14);
+
         StatusPage.reportStatus(StatusPage.LIGHTS_SUBSYSTEM, true);
     }
 
@@ -171,7 +148,7 @@ public class Lights extends SubsystemBase {
           case TurretDisplay:
             //Display turret status, yellow for aiming, green for hub lock, purple for passing
             if(shotPreped.isPresent() && shotPreped.get() == true){
-              if(currentTarget == Target.Hub){
+              if(currentTarget == LightsTarget.Hub){
                 Color deepGreen = new Color(0, 255, 10);
                 solidColor = deepGreen;
               } else {
@@ -183,8 +160,6 @@ public class Lights extends SubsystemBase {
             }
 
             LightUtils.solid(turretStrip, solidColor);
-            LightUtils.solid(leftStrip, solidColor);
-            LightUtils.solid(rightStrip, solidColor);
 
             if(rebuiltUtils.timeToAcivationSwitch() < 5){
               runEffect(LightEffects.timePulse);
@@ -200,56 +175,43 @@ public class Lights extends SubsystemBase {
             Color deepBlue = new Color(0, 0, 255);
             solidColor = deepBlue;
             LightUtils.solid(turretStrip, solidColor);
-            LightUtils.solid(leftStrip, solidColor);
-            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case SpinJam:
             //Displays orange light when Spindexer jam is detetcted
             Color trueOrange = new Color(255, 25, 0);
             LightUtils.blink(turretStrip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
-            LightUtils.blink(leftStrip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
-            LightUtils.blink(rightStrip, trueOrange, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case SysFault:
             //Displays solid red when a System Fault occurs
             solidColor = Color.kRed;
             LightUtils.solid(turretStrip, solidColor);
-            LightUtils.solid(leftStrip, solidColor);
-            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case VisionLost:
             //Displays blinking white light if vision is lost
             LightUtils.blink(turretStrip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
-            LightUtils.blink(leftStrip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
-            LightUtils.blink(rightStrip, Color.kWhite, Color.kBlack,0.25, TimeCache.getInstance().get());
 
             break;
           case Solid:
             //Diplays a solid light of a set color, mostly a debug mode
             LightUtils.solid(turretStrip, solidColor);
-            LightUtils.solid(leftStrip, solidColor);
-            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case PitLight:
             //Displays solid white light to make it easier to see while working on the robot
             solidColor = new Color(100, 100, 100);
             LightUtils.solid(turretStrip, solidColor);
-            LightUtils.solid(leftStrip, solidColor);
-            LightUtils.solid(rightStrip, solidColor);
 
             break;
           case Disabled:
             LightUtils.worbotsBounce(turretStrip);
-            LightUtils.worbotsBounce(leftStrip);
-            LightUtils.worbotsBounce(rightStrip);
+
             break;
         }
 
-        lights.periodic();
+        turretStrip.periodic();
     }
 
     public void runEffect(LightEffects effect){
@@ -264,8 +226,7 @@ public class Lights extends SubsystemBase {
           //Flashes the lights yellow if the drivers try to shoot before the robot has a lock
           final double flashPeriod = 0.125;
           LightUtils.blink(turretStrip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
-          LightUtils.blink(leftStrip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
-          LightUtils.blink(rightStrip, Color.kGold, Color.kBlack, flashPeriod, effectTimer.get());
+
           if (effectTimer.get() > flashPeriod * 3.0) {
             effectOverride = Optional.empty();
           }
@@ -275,14 +236,10 @@ public class Lights extends SubsystemBase {
           final double minBrightness = 0.1;
           final double totalTime = 5.0;
           LightUtils.dopplerEffect(turretStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
-          LightUtils.dopplerEffect(leftStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
-          LightUtils.dopplerEffect(rightStrip, solidColor, minBrightness, totalTime, rebuiltUtils.timeToAcivationSwitch(), 0.8);
 
           break;
         case superStar:
           LightUtils.rainbow(turretStrip, 0.5, 1);
-          LightUtils.rainbow(leftStrip, 0.5, 1);
-          LightUtils.rainbow(rightStrip, 0.5, 1);
 
           break;
         case none:
@@ -315,7 +272,7 @@ public class Lights extends SubsystemBase {
    * Sets the target the lights believe the turret to be aiming at
    * @param target the target (Hub or passing)
    */
-  public void setTarget(Target target){
+  public void setTarget(LightsTarget target){
     this.currentTarget = target;
   }
 

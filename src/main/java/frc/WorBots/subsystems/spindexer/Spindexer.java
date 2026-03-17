@@ -45,7 +45,7 @@ public class Spindexer extends SubsystemBase{
   public void periodic(){
     io.updateInputs(inputs);
     StatusPage.reportStatus(StatusPage.SPINDEXER_SUBSYSTEM, inputs.talon.isConnected && inputs.follower.isConnected);
-    StatusPage.reportStatus(StatusPage.SPINDEXER_JAM, inputs.jammed);
+    StatusPage.reportStatus(StatusPage.SPINDEXER_JAM, isJammed());
     if(DriverStation.isDisabled() || inputs.talon.temperatureCelsius > Constants.SpindexerConstants.SPINDEXER_MAX_TEMP){
       controlMode = ControlMode.Disabled;
     }
@@ -93,7 +93,7 @@ public class Spindexer extends SubsystemBase{
   }
 
   public boolean isJammed(){
-    return false;
+    return inputs.jammed;
   }
 
   public boolean isActive(){

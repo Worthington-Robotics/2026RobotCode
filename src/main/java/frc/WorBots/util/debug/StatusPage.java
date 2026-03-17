@@ -67,8 +67,6 @@ public class StatusPage {
   // Sort in order of priority, from highest to lowest
   /** All systems that the StatusPage reports */
   public static final String[] ALL_SYSTEMS = {
-    AUTOS,
-    AUTO_CHOSEN,
     DRIVE_CONTROLLER,
     OPERATOR_CONTROLLER,
     INTAKE_CONNECTED,
@@ -90,7 +88,6 @@ public class StatusPage {
     SHOOTER_SUBSYSTEM,
     TAG_VISION_SUBSUBSYSTEM,
     BLOB_VISION_SUBSUBSYSTEM,
-    CLIMBER_SUBSYSTEM,
     DRIVER_CAM,
     DRIVER_STATION,
     FMS,
@@ -101,7 +98,6 @@ public class StatusPage {
     LAUNCHPAD,
     LIGHTS_SUBSYSTEM,
     NOT_ESTOPPED,
-    CLIMBING,
     SPINDEXER_JAM,
     FIRE_CONTROL,
     FIRE_CONTROL_OUTPUT

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.lights.Lights.LightEffects;
+import frc.WorBots.subsystems.lights.Lights.LightsTarget;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.util.debug.StatusPage;
@@ -85,7 +86,12 @@ public class FireController {
     if (DriverStation.getAlliance().isPresent() && ((DriverStation.getAlliance().get() == Alliance.Red && drive.inRedZone())
         || (DriverStation.getAlliance().get() == Alliance.Blue && drive.inBlueZone()))) {
       output = output && timeAcceptable();
+      Lights.getInstance().setTarget(LightsTarget.Hub);
+    } else {
+      Lights.getInstance().setTarget(LightsTarget.Pass);
     }
+
+    //System.out.println(drive.inRedZone());
 
     Lights.getInstance().runEffect(LightEffects.invalidShotFlash);
     return output;

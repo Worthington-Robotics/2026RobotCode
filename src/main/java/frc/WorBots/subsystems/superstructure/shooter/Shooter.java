@@ -10,7 +10,6 @@ import frc.WorBots.Constants;
 import frc.WorBots.Constants.TurretShooterConstants;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
-import frc.WorBots.subsystems.lights.Lights.Target;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIO.ShooterIOInputs;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunablePIDController;
@@ -153,11 +152,6 @@ public class Shooter {
     // the trench.
 
     StatusPage.reportStatus(StatusPage.SHOOTER_READY, readyToShoot());
-    Lights.Target target = Target.Hub;
-    if (getPassing()) {
-      target = Target.Pass;
-    }
-    Lights.getInstance().setTarget(target);
   }
 
   /**

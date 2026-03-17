@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.0,
+        "x": 6.1,
         "y": 0.65
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.743238231098432,
+        "x": 6.843238231098431,
         "y": 1.0655777460770333
       },
       "isLocked": false,
@@ -33,15 +33,15 @@
     {
       "anchor": {
         "x": 7.25,
-        "y": 3.0
+        "y": 2.65
       },
       "prevControl": {
         "x": 7.25,
-        "y": 2.5999999999999996
+        "y": 2.2499999999999996
       },
       "nextControl": {
         "x": 7.25,
-        "y": 3.4000000000000004
+        "y": 3.0500000000000003
       },
       "isLocked": false,
       "linkedName": null
@@ -86,7 +86,7 @@
       "rotationDegrees": 80.0
     },
     {
-      "waypointRelativePos": 2.8100759696121558,
+      "waypointRelativePos": 2.9188324670131935,
       "rotationDegrees": -130.0
     }
   ],
@@ -94,10 +94,10 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.5868945868945974,
-      "maxWaypointRelativePos": 3.0104463437796793,
+      "maxWaypointRelativePos": 2.790123456790126,
       "constraints": {
         "maxVelocity": 0.6,
-        "maxAcceleration": 12.192,
+        "maxAcceleration": 7.0,
         "maxAngularVelocity": 720.0,
         "maxAngularAcceleration": 3000.0,
         "nominalVoltage": 12.0,
@@ -106,11 +106,11 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 3.4662867996201316,
+      "minWaypointRelativePos": 3.344729344729351,
       "maxWaypointRelativePos": 4.0,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 12.192,
+        "maxVelocity": 1.25,
+        "maxAcceleration": 7.0,
         "maxAngularVelocity": 720.0,
         "maxAngularAcceleration": 3000.0,
         "nominalVoltage": 12.0,
@@ -122,14 +122,14 @@
   "eventMarkers": [
     {
       "name": "Mine Mine Mine",
-      "waypointRelativePos": 0.3285849952516565,
+      "waypointRelativePos": 0.10066476733144077,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 6.096,
-    "maxAcceleration": 12.192,
+    "maxAcceleration": 7.5,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 3000.0,
     "nominalVoltage": 12.0,
@@ -145,5 +145,5 @@
     "velocity": 4.0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

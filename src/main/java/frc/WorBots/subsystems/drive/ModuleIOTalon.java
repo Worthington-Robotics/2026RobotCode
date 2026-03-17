@@ -105,8 +105,8 @@ public class ModuleIOTalon implements ModuleIO {
     id = index;
 
     // Configure devices
-    HardwareUtils.setCurrentLimit(driveMotor, 46);
-    HardwareUtils.setCurrentLimit(turnMotor, 40);
+    HardwareUtils.setCurrentLimit(driveMotor, Constants.DriveConstants.DRIVE_CURRENT_LIMIT);
+    HardwareUtils.setCurrentLimit(turnMotor, Constants.DriveConstants.TURN_CURRENT_LIMIT);
 
     driveMotor.setNeutralMode(NeutralModeValue.Brake);
     turnMotor.setNeutralMode(NeutralModeValue.Brake);

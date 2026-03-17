@@ -53,10 +53,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8062678062678071,
+      "minWaypointRelativePos": 1.0075973409306698,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 0.35,
         "maxAcceleration": 12.192,
         "maxAngularVelocity": 720.0,
         "maxAngularAcceleration": 3000.0,
@@ -78,17 +78,11 @@
       "waypointRelativePos": 1.129154795821462,
       "endWaypointRelativePos": null,
       "command": null
-    },
-    {
-      "name": "Dude Chill",
-      "waypointRelativePos": 1.7103513770180439,
-      "endWaypointRelativePos": null,
-      "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 6.096,
-    "maxAcceleration": 12.192,
+    "maxAcceleration": 7.5,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 3000.0,
     "nominalVoltage": 12.0,

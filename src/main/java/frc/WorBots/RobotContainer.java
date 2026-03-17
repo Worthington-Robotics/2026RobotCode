@@ -306,6 +306,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
     NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
     NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
+    NamedCommands.registerCommand("Dunk", new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT));
 
     NamedCommands.registerCommand("Pit Test", new PitTest().fullPitTest(drive, superstructure, intake, spin, vision, Lights.getInstance()));
 

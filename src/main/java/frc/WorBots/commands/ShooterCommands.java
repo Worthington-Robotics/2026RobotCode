@@ -88,7 +88,7 @@ public class ShooterCommands {
    * @apiNote Sets the shooter to manual mode
    */
   public Command manualShot(Superstructure superstructure, ShootingParams params) {
-    return superstructure.runOnce(() -> {
+    return Commands.runOnce(() -> {
       superstructure.runShot(params);
     });
   }
