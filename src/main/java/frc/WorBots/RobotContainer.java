@@ -142,31 +142,11 @@ public class RobotContainer {
     configureBindings();
   }
 
-  // TODO: MODIFY THIS
   public void configureBindings() {
     configureDriverRealBindings();
     configureOperatorRealBindings();
-    // configureDriverTestBindings();
-    // configureOperatorTestBindings();
-    // configureDebugBindings();
-    // configureTurretTestBindings();
   }
 
-  // Testing Ver.
-  public void configureDriverTestBindings() {
-    drive.setDefaultCommand(
-        new DriveWithJoysticks(
-            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> driver.rightTrigger().getAsBoolean()));
-    driver.rightBumper().whileTrue(new IntakeCommands().intake(intake));
-    driver.leftBumper().whileTrue(new IntakeCommands().spit(intake));
-    driver.y().onTrue(new IntakeCommands().extend(intake));
-    driver.b().onTrue(new IntakeCommands().agitate(intake));
-    driver.a().onFalse(new IntakeCommands().retract(intake));
-  }
-
-  // Actual Driver Bindings
-  // TODO: add some debounce to all of these
   public void configureDriverRealBindings() {
     // Configure DriveWithJoysticks
     drive.setDefaultCommand(
@@ -189,21 +169,6 @@ public class RobotContainer {
 
   }
 
-  // Testing Ver.
-  public void configureOperatorTestBindings() {
-    operator.rightBumper().whileTrue(new ConditionalFireCommand(drive, spin, 10));
-    operator.leftBumper().whileTrue(new RunSpindexer(spin, -12));
-    operator.rightTrigger()
-        .whileTrue(new ShooterCommands().commandHoodWithStick(superstructure, () -> operator.getLeftY()));
-    operator.povDown().whileTrue(new ShooterCommands().setHoodPose(superstructure, 0));
-    operator.a().toggleOnTrue(new StartAutoAim(superstructure));
-    operator.b().whileTrue(new RunSpindexer(spin, 10));
-
-    // operator.a().multiPress(3, 5).onTrue(getAutonomousCommand());
-  }
-
-  // Actual Operator Bindings
-  // Add debouncers for all of these commands
   /*
    * Add set-pose
    * One: in front of the HP station
@@ -233,46 +198,6 @@ public class RobotContainer {
     operator.povLeft().debounce(0.02).onTrue(new ShotControlFudgeCommand(superstructure, -2.0, () -> operator.x().getAsBoolean()));
     operator.povRight().debounce(0.02).onTrue(new ShotControlFudgeCommand(superstructure, 2.0, () -> operator.x().getAsBoolean()));
     
-  }
-
-  // For tuning the shooter--will not be using afterward. -- Yes you will, manual modes are used if vision goes down (And for re-tuning)
-  public void configureDebugBindings() {
-    drive.setDefaultCommand(
-        new DriveWithJoysticks(
-            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> driver.rightTrigger().getAsBoolean()));
-    // TODO change to operator if needed
-    driver.rightBumper().whileTrue(new RunSpindexer(spin, 10));
-    driver.leftBumper().whileTrue(new RunSpindexer(spin, -10));
-    operator.leftTrigger()
-        .whileTrue(new ShooterCommands().commandHoodWithStick(superstructure, () -> operator.getLeftY()));
-    operator.rightTrigger()
-        .whileTrue(new ShooterCommands().commandFlywheelWithStick(superstructure, () -> operator.getRightY()));
-    driver.a().onTrue(new IntakeCommands().extend(intake));
-    driver.b().onTrue(new IntakeCommands().retract(intake));
-    driver.leftTrigger().whileTrue(new IntakeCommands().intake(intake));
-  }
-
-  // Used for manual voltage/setpoint control of the turret
-  public void configureTurretTestBindings() {
-    drive.setDefaultCommand(
-        new DriveWithJoysticks(
-            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> driver.rightTrigger().getAsBoolean()));
-    driver.a().onTrue(new IntakeCommands().extend(intake));
-    driver.b().onTrue(new IntakeCommands().retract(intake));
-    driver.leftBumper().whileTrue(new IntakeCommands().intake(intake));
-    driver.rightBumper().whileTrue(new IntakeCommands().spit(intake));
-
-    operator.leftTrigger()
-        .whileTrue(
-            new ManualTurretTestCommands().commandTurretWithStick(superstructure, () -> operator.getLeftX(), 0.5));
-    operator.rightTrigger()
-        .whileTrue(
-            new ManualTurretTestCommands().commandTurretSetpointWithStick(superstructure, () -> operator.getRightX()));
-    operator.povLeft().onTrue(new ManualTurretTestCommands().snapLeft(superstructure, Units.degreesToRadians(80)));
-    operator.povRight().onTrue(new ManualTurretTestCommands().snapRight(superstructure, Units.degreesToRadians(80)));
-    operator.povUp().onTrue(new ManualTurretTestCommands().goToZero(superstructure));
   }
 
   public Command getAutonomousCommand() {
