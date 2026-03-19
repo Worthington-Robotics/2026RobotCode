@@ -37,6 +37,7 @@ public class Turret {
   private final DoublePublisher goalPosePub = turret.getDoubleTopic("Goal Position").publish();
   private final BooleanPublisher lockedPub = turret.getBooleanTopic("Locked").publish();
   private final BooleanPublisher readyPub = turret.getBooleanTopic("Ready").publish();
+  private final DoublePublisher errorPub = turret.getDoubleTopic("Error").publish();
 
   public final TurretIO io;
 
@@ -120,7 +121,7 @@ public class Turret {
     goalPosePub.set(goalPosition);
     lockedPub.set(turretLocked);
     readyPub.set(readyToShoot());
-    SmartDashboard.putNumber("Turret Error", goalPosition - inputs.turretFusedAngle);
+    errorPub.set(goalPosition - inputs.turretFusedAngle);
     inputs.turret.publish();
 
     StatusPage.reportStatus(StatusPage.TURRET_READY, atGoal());
