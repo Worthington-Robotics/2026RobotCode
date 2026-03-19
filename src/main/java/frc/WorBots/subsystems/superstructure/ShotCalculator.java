@@ -111,8 +111,10 @@ public class ShotCalculator {
     }
     if (pose.getY() > AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && !AllianceFlipUtil.shouldFlip() || pose.getY() < AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && AllianceFlipUtil.shouldFlip()){
       targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), (FieldConstants.fieldWidth - FieldConstants.passTarget.getY())));
+      SmartDashboard.putBoolean("Left target", true);
     } else {
       targetPose = AllianceFlipUtil.apply(FieldConstants.passTarget);
+      SmartDashboard.putBoolean("Left target", false);
     }
     Translation2d[] shotPath = {turretPose, targetPose };
     if (GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))) { // TODO make sure alliance flip for arrays is working correctly

@@ -152,7 +152,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
         new DriveWithJoysticks(
             drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> driver.leftTrigger().getAsBoolean()));
+            () -> {return false;}));
     // A Key = Extend or retract intake
     // TODO: check if written correctly
     driver.rightBumper().debounce(0.02).onTrue(new IntakeCommands().togglePose(intake));
@@ -187,6 +187,8 @@ public class RobotContainer {
     operator.b().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
 
     operator.a().debounce(0.02).onTrue(new StartAutoAim(superstructure));
+
+    operator.y().debounce(0.02).onTrue(new ShooterCommands().setHoodPose(superstructure, 0));
 
     //Commands to do setpoint shots: set to d pad
     operator.povUp().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT, () -> operator.x().getAsBoolean()));

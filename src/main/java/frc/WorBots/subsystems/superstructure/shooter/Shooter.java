@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.Constants.TurretShooterConstants;
 import frc.WorBots.subsystems.drive.Drive;
@@ -118,7 +119,10 @@ public class Shooter {
     FlywheelFudgePub.set(leaderFudgeFactor);
 
     StatusPage.reportStatus(StatusPage.SHOOTER_SUBSYSTEM, inputs.leader.isConnected && inputs.follower.isConnected);
-
+    //TODO remove eventually
+    SmartDashboard.putBoolean("Near Trench", drive.nearTrench());
+    SmartDashboard.putBoolean("Near Blue trench", drive.approachingBlueTrench(.25));
+    SmartDashboard.putBoolean("Near Red Trench", drive.approachingRedTrench(.25));
     if (drive.nearTrench()) {
       setpointPosition = 0;
       setHoodPose(setpointPosition);

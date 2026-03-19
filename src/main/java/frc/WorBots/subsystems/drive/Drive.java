@@ -470,17 +470,17 @@ public class Drive extends SubsystemBase {
    * @return if the robot is approaching a trench
    */
   public boolean nearTrench() {
-    if (inBlueZone()) {
-      return approachingBlueTrench(chassisSpeedsLength);
-    }
+    // if (inBlueZone()) {
+    //   return approachingBlueTrench(chassisSpeedsLength);
+    // }
 
-    else if (inRedZone()) {
-      return approachingRedTrench(chassisSpeedsLength); // tune these values
-    }
+    // else if (inRedZone()) {
+    //   return approachingRedTrench(chassisSpeedsLength); // tune these values
+    // }
 
-    else {
+    // else {
       return approachingRedTrench(chassisSpeedsLength) || approachingBlueTrench(chassisSpeedsLength);
-    }
+    // }
   }
 
   public void resetYaw(){

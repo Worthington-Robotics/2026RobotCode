@@ -50,13 +50,13 @@ public class DriveWithJoysticks extends Command {
     double rightX = rightXSupplier.get();
 
     // Will slow the robot is slow supplier is true or we are in our alliance zone
-    if (slowSupplier.get() || (AllianceFlipUtil.shouldFlip() && drive.inRedZone())
-        || (!AllianceFlipUtil.shouldFlip() && drive.inBlueZone())) {
-      RobotContainer.driveController.temporarySpeedMultiplier = Optional
-          .of(Constants.DriveConstants.DRIVE_SLOW_MULTIPLIER);
-    } else {
+    // if (slowSupplier.get() || (AllianceFlipUtil.shouldFlip() && drive.inRedZone())
+    //     || (!AllianceFlipUtil.shouldFlip() && drive.inBlueZone())) {
+    //   RobotContainer.driveController.temporarySpeedMultiplier = Optional
+    //       .of(Constants.DriveConstants.DRIVE_SLOW_MULTIPLIER);
+    // } else {
       RobotContainer.driveController.temporarySpeedMultiplier = Optional.empty();
-    }
+    // }
 
     double maxSpeed = drive.getDriveMaxSpeed();
     final ChassisSpeeds speeds = RobotContainer.driveController.getSpeeds(-leftY, leftX, rightX, drive.getYaw(),
