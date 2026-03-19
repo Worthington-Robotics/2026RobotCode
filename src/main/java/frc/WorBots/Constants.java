@@ -96,8 +96,8 @@ public class Constants {
     public final static double HOOD_CURRENT_LIMIT = 40;
 
     //Turret Saftey Limits
-    public static final double TURRET_MIN_ANGLE = Units.degreesToRadians(-180.0);
-    public static final double TURRET_MAX_ANGLE = Units.degreesToRadians(180.0);
+    public static final double TURRET_MIN_ANGLE = Units.degreesToRadians(-190.0);
+    public static final double TURRET_MAX_ANGLE = Units.degreesToRadians(190.0);
     public static final double TURRET_MIN_VOLTAGE = -7.0;
     public static final double TURRET_MAX_VOLTAGE = 7.0;
 

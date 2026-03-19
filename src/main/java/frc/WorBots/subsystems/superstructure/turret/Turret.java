@@ -186,6 +186,9 @@ public class Turret {
     dThetas.add(dTheta);
     dThetas.add(dTheta2);
     dThetas.add(dTheta3);
+    SmartDashboard.putNumber("TurretOptimize/dTheta 1", dTheta);
+    SmartDashboard.putNumber("TurretOptimize/dTheta 2", dTheta2);
+    SmartDashboard.putNumber("TurretOptimize/dTheta 3", dTheta3);
 
     // Removes any paths that take us beyond our limits
     for (int i = 0; i < dThetas.size(); i++) {
@@ -210,6 +213,7 @@ public class Turret {
 
     double output = inputs.turretFusedAngle + shortestPathLength;
     controlMode = TurretControlMode.Position;
+    SmartDashboard.putNumber("TurretOptimize/output", output);
     return output;
   }
 
@@ -219,6 +223,7 @@ public class Turret {
     positionRads = MathUtil.angleModulus(positionRads);
     positionRads = MathUtil.clamp(positionRads, Constants.TurretShooterConstants.TURRET_MIN_ANGLE,
         Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
+    positionRads = optimizeSetpoint(positionRads);
     goalPosition = positionRads;
     goalVelocity = 0;
   }
@@ -266,8 +271,10 @@ public class Turret {
    * @implNote Field relative by default
    */
   public void setPositionAndVelocity(Rotation2d position, double velocity) {
+    SmartDashboard.putNumber("TurretOptimize/Pre Optimize Position", position.getRadians());
     controlMode = TurretControlMode.Position;
-    goalPosition = position.getRadians();
+    double setPosition = MathUtil.angleModulus(position.getRadians());
+    goalPosition = optimizeSetpoint(setPosition);
     goalVelocity = velocity;
   }
 

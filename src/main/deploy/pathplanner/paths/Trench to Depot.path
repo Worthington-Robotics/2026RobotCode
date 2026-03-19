@@ -57,7 +57,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.1946818613485258,
+      "minWaypointRelativePos": 1.7661870503597015,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 0.5,
@@ -78,14 +78,8 @@
       "command": null
     },
     {
-      "name": "Dracarys!",
-      "waypointRelativePos": 1.2050359712230136,
-      "endWaypointRelativePos": 1.9914529914529908,
-      "command": null
-    },
-    {
       "name": "Sustained Fire",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 1.9474820143884926,
       "endWaypointRelativePos": null,
       "command": null
     }
