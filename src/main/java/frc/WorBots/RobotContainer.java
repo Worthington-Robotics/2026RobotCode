@@ -177,9 +177,10 @@ public class RobotContainer {
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
     operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, 7));
-    // LT = Manual override to shoot
     // operator.leftTrigger().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -7)); 
+    //Force feed
+    operator.leftBumper().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     // Climber command is going to be up Dpad
     // TODO: Add driver-assist manual disable
     // Spit intake Command

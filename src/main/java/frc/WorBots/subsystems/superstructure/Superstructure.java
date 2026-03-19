@@ -103,6 +103,7 @@ public class Superstructure extends SubsystemBase {
     shooter.periodic();
     turret.periodic();
     Lights.getInstance().addShotStatus(readyToShoot() && FireController.getInstance().readyToFire());
+    currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
   }
 
   /**

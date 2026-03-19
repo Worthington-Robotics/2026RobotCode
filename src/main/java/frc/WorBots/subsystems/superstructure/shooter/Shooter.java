@@ -230,7 +230,11 @@ public class Shooter {
   public void setHoodPose(double pose) {
     controlMode = ControlMode.Setpoint;
     pose = MathUtil.clamp(pose, 0, hoodMaxHeading);
-    setpointPosition = pose + hoodFudgeFactor;
+    if (pose == 0){
+      setpointPosition = pose;
+    } else {
+      setpointPosition = pose + hoodFudgeFactor;
+    }
   }
 
   /**
