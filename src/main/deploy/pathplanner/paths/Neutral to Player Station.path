@@ -32,11 +32,11 @@
     },
     {
       "anchor": {
-        "x": 1.2,
+        "x": 0.85,
         "y": 0.65
       },
       "prevControl": {
-        "x": 1.495482406597684,
+        "x": 1.1454824065976839,
         "y": 0.65
       },
       "nextControl": null,
@@ -53,7 +53,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.0075973409306698,
+      "minWaypointRelativePos": 1.1935251798561013,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 0.35,
@@ -75,7 +75,7 @@
     },
     {
       "name": "Sustained Fire",
-      "waypointRelativePos": 1.129154795821462,
+      "waypointRelativePos": 1.3230215827338037,
       "endWaypointRelativePos": null,
       "command": null
     }

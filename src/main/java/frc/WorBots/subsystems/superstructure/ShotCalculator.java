@@ -12,6 +12,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.util.debug.Logger;
 import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeomUtil;
@@ -53,8 +54,8 @@ public class ShotCalculator {
       { 2.067517874264592, 0.226, 134, 1},
       { 2.981151807004248, 0.265, 149, 1},
       { 3.8951452800012, 0.375, 163, 1},
-      { 4.809293308638241, 0.384, 185.3, 1},
-      { 5.05423, 0.383, 197.5, 1.1},
+      { 4.809293308638241, 0.384, 186.3, 1},
+      { 5.05423, 0.383, 200, 1.1},
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (Rads/sec), time of
@@ -183,6 +184,7 @@ public class ShotCalculator {
     double vx = turretVelocityX;
     double vy = turretVelocityY;
     double turretSpeed = -(dx * vy - dy * vx) / (dx * dx + dy * dy);
+    SmartDashboard.putNumberArray("ShotCalc/Target Pose", Logger.translation2dToArray(target));
     return new ShootingParams(isValid,
         turretAngle,
         (isHub ? hubHoodAngleMap.get(dist_to_target).getRadians() : passHoodAngleMap.get(dist_to_target).getRadians()),

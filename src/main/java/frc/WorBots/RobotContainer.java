@@ -176,9 +176,9 @@ public class RobotContainer {
    */
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
-    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, 7));
+    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, 8));
     // operator.leftTrigger().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
-    operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -7)); 
+    operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8)); 
     //Force feed
     operator.leftBumper().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     // Climber command is going to be up Dpad

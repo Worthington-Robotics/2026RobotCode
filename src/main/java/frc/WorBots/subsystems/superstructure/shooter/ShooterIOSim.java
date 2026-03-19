@@ -5,7 +5,10 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
+import frc.WorBots.FieldConstants;
+import frc.WorBots.util.debug.Logger;
 
 public class ShooterIOSim implements ShooterIO {
   //TODO: Update Max angle(Hood), JKgMetersSquared(Fly), Gearing (Fly) to be the real value.
@@ -47,6 +50,16 @@ public class ShooterIOSim implements ShooterIO {
     inputs.actualLeaderVelocityRadPerSec = flyLeader.getAngularVelocityRadPerSec();
 
     inputs.actualHoodPosition = hood.getAngleRads() * Constants.TurretShooterConstants.Hood_GEAR_RATIO;   
+
+    //Debug logging
+    SmartDashboard.putNumberArray("Trench/R Trench 1", Logger.translation2dToArray(FieldConstants.redBottomTrench[0]));
+    SmartDashboard.putNumberArray("Trench/R Trench 2", Logger.translation2dToArray(FieldConstants.redBottomTrench[1]));
+    SmartDashboard.putNumberArray("Trench/R Trench 3", Logger.translation2dToArray(FieldConstants.redTopTrench[0]));
+    SmartDashboard.putNumberArray("Trench/R Trench 4", Logger.translation2dToArray(FieldConstants.redTopTrench[1]));
+    SmartDashboard.putNumberArray("Trench/B Trench 1", Logger.translation2dToArray(FieldConstants.blueBottomTrench[0]));
+    SmartDashboard.putNumberArray("Trench/B Trench 2", Logger.translation2dToArray(FieldConstants.blueBottomTrench[1]));
+    SmartDashboard.putNumberArray("Trench/B Trench 3", Logger.translation2dToArray(FieldConstants.blueTopTrench[0]));
+    SmartDashboard.putNumberArray("Trench/B Trench 4", Logger.translation2dToArray(FieldConstants.blueTopTrench[1]));
     }
 
     @Override
