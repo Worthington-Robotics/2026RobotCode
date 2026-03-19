@@ -125,8 +125,8 @@ public class Constants {
     //Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 144,0);
     public final static ShootingParams TOWER_SHOT = new ShootingParams(true, new Rotation2d(), 0.26, 150,0);
-    public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(-0.8026), 0.383, 197.5, 0);
-    public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(0.8026), 0.383, 197.5,0);
+    public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(-0.8026), 0.383, 199.5, 0);
+    public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(0.8026), 0.383, 199.5,0);
   }
 
   /**PathPlanner Constants*/
@@ -137,7 +137,7 @@ public class Constants {
 
   /**Intake Constants*/
   public class IntakeConstants{
-    public static final double INTAKE_VOLTAGE = 6;
+    public static final double INTAKE_VOLTAGE = 5;
     //These values need to be modified
     public static final double INTAKE_MAX_TEMP = 80.0;
     public static final double TIME_OF_FLIGHT_THRES = 0.255;

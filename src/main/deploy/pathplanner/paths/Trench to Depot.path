@@ -16,49 +16,56 @@
     },
     {
       "anchor": {
-        "x": 0.85,
-        "y": 7.0
+        "x": 1.8117228915662649,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 0.85,
-        "y": 7.5
+        "x": 2.9263493975903616,
+        "y": 5.991060240963854
       },
       "nextControl": {
-        "x": 0.85,
-        "y": 6.5
+        "x": 1.3133831342066644,
+        "y": 5.859287763083168
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.85,
-        "y": 4.947175463623396
+        "x": 0.6,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 0.8499999999999999,
-        "y": 5.87317134738489
+        "x": 0.324950291511438,
+        "y": 5.9
+      },
+      "nextControl": {
+        "x": 1.5259958837614964,
+        "y": 5.9
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.8117228915662649,
+        "y": 5.9
+      },
+      "prevControl": {
+        "x": 1.0644126878112798,
+        "y": 5.9
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3942423030787694,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 0.8260695721711289,
-      "rotationDegrees": -135.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.7661870503597015,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 1.466546762589914,
       "constraints": {
         "maxVelocity": 0.5,
         "maxAcceleration": 12.192,
@@ -72,14 +79,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "Dracarys!",
-      "waypointRelativePos": 0.44919278252611106,
-      "endWaypointRelativePos": 0.8100664767331435,
+      "waypointRelativePos": 0.5212230215827339,
+      "endWaypointRelativePos": 1.2075539568345226,
       "command": null
     },
     {
       "name": "Sustained Fire",
-      "waypointRelativePos": 1.9474820143884926,
+      "waypointRelativePos": 3.0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -94,7 +107,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
