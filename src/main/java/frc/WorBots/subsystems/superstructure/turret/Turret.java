@@ -182,7 +182,7 @@ public class Turret {
     // Calculates the adjustment for each of the three paths we can take
     double dTheta = positionRads - inputs.turretFusedAngle;
     double dTheta2 = dTheta + Units.degreesToRadians(360);
-    double dTheta3 = dTheta + Units.degreesToRadians(-360);
+    double dTheta3 = dTheta - Units.degreesToRadians(360);
     dThetas.add(dTheta);
     dThetas.add(dTheta2);
     dThetas.add(dTheta3);
@@ -199,19 +199,20 @@ public class Turret {
         i--;
       }
     }
-
     // finds the shortest path
     double shortestPathLength = Double.MAX_VALUE;
+    double truePath = 0;
 
     for (double i : dThetas) {
       if (Math.abs(i) < shortestPathLength) {
+        truePath = i;
         shortestPathLength = Math.abs(i);
       }
     }
     if (Math.abs(shortestPathLength) > Math.PI) {
     }
 
-    double output = inputs.turretFusedAngle + shortestPathLength;
+    double output = inputs.turretFusedAngle + truePath;
     controlMode = TurretControlMode.Position;
     SmartDashboard.putNumber("TurretOptimize/output", output);
     return output;

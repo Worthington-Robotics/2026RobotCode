@@ -1,6 +1,7 @@
 package frc.WorBots.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.WorBots.subsystems.drive.Drive;
@@ -127,10 +128,10 @@ public class PitTest {
   public Command testTurret(Superstructure superstructure) {
     return Commands.sequence(
         // Test turret
-        superstructure.runOnce(() -> superstructure.setTurretPose(180)).withTimeout(1.0),
+        superstructure.runOnce(() -> superstructure.setTurretPose(Units.degreesToRadians(180))).withTimeout(1.0),
         Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
-        superstructure.runOnce(() -> superstructure.setTurretPose(-180)).withTimeout(1.0),
+        superstructure.runOnce(() -> superstructure.setTurretPose(-Units.degreesToRadians(180))).withTimeout(1.0),
         Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
         superstructure.runOnce(() -> superstructure.setTurretPose(0)).withTimeout(1.0),
