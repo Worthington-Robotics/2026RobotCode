@@ -37,6 +37,7 @@ public class Turret {
   private final BooleanPublisher lockedPub = turret.getBooleanTopic("Locked").publish();
   private final BooleanPublisher readyPub = turret.getBooleanTopic("Ready").publish();
   private final DoublePublisher errorPub = turret.getDoubleTopic("Error").publish();
+  private final DoublePublisher requestedVoltagePub = turret.getDoubleTopic("Requested Voltage").publish();
 
   public final TurretIO io;
 
@@ -105,6 +106,8 @@ public class Turret {
             Constants.TurretShooterConstants.TURRET_MIN_ANGLE, Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
 
         io.setVoltage(volts);
+
+        requestedVoltagePub.set(volts);
       }
 
     }

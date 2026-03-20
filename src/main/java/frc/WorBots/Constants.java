@@ -92,7 +92,7 @@ public class Constants {
     
     //Current Limits
     public final static double TURRET_CURRENT_LIMIT = 40;
-    public final static double FLYWHEEL_CURRENT_LIMIT = 40;
+    public final static double FLYWHEEL_CURRENT_LIMIT = 200;
     public final static double HOOD_CURRENT_LIMIT = 40;
 
     //Turret Saftey Limits

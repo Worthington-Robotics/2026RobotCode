@@ -63,6 +63,8 @@ public class Shooter {
   private final DoublePublisher hoodErrorPub = shooter.getDoubleTopic("Hood Error").publish();
   private final DoublePublisher hoodFudgePub = shooter.getDoubleTopic("Hood Fudge Factor").publish();
   private final DoublePublisher FlywheelFudgePub = shooter.getDoubleTopic("Flywheel Fudge Factor").publish();
+  private final DoublePublisher flywheelRequestedPub = shooter.getDoubleTopic("Flywheel Requested Voltage").publish();
+  private final DoublePublisher hoodRequestedPub = shooter.getDoubleTopic("Hood Requested Voltage").publish();
 
   // a
 
@@ -148,6 +150,9 @@ public class Shooter {
 
       io.setHoodVolts(hoodFeedback);
       io.setLeaderVolts(leaderVolts);
+      
+      flywheelRequestedPub.set(leaderVolts);
+      hoodRequestedPub.set(hoodFeedback);
     } else if (controlMode == ControlMode.Voltage) {
       io.setHoodVolts(hoodSetpointVolts);
       io.setLeaderVolts(flySetpointVolts);
@@ -155,7 +160,6 @@ public class Shooter {
 
     // If the robot is near the trench, set the hood to 0 degrees to prevent hitting
     // the trench.
-
     StatusPage.reportStatus(StatusPage.SHOOTER_READY, readyToShoot());
   }
 
