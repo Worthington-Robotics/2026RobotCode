@@ -118,7 +118,7 @@ public class Constants {
 
     // Shot calculator constant
     public final static double SHOT_CALC_PARA_VEL_GAIN_TOWARDS = -0.7;
-    public final static double SHOT_CALC_PARA_VEL_GAIN_AWAY = -0.8;
+    public final static double SHOT_CALC_PARA_VEL_GAIN_AWAY = -0.9;
     public final static double SHOT_CALC_PERP_VEL_A_GAIN = 1.1;
     public final static double SHOT_CALC_PERP_VEL_B_GAIN = 2.0;
 
