@@ -13,7 +13,7 @@ import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.vision.apriltags.TagVision;
 import frc.WorBots.util.UtilCommands;
 
-//TODO implement climber, vision, and lights tests
+//TODO implement check vision test and implement lights tests
 /** A class containing commands to be used to perform pit tests. */
 public class PitTest {
   // The amount to wait in between steps
