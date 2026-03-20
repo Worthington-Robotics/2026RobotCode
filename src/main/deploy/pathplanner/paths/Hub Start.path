@@ -57,12 +57,6 @@
       "waypointRelativePos": 0.5723021582733773,
       "endWaypointRelativePos": null,
       "command": null
-    },
-    {
-      "name": "Sustained Fire",
-      "waypointRelativePos": 0.8499999999999958,
-      "endWaypointRelativePos": null,
-      "command": null
     }
   ],
   "globalConstraints": {

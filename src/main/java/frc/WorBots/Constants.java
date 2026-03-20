@@ -61,6 +61,7 @@ public class Constants {
 
   /**Spindexer Constants*/
   public class SpindexerConstants{
+    public static final double SPINDEXER_VOLTAGE = 9;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1;

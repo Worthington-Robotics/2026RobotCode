@@ -174,7 +174,7 @@ public class RobotContainer {
    */
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
-    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, 9));
+    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     // operator.leftTrigger().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8)); 
     //Force feed
@@ -227,7 +227,7 @@ public class RobotContainer {
     selector = new AutoSelector("Auto Selector 2");
 
     NamedCommands.registerCommand("Focus Your Power", new StartAutoAim(superstructure));
-    NamedCommands.registerCommand("Sustained Fire", new ConditionalFireCommand(drive, spin, 8));
+    NamedCommands.registerCommand("Sustained Fire", new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
     NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
     NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
@@ -235,13 +235,13 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Pit Test", new PitTest().fullPitTest(drive, superstructure, intake, spin, vision, Lights.getInstance()));
 
-    new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, 8));
+    new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Mine Mine Mine").onTrue(new PathplannerIntakeCommands().startIntakeAuto(intake));
     new EventTrigger("Dude Chill").onTrue(new PathplannerIntakeCommands().stopIntakeAuto(intake));
     new EventTrigger("Hit The Deck").whileTrue(new ShooterCommands().hoodDown(superstructure));
     new EventTrigger("Deploy Intake").onTrue(new IntakeCommands().extend(intake));
     new EventTrigger("Retract Intake").onTrue(new IntakeCommands().retract(intake));
-    new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, 8));
+    new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Use the Force").onTrue(new StartAutoAim(superstructure));
 
     // Fetchs all of the autos from Path Planner

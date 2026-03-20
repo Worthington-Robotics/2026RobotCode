@@ -48,7 +48,7 @@ public class ShooterCommands {
    */
   public Command forceFeedShooter(Spindexer spin) {
     return spin.runEnd(() -> {
-      spin.runSpindexerVoltage(5);
+      spin.runSpindexerVoltage(Constants.SpindexerConstants.SPINDEXER_VOLTAGE);
     }, () -> {
       spin.stopSpindexer();
     });
@@ -119,7 +119,7 @@ public class ShooterCommands {
   public Command superPass(Superstructure superstructure, Intake intake, Drive drive, Spindexer spin){
     return Commands.parallel(
       new IntakeCommands().spit(intake),
-      new ConditionalFireCommand(drive, spin, 8),
+      new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE),
       new SuperPassLights()
     );
   }
