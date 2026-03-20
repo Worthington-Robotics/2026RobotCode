@@ -19,7 +19,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center to Depo"
+            "pathName": "Center to Player Station"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Mag Dump"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Annoy"
           }
         }
       ]

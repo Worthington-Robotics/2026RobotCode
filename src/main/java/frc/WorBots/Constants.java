@@ -125,8 +125,8 @@ public class Constants {
     //Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 144,0);
     public final static ShootingParams TOWER_SHOT = new ShootingParams(true, new Rotation2d(), 0.26, 150,0);
-    public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(-0.8026), 0.383, 199.5, 0);
-    public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(0.8026), 0.383, 199.5,0);
+    public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(-0.8026+0.00872665), 0.383, 199.5, 0);
+    public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(0.8026-0.00872665), 0.383, 199.5,0);
   }
 
   /**PathPlanner Constants*/
