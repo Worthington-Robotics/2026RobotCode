@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.intake.Intake;
 import frc.WorBots.subsystems.lights.Lights;
+import frc.WorBots.subsystems.lights.Lights.LightEffects;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.vision.apriltags.TagVision;
@@ -128,10 +129,14 @@ public class PitTest {
   public Command testTurret(Superstructure superstructure) {
     return Commands.sequence(
         // Test turret
-        superstructure.runOnce(() -> superstructure.setTurretPose(Units.degreesToRadians(180))).withTimeout(1.0),
+        superstructure.runOnce(() -> superstructure.setTurretPose(Units.degreesToRadians(160))).withTimeout(1.0),
         Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
-        superstructure.runOnce(() -> superstructure.setTurretPose(-Units.degreesToRadians(180))).withTimeout(1.0),
+        Commands.runOnce(() -> Lights.getInstance().runEffect(LightEffects.superStar)),
+        superstructure.runOnce(() -> superstructure.setTurretPose(-Units.degreesToRadians(160))).withTimeout(1.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
+        Commands.waitSeconds(wait),
+        superstructure.runOnce(() -> superstructure.setTurretPose(Units.degreesToRadians(180))).withTimeout(1.0),
         Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
         superstructure.runOnce(() -> superstructure.setTurretPose(0)).withTimeout(1.0),
