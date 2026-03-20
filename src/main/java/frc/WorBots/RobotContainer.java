@@ -174,7 +174,7 @@ public class RobotContainer {
    */
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
-    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, 8));
+    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, 9));
     // operator.leftTrigger().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8)); 
     //Force feed

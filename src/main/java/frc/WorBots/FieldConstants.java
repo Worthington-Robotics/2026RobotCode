@@ -4,6 +4,8 @@ import static edu.wpi.first.apriltag.AprilTagFields.k2026RebuiltWelded;
 import edu.wpi.first.apriltag.*;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.io.IOException;
 
 public class FieldConstants {
@@ -30,7 +32,7 @@ public class FieldConstants {
   public static final double passExclusionMargin = Units.inchesToMeters(1);
   public static final Translation2d[] passExclusionZone = { new Translation2d(Units.inchesToMeters(182.11-22.0) - passExclusionMargin, Units.inchesToMeters(158.84 - 22.0) - passExclusionMargin),
       new Translation2d(Units.inchesToMeters(182.11+25.0) + passExclusionMargin, Units.inchesToMeters(158.84 + 25.0) + passExclusionMargin) };
-  public static final Translation2d passTarget = new Translation2d(1.9965776218182945, 2.478353240555334);
+  public static final Translation2d passTarget = new Translation2d(1.0, 1.0);
   public static final Translation2d[] allianceZone = { new Translation2d(0.0, 0.0),
       new Translation2d(Units.inchesToMeters(182.11-23.5), fieldWidth) };
 
