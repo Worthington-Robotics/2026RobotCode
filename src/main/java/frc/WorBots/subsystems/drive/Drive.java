@@ -30,6 +30,7 @@ import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
 import frc.WorBots.util.debug.Logger;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeomUtil;
 import frc.WorBots.util.math.PoseEstimator;
 import frc.WorBots.util.math.PoseEstimator.TimestampedVisionUpdate;
@@ -406,6 +407,14 @@ public class Drive extends SubsystemBase {
 
   public boolean inNeutralZone() {
     return GeomUtil.translation2dInBoundingBox(getPose().getTranslation(), FieldConstants.neutralZone);
+  }
+
+  public boolean inOurAllianceZone(){
+    if(AllianceFlipUtil.shouldFlip()){
+      return inRedZone();
+    } else {
+      return inBlueZone();
+    }
   }
 
   /**
