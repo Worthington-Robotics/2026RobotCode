@@ -167,6 +167,10 @@ public class Turret {
     return Math.abs(turretFeedBack.getGoal().position - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_TOLERANCE;
   }
 
+  public boolean readyToPass(){
+    return Math.abs(turretFeedBack.getGoal().position - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_PASS_TOLERANCE;
+  }
+
   /**
    * Optimizes a setpoint to minimize turret movement
    * 

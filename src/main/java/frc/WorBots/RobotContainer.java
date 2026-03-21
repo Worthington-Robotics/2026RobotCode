@@ -118,7 +118,7 @@ public class RobotContainer {
         () -> drive.getRobotRelativeSpeeds(), // Robot Relative Speed Supplier
         speeds -> driveController.drive(drive, speeds), // Output Command
         new PPHolonomicDriveController( // Holonomic Drive Controller Used by PathPlanner
-            new PIDConstants(2.2, 0.0, 0.15), // Translation PID Constants
+            new PIDConstants(2.4, 0.0, 0.15), // Translation PID Constants
             new PIDConstants(3.2, 0.0, 0.0), // Rotational PID Constants
             Constants.RobotConstants.ROBOT_PERIOD), // PID Period
         Constants.PathPlannerConstants.PATHPLANNER_CONFIG,
@@ -151,7 +151,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
         new DriveWithJoysticks(
             drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> {return false;}, () -> driver.b().getAsBoolean()));
+            () -> {return false;}, () -> driver.x().getAsBoolean()));
     // A Key = Extend or retract intake
     // TODO: check if written correctly
     driver.rightBumper().debounce(0.02).onTrue(new IntakeCommands().togglePose(intake));
@@ -176,7 +176,7 @@ public class RobotContainer {
    */
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
-    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     // operator.leftTrigger().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8)); 
     //Force feed
@@ -229,7 +229,7 @@ public class RobotContainer {
     selector = new AutoSelector("Auto Selector 2");
 
     NamedCommands.registerCommand("Focus Your Power", new StartAutoAim(superstructure));
-    NamedCommands.registerCommand("Sustained Fire", new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    NamedCommands.registerCommand("Sustained Fire", new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
     NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
     NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
@@ -237,13 +237,13 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Pit Test", new PitTest().fullPitTest(drive, superstructure, intake, spin, vision, Lights.getInstance()));
 
-    new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Mine Mine Mine").onTrue(new PathplannerIntakeCommands().startIntakeAuto(intake));
     new EventTrigger("Dude Chill").onTrue(new PathplannerIntakeCommands().stopIntakeAuto(intake));
     new EventTrigger("Hit The Deck").whileTrue(new ShooterCommands().hoodDown(superstructure));
     new EventTrigger("Deploy Intake").onTrue(new IntakeCommands().extend(intake));
     new EventTrigger("Retract Intake").onTrue(new IntakeCommands().retract(intake));
-    new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Use the Force").onTrue(new StartAutoAim(superstructure));
 
     // Fetchs all of the autos from Path Planner

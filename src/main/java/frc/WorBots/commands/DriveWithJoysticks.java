@@ -3,6 +3,7 @@ package frc.WorBots.commands;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.Constants;
@@ -18,6 +19,8 @@ public class DriveWithJoysticks extends Command {
   private final Supplier<Double> rightXSupplier;
   private final Supplier<Boolean> slowSupplier;
   private final Supplier<Boolean> lockGyroSupplier;
+  private boolean gyroLockActive = false;
+  private double gyroLockSetpoint;
 
   /**
    * The main teleop drive command. Controls the robot with joystick input
@@ -52,7 +55,13 @@ public class DriveWithJoysticks extends Command {
     double leftY = leftYSupplier.get();
     double rightX = rightXSupplier.get();
     if(lockGyroSupplier.get()){
-      rightX = 0;
+      if(!gyroLockActive){
+        gyroLockActive = true;
+        gyroLockSetpoint = drive.getYaw().getRadians();
+      }
+      rightX = MathUtil.clamp((gyroLockSetpoint - drive.getYaw().getRadians()) * Constants.DriveConstants.GYRO_LOCK_KP, -0.5, 0.5);
+    } else{
+      gyroLockActive = false;
     }
 
     // Will slow the robot is slow supplier is true or we are in our alliance zone

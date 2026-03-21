@@ -304,6 +304,20 @@ public class Shooter {
     return hoodInPosition() && flywheelAtSpeed(); // && isShotValid();
   }
 
+  public boolean readyToPass() {
+    return hoodInPositionPass() && flywheelAtSpeedPass(); // && isShotValid();
+  }
+
+  public boolean flywheelAtSpeedPass() {
+    return Math.abs(inputs.actualLeaderVelocityRadPerSec
+        - setpointVelocity) < Constants.TurretShooterConstants.FLYWHEEL_READY_PASS_VEL_TOLERANCE;
+  }
+
+  public boolean hoodInPositionPass() {
+    return Math.abs(inputs.actualHoodPosition
+        - hoodPIDController.pid.getSetpoint()) < Constants.TurretShooterConstants.HOOD_READY_PASS_TOLERANCE && !autoHoodDown;
+  }
+
   /**
    * Sets the passing status
    * 

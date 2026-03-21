@@ -195,7 +195,11 @@ public class Superstructure extends SubsystemBase {
   }
 
   public boolean readyToShoot() {
-    return turret.readyToShoot() && shooter.readyToShoot();
+    if(!isPassing()){
+      return turret.readyToShoot() && shooter.readyToShoot();
+    } else {
+      return turret.readyToPass() && shooter.readyToPass();
+    }
   }
 
   public boolean shotValid() {

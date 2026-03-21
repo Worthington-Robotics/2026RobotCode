@@ -57,6 +57,8 @@ public class Constants {
     * The minimum speed percentage of the maximum that can be set before angle changes are ignored
     */
     public static final double ANTI_JITTER_THRESHOLD = 0.005;
+
+    public static final double GYRO_LOCK_KP = 1.0;
   }
 
   /**Spindexer Constants*/
@@ -106,13 +108,17 @@ public class Constants {
     public final static double TURRET_POSE_TOLERANCE = Units.degreesToRadians(0.5);
     public final static double TURRET_VEL_TOLERANCE = Units.degreesToRadians(5);
     public final static double HOOD_POS_TOLERANCE = Units.degreesToRadians(0.1);
-    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(30);
+    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(20); //TODO should be 0
 
     //Ready to shoot tolerances
     //TODO set real numbers
     public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(2);
     public final static double HOOD_READY_TOLERANCE = Units.degreesToRadians(2);
     public final static double FLYWHEEL_READY_VEL_TOLERANCE = 20;
+
+    public final static double TURRET_READY_PASS_TOLERANCE = Units.degreesToRadians(4);
+    public final static double HOOD_READY_PASS_TOLERANCE = Units.degreesToRadians(4);
+    public final static double FLYWHEEL_READY_PASS_VEL_TOLERANCE = 20;
 
     // Feed forward values
     public final static double HOOD_STATIC_FEEDFORWARD_VOLTAGE = .22;
@@ -124,7 +130,7 @@ public class Constants {
     public final static double SHOT_CALC_PERP_VEL_B_GAIN = 2.0;
 
     //Manual shots
-    public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 144,0);
+    public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 146,0);
     public final static ShootingParams TOWER_SHOT = new ShootingParams(true, new Rotation2d(), 0.26, 150,0);
     public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(-0.8026+0.00872665), 0.383, 199.5, 0);
     public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(0.8026-0.00872665), 0.383, 199.5,0);
