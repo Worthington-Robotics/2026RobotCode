@@ -17,6 +17,7 @@ public class DriveWithJoysticks extends Command {
   private final Supplier<Double> leftYSupplier;
   private final Supplier<Double> rightXSupplier;
   private final Supplier<Boolean> slowSupplier;
+  private final Supplier<Boolean> lockGyroSupplier;
 
   /**
    * The main teleop drive command. Controls the robot with joystick input
@@ -27,15 +28,17 @@ public class DriveWithJoysticks extends Command {
    * @param rightXSupplier Supplier providing the right joystick x value
    * @param slowSupplier   A supplier that will slow down the robot when true.
    *                       Intended to be used with a button.
+   * @param lockGyroSupplier When true the robot will lock to its current heading
    */
   public DriveWithJoysticks(Drive drive, Supplier<Double> leftXSupplier, Supplier<Double> leftYSupplier,
-      Supplier<Double> rightXSupplier, Supplier<Boolean> slowSupplier) {
+      Supplier<Double> rightXSupplier, Supplier<Boolean> slowSupplier, Supplier<Boolean> lockGyroSupplier) {
     addRequirements(drive);
     this.drive = drive;
     this.leftXSupplier = leftXSupplier;
     this.leftYSupplier = leftYSupplier;
     this.rightXSupplier = rightXSupplier;
     this.slowSupplier = slowSupplier;
+    this.lockGyroSupplier = lockGyroSupplier;
   }
 
   @Override
@@ -48,6 +51,9 @@ public class DriveWithJoysticks extends Command {
     double leftX = leftXSupplier.get();
     double leftY = leftYSupplier.get();
     double rightX = rightXSupplier.get();
+    if(lockGyroSupplier.get()){
+      rightX = 0;
+    }
 
     // Will slow the robot is slow supplier is true or we are in our alliance zone
     // if (slowSupplier.get() || (AllianceFlipUtil.shouldFlip() && drive.inRedZone())

@@ -4,6 +4,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.WorBots.Constants;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.intake.Intake;
 import frc.WorBots.subsystems.lights.Lights;
@@ -81,7 +82,7 @@ public class PitTest {
         // Test Intake
         intake.runOnce(() -> intake.extend()).withTimeout(1.5),
         Commands.waitSeconds(wait),
-        intake.runOnce(() -> intake.setVoltsIntake(7)).withTimeout(1.0),
+        intake.runOnce(() -> intake.setVoltsIntake(Constants.IntakeConstants.INTAKE_VOLTAGE)).withTimeout(1.0),
         Commands.waitSeconds(3),
         intake.runOnce(() -> intake.setVoltsIntake(0)).withTimeout(1.0),
         Commands.waitSeconds(wait),
