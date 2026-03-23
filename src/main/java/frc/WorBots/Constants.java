@@ -129,7 +129,7 @@ public class Constants {
     public final static double SHOT_CALC_PERP_VEL_A_GAIN = 1.1;
     public final static double SHOT_CALC_PERP_VEL_B_GAIN = 2.0;
 
-    public final static double ACCELERATION_FACTOR = 0.25;
+    public final static double ACCELERATION_FACTOR = 0.25; //How many seconds of acceleration to apply to velocity in shot calculation. Should probably be about the time we expect systems to take to respond
 
     //Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 146,0);

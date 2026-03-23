@@ -156,7 +156,8 @@ public class ShotCalculator {
             * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * cos
                 - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * sin);
     Translation2d robotVelocityVector = new Translation2d(turretVelocityX, turretVelocityY);
-    robotVelocityVector = robotVelocityVector.plus(new Translation2d(robotAcceleration.vxMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR, robotAcceleration.vyMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR));
+    robotVelocityVector = robotVelocityVector.plus(new Translation2d(robotAcceleration.vxMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR, 
+      robotAcceleration.vyMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR));
     Translation2d aimVector = new Translation2d(dx, dy);
     double dist_to_target = aimVector.getNorm();
 
