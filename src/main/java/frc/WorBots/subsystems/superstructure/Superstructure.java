@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
@@ -69,11 +70,12 @@ public class Superstructure extends SubsystemBase {
     //Publish values
     controlModePub.set(controlMode.toString());
     if (controlMode == SuperstructureControlMode.Disabled) {
+      currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
       turret.setTurretMode(TurretControlMode.Disabled);
       shooter.setShooterMode(ControlMode.Disabled);
     } else if (controlMode == SuperstructureControlMode.AutomaticShot) {
       //Calculate new params
-      if (drive.inNeutralZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
+      if (!drive.inOurAllianceZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
         currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
         isPassing = true;
       } else {
@@ -111,16 +113,16 @@ public class Superstructure extends SubsystemBase {
    */
   public void setControlMode(SuperstructureControlMode mode) {
     controlMode = mode;
-    if (controlMode == SuperstructureControlMode.AutomaticShot) {
-      if (drive.inNeutralZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
-        currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
-      } else {
-        currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
-      }
-      shotValid = currentShootingParams.isValid();
-      shooter.setFlywheelSpeed(currentShootingParams.flywheelspeed());
-      shooter.setHoodPose(currentShootingParams.hoodAngle());
-    }
+    // if (controlMode == SuperstructureControlMode.AutomaticShot) {
+    //   if (!drive.inOurAllianceZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
+    //     currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+    //   } else {
+    //     currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+    //   }
+    //   shotValid = currentShootingParams.isValid();
+    //   shooter.setFlywheelSpeed(currentShootingParams.flywheelspeed());
+    //   shooter.setHoodPose(currentShootingParams.hoodAngle());
+    // }
   }
 
   /**
@@ -193,7 +195,11 @@ public class Superstructure extends SubsystemBase {
   }
 
   public boolean readyToShoot() {
-    return turret.readyToShoot() && shooter.readyToShoot();
+    if(!isPassing()){
+      return turret.readyToShoot() && shooter.readyToShoot();
+    } else {
+      return turret.readyToPass() && shooter.readyToPass();
+    }
   }
 
   public boolean shotValid() {

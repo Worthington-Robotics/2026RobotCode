@@ -3,29 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.0,
-        "y": 0.65
+        "x": 2.6,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.232096385542169,
-        "y": 0.6099879518072294
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.5055180722891564,
-        "y": 0.65
-      },
-      "prevControl": {
-        "x": 4.5055180722891475,
-        "y": 0.6499999999999999
-      },
-      "nextControl": {
-        "x": 2.2593277537926775,
-        "y": 0.6500000000000001
+        "x": 2.751506024096386,
+        "y": 2.898518072289156
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +20,8 @@
         "y": 0.6
       },
       "prevControl": {
-        "x": 1.1454824065976839,
-        "y": 0.6
+        "x": 3.319746987951808,
+        "y": 0.8222530120481917
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,19 +30,19 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.5,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.6522834645669296,
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.1935251798561013,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.6758992805755469,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.35,
-        "maxAcceleration": 12.192,
-        "maxAngularVelocity": 720.0,
+        "maxVelocity": 0.5,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 90.0,
         "maxAngularAcceleration": 3000.0,
         "nominalVoltage": 12.0,
         "unlimited": false
@@ -68,14 +52,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Hit The Deck",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.7644824311491011,
-      "command": null
-    },
-    {
-      "name": "Sustained Fire",
-      "waypointRelativePos": 1.3230215827338037,
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0.9550359712230183,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -89,14 +67,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

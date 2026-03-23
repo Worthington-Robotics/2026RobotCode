@@ -11,15 +11,39 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Center to Player Station"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Mag Dump"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Sustained Fire"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 2.0
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Center to Depo"
+            "name": "Annoy"
           }
         }
       ]

@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.6,
+        "x": 3.2,
         "y": 4.0
       },
       "prevControl": {
-        "x": 2.85,
+        "x": 3.45,
         "y": 4.0
       },
       "nextControl": null,
@@ -45,20 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Use the Force",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Deploy Intake",
-      "waypointRelativePos": 0.5723021582733773,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.096,
     "maxAcceleration": 7.5,

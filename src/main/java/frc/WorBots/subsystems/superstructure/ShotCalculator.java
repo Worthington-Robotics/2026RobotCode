@@ -12,6 +12,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.util.debug.Logger;
 import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeomUtil;
@@ -52,21 +53,23 @@ public class ShotCalculator {
       { 1.528, 0.1542, 133.65, 1},
       { 2.067517874264592, 0.226, 134, 1},
       { 2.981151807004248, 0.265, 149, 1},
-      { 3.8951452800012, 0.375, 163, 1},
-      { 4.809293308638241, 0.384, 185.3, 1},
-      { 5.05423, 0.383, 197.5, 1.1},
+      { 3.8951452800012, 0.375, 164, 1},
+      { 4.809293308638241, 0.384, 187.3, 1},
+      { 5.05423, 0.383, 200.25, 1.1},
+      { 5.3, 0.381, 202.25, 1.1},
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (Rads/sec), time of
     // flight (sec)
     //TODO actually find this, just using hub right now
     double[][] passingData = { 
-      { Units.inchesToMeters(55), 0, 124, 1},
-      { 2.067517874264592, 0.226, 100, 1},
-      { 2.981151807004248, 0.265, 115, 1},
-      { 3.8951452800012, 0.375, 124, 1},
-      { 4.809293308638241, 0.384, 156.3, 1},
-      { 5.551, 0.404, 201.3, 1},
+      { Units.inchesToMeters(55), 0, 112, 1},
+      { 2.067517874264592, 0.35, 80, 1},
+      { 2.981151807004248, 0.45, 90, 1},
+      { 3.8951452800012, 0.5, 105, 1},
+      { 4.809293308638241, 0.5, 140, 1},
+      { 5.551, 0.5, 160, 1},
+      { 10.787, 0.500, 205, 1 },
       };
 
     for (double[] i : scoringData) {
@@ -111,8 +114,10 @@ public class ShotCalculator {
     }
     if (pose.getY() > AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && !AllianceFlipUtil.shouldFlip() || pose.getY() < AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && AllianceFlipUtil.shouldFlip()){
       targetPose = AllianceFlipUtil.apply(new Translation2d(FieldConstants.passTarget.getX(), (FieldConstants.fieldWidth - FieldConstants.passTarget.getY())));
+      SmartDashboard.putBoolean("Left target", true);
     } else {
       targetPose = AllianceFlipUtil.apply(FieldConstants.passTarget);
+      SmartDashboard.putBoolean("Left target", false);
     }
     Translation2d[] shotPath = {turretPose, targetPose };
     if (GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))) { // TODO make sure alliance flip for arrays is working correctly
@@ -181,6 +186,7 @@ public class ShotCalculator {
     double vx = turretVelocityX;
     double vy = turretVelocityY;
     double turretSpeed = -(dx * vy - dy * vx) / (dx * dx + dy * dy);
+    SmartDashboard.putNumberArray("ShotCalc/Target Pose", Logger.translation2dToArray(target));
     return new ShootingParams(isValid,
         turretAngle,
         (isHub ? hubHoodAngleMap.get(dist_to_target).getRadians() : passHoodAngleMap.get(dist_to_target).getRadians()),

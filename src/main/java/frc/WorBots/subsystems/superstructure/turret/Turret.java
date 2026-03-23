@@ -3,7 +3,6 @@ package frc.WorBots.subsystems.superstructure.turret;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,6 +36,8 @@ public class Turret {
   private final DoublePublisher goalPosePub = turret.getDoubleTopic("Goal Position").publish();
   private final BooleanPublisher lockedPub = turret.getBooleanTopic("Locked").publish();
   private final BooleanPublisher readyPub = turret.getBooleanTopic("Ready").publish();
+  private final DoublePublisher errorPub = turret.getDoubleTopic("Error").publish();
+  private final DoublePublisher requestedVoltagePub = turret.getDoubleTopic("Requested Voltage").publish();
 
   public final TurretIO io;
 
@@ -105,6 +106,8 @@ public class Turret {
             Constants.TurretShooterConstants.TURRET_MIN_ANGLE, Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
 
         io.setVoltage(volts);
+
+        requestedVoltagePub.set(volts);
       }
 
     }
@@ -120,7 +123,7 @@ public class Turret {
     goalPosePub.set(goalPosition);
     lockedPub.set(turretLocked);
     readyPub.set(readyToShoot());
-    SmartDashboard.putNumber("Turret Error", goalPosition - inputs.turretFusedAngle);
+    errorPub.set(goalPosition - inputs.turretFusedAngle);
     inputs.turret.publish();
 
     StatusPage.reportStatus(StatusPage.TURRET_READY, atGoal());
@@ -164,6 +167,10 @@ public class Turret {
     return Math.abs(turretFeedBack.getGoal().position - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_TOLERANCE;
   }
 
+  public boolean readyToPass(){
+    return Math.abs(turretFeedBack.getGoal().position - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_PASS_TOLERANCE;
+  }
+
   /**
    * Optimizes a setpoint to minimize turret movement
    * 
@@ -181,10 +188,13 @@ public class Turret {
     // Calculates the adjustment for each of the three paths we can take
     double dTheta = positionRads - inputs.turretFusedAngle;
     double dTheta2 = dTheta + Units.degreesToRadians(360);
-    double dTheta3 = dTheta + Units.degreesToRadians(-360);
+    double dTheta3 = dTheta - Units.degreesToRadians(360);
     dThetas.add(dTheta);
     dThetas.add(dTheta2);
     dThetas.add(dTheta3);
+    SmartDashboard.putNumber("TurretOptimize/dTheta 1", dTheta);
+    SmartDashboard.putNumber("TurretOptimize/dTheta 2", dTheta2);
+    SmartDashboard.putNumber("TurretOptimize/dTheta 3", dTheta3);
 
     // Removes any paths that take us beyond our limits
     for (int i = 0; i < dThetas.size(); i++) {
@@ -195,20 +205,22 @@ public class Turret {
         i--;
       }
     }
-
     // finds the shortest path
     double shortestPathLength = Double.MAX_VALUE;
+    double truePath = 0;
 
     for (double i : dThetas) {
       if (Math.abs(i) < shortestPathLength) {
+        truePath = i;
         shortestPathLength = Math.abs(i);
       }
     }
     if (Math.abs(shortestPathLength) > Math.PI) {
     }
 
-    double output = inputs.turretFusedAngle + shortestPathLength;
+    double output = inputs.turretFusedAngle + truePath;
     controlMode = TurretControlMode.Position;
+    SmartDashboard.putNumber("TurretOptimize/output", output);
     return output;
   }
 
@@ -218,6 +230,7 @@ public class Turret {
     positionRads = MathUtil.angleModulus(positionRads);
     positionRads = MathUtil.clamp(positionRads, Constants.TurretShooterConstants.TURRET_MIN_ANGLE,
         Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
+    positionRads = optimizeSetpoint(positionRads);
     goalPosition = positionRads;
     goalVelocity = 0;
   }
@@ -265,8 +278,10 @@ public class Turret {
    * @implNote Field relative by default
    */
   public void setPositionAndVelocity(Rotation2d position, double velocity) {
+    SmartDashboard.putNumber("TurretOptimize/Pre Optimize Position", position.getRadians());
     controlMode = TurretControlMode.Position;
-    goalPosition = position.getRadians();
+    double setPosition = MathUtil.angleModulus(position.getRadians());
+    goalPosition = optimizeSetpoint(setPosition);
     goalVelocity = velocity;
   }
 

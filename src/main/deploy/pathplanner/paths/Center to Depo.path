@@ -16,44 +16,60 @@
     },
     {
       "anchor": {
-        "x": 2.0084216867469884,
-        "y": 5.062204819277108
+        "x": 1.4401807228915664,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 2.2816144578313255,
-        "y": 4.909216867469879
+        "x": 1.6901807228915664,
+        "y": 5.9
       },
       "nextControl": {
-        "x": 1.5944665252481085,
-        "y": 5.294019709716481
+        "x": 0.9691469472177618,
+        "y": 5.9
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6752409638554218,
-        "y": 4.887361445783132
+        "x": 0.6,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 0.6752409638554218,
-        "y": 4.637361445783132
+        "x": 0.85,
+        "y": 5.9
       },
       "nextControl": {
-        "x": 0.6752409638554218,
-        "y": 5.358395221456936
+        "x": 0.35,
+        "y": 5.9
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6752409638554218,
-        "y": 6.493734939759036
+        "x": 2.6,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 0.6752409638554218,
-        "y": 5.761578313253012
+        "x": 1.7373337056140479,
+        "y": 5.9
+      },
+      "nextControl": {
+        "x": 3.4626662943859525,
+        "y": 5.9
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6,
+        "y": 4.0
+      },
+      "prevControl": {
+        "x": 3.0320741110483977,
+        "y": 4.9543554216867465
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,15 +78,19 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2.0702362204724465,
-      "rotationDegrees": 119.99999999999999
+      "waypointRelativePos": 1.0702362204724465,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2.8661417322834586,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 2.08381294964029,
+      "maxWaypointRelativePos": 1.08381294964029,
       "constraints": {
         "maxVelocity": 1.2,
         "maxAcceleration": 12.192,
@@ -82,11 +102,24 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.7125899280575552,
+      "minWaypointRelativePos": 2.3169064748201382,
       "maxWaypointRelativePos": 3.0,
       "constraints": {
         "maxVelocity": 0.5,
         "maxAcceleration": 12.192,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 3.814388489208624,
+      "maxWaypointRelativePos": 4.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 7.5,
         "maxAngularVelocity": 720.0,
         "maxAngularAcceleration": 3000.0,
         "nominalVoltage": 12.0,
@@ -97,14 +130,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Mine Mine Mine",
-      "waypointRelativePos": 1.2982014388489111,
-      "endWaypointRelativePos": null,
+      "name": "Dracarys!",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 0.6291366906474751,
       "command": null
     },
     {
       "name": "Sustained Fire",
-      "waypointRelativePos": 2.3902877697841682,
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0.35,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -119,7 +158,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 119.99999999999999
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,

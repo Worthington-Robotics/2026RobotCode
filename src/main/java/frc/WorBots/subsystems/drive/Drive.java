@@ -30,6 +30,7 @@ import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
 import frc.WorBots.util.debug.Logger;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeomUtil;
 import frc.WorBots.util.math.PoseEstimator;
 import frc.WorBots.util.math.PoseEstimator.TimestampedVisionUpdate;
@@ -408,6 +409,14 @@ public class Drive extends SubsystemBase {
     return GeomUtil.translation2dInBoundingBox(getPose().getTranslation(), FieldConstants.neutralZone);
   }
 
+  public boolean inOurAllianceZone(){
+    if(AllianceFlipUtil.shouldFlip()){
+      return inRedZone();
+    } else {
+      return inBlueZone();
+    }
+  }
+
   /**
    * Checks if the robot is approaching the red zone by checking if the line
    * segment passes the bounding box of the red zone.
@@ -470,17 +479,17 @@ public class Drive extends SubsystemBase {
    * @return if the robot is approaching a trench
    */
   public boolean nearTrench() {
-    if (inBlueZone()) {
-      return approachingBlueTrench(chassisSpeedsLength);
-    }
+    // if (inBlueZone()) {
+    //   return approachingBlueTrench(chassisSpeedsLength);
+    // }
 
-    else if (inRedZone()) {
-      return approachingRedTrench(chassisSpeedsLength); // tune these values
-    }
+    // else if (inRedZone()) {
+    //   return approachingRedTrench(chassisSpeedsLength); // tune these values
+    // }
 
-    else {
+    // else {
       return approachingRedTrench(chassisSpeedsLength) || approachingBlueTrench(chassisSpeedsLength);
-    }
+    // }
   }
 
   public void resetYaw(){

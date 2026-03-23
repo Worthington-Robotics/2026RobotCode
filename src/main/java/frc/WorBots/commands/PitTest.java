@@ -1,17 +1,20 @@
 package frc.WorBots.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.WorBots.Constants;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.intake.Intake;
 import frc.WorBots.subsystems.lights.Lights;
+import frc.WorBots.subsystems.lights.Lights.LightEffects;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.vision.apriltags.TagVision;
 import frc.WorBots.util.UtilCommands;
 
-//TODO implement climber, vision, and lights tests
+//TODO implement check vision test and implement lights tests
 /** A class containing commands to be used to perform pit tests. */
 public class PitTest {
   // The amount to wait in between steps
@@ -79,12 +82,13 @@ public class PitTest {
         // Test Intake
         intake.runOnce(() -> intake.extend()).withTimeout(1.5),
         Commands.waitSeconds(wait),
-        intake.runOnce(() -> intake.setVoltsIntake(2)).withTimeout(1.0),
-        Commands.waitSeconds(wait),
+        intake.runOnce(() -> intake.setVoltsIntake(Constants.IntakeConstants.INTAKE_VOLTAGE)).withTimeout(1.0),
+        Commands.waitSeconds(3),
         intake.runOnce(() -> intake.setVoltsIntake(0)).withTimeout(1.0),
         Commands.waitSeconds(wait),
-        intake.runOnce(() -> intake.retract()).withTimeout(1.5),
-        Commands.waitSeconds(wait));
+        intake.runOnce(() -> intake.agitate()).withTimeout(1.5),
+        Commands.waitSeconds(wait),
+        intake.runOnce(() -> intake.extend()).withTimeout(1.5));
   }
 
   /**
@@ -101,8 +105,11 @@ public class PitTest {
         superstructure.runOnce(() -> superstructure.setHoodPose(Math.PI / 3)).withTimeout(1.0),
         Commands.waitSeconds(wait),
         Commands.waitUntil(() -> superstructure.hoodInPosition()),
-        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(2)).withTimeout(3.0),
+        superstructure.runOnce(() -> superstructure.setHoodPose(0)).withTimeout(1.0),
         Commands.waitSeconds(wait),
+        Commands.waitUntil(() -> superstructure.hoodInPosition()),
+        superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(50)).withTimeout(3.0),
+        Commands.waitSeconds(2.0),
 
         // Test Spindexer and take a test shot
         spindexer.runOnce(() -> spindexer.runSpindexerVoltage(5)).withTimeout(2.0),
@@ -123,14 +130,18 @@ public class PitTest {
   public Command testTurret(Superstructure superstructure) {
     return Commands.sequence(
         // Test turret
-        superstructure.runOnce(() -> superstructure.setTurretPose(180)).withTimeout(1.0),
-        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
+        superstructure.runOnce(() -> superstructure.setTurretPose(Units.degreesToRadians(160))).withTimeout(1.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
-        superstructure.runOnce(() -> superstructure.setTurretPose(-180)).withTimeout(1.0),
-        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
+        Commands.runOnce(() -> Lights.getInstance().runEffect(LightEffects.superStar)),
+        superstructure.runOnce(() -> superstructure.setTurretPose(-Units.degreesToRadians(160))).withTimeout(1.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
+        Commands.waitSeconds(wait),
+        superstructure.runOnce(() -> superstructure.setTurretPose(Units.degreesToRadians(180))).withTimeout(1.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait),
         superstructure.runOnce(() -> superstructure.setTurretPose(0)).withTimeout(1.0),
-        Commands.waitUntil(() -> superstructure.turretReady()).withTimeout(3.0),
+        Commands.waitUntil(() -> superstructure.turretReady()),
         Commands.waitSeconds(wait));
 
   }

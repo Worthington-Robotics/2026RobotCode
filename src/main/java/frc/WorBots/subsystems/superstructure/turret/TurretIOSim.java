@@ -17,7 +17,7 @@ public class TurretIOSim implements TurretIO {
 
 
   public void setVoltage(double volts) {
-    velocity = volts;
+    velocity = volts * 0.25;
   }
 
   public void updateInputs(TurretIOInputs inputs) {

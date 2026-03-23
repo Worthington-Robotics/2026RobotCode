@@ -48,7 +48,7 @@ public class ShooterCommands {
    */
   public Command forceFeedShooter(Spindexer spin) {
     return spin.runEnd(() -> {
-      spin.runSpindexerVoltage(5);
+      spin.runSpindexerVoltage(Constants.SpindexerConstants.SPINDEXER_VOLTAGE);
     }, () -> {
       spin.stopSpindexer();
     });
@@ -85,11 +85,14 @@ public class ShooterCommands {
    * 
    * @param superstructure The superstructure to use
    * @param params         The shot parameters representing the manual shot
+   * @param doRunSupplier  If true the command will have no effect
    * @apiNote Sets the shooter to manual mode
    */
-  public Command manualShot(Superstructure superstructure, ShootingParams params) {
+  public Command manualShot(Superstructure superstructure, ShootingParams params, Supplier<Boolean> doRunSupplier) {
     return Commands.runOnce(() -> {
-      superstructure.runShot(params);
+      if(!doRunSupplier.get()){
+        superstructure.runShot(params);
+      }
     });
   }
 
@@ -116,7 +119,7 @@ public class ShooterCommands {
   public Command superPass(Superstructure superstructure, Intake intake, Drive drive, Spindexer spin){
     return Commands.parallel(
       new IntakeCommands().spit(intake),
-      new ConditionalFireCommand(drive, spin, 8),
+      new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE),
       new SuperPassLights()
     );
   }

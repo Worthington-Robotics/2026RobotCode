@@ -85,7 +85,7 @@ public class FireController {
 
     if (DriverStation.getAlliance().isPresent() && ((DriverStation.getAlliance().get() == Alliance.Red && drive.inRedZone())
         || (DriverStation.getAlliance().get() == Alliance.Blue && drive.inBlueZone()))) {
-      output = output && timeAcceptable();
+      output = output;// && timeAcceptable();
       Lights.getInstance().setTarget(LightsTarget.Hub);
     } else {
       Lights.getInstance().setTarget(LightsTarget.Pass);

@@ -1,5 +1,7 @@
 package frc.WorBots.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 
@@ -8,6 +10,7 @@ public class HoodControlFudgeCommand extends Command {
 
   private Superstructure superstructure;
   private double fudgeFactor;
+  private Supplier<Boolean> doRunSupplier;
 
   /**
    * Changes the hood fudge factor by a specified amount.
@@ -15,16 +18,20 @@ public class HoodControlFudgeCommand extends Command {
    * @param superstructure The superstructure containing the hood to adjust the
    *                       fudge factor for
    * @param fudgeFactor    The amount to adjust the fudge factor by
+   * @param doRunSupplier  If true the command will run
    */
-  public HoodControlFudgeCommand(Superstructure superstructure, double fudgeFactor) {
+  public HoodControlFudgeCommand(Superstructure superstructure, double fudgeFactor, Supplier<Boolean> doRunSupplier) {
     addRequirements(superstructure);
     this.superstructure = superstructure;
     this.fudgeFactor = fudgeFactor;
+    this.doRunSupplier = doRunSupplier;
   }
 
   @Override
   public void execute() {
-    superstructure.shooter.modHoodFudgeFactor(fudgeFactor);
+    if(doRunSupplier.get()){
+      superstructure.shooter.modHoodFudgeFactor(fudgeFactor);
+    }
   }
 
   @Override

@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.Constants.TurretShooterConstants;
 import frc.WorBots.subsystems.drive.Drive;
@@ -29,19 +30,16 @@ public class Shooter {
   private double setpointVelocity;
   private double setpointPosition;
   
-  private double flywheelFudge;
-  private double hoodFudge;
-
   private double flySetpointVolts;
   private double hoodSetpointVolts;
   private Drive drive;
 
-  private double hoodFudgeFactor = 0;
   private final double hoodMaxHeading = 0.525;
   private double timeOfFlight = 0;
   private boolean passing = false;
 
   private double leaderFudgeFactor = 0;
+  private double hoodFudgeFactor = 0;
   private boolean autoHoodDown = false;
 
   // Two control modes, one allows you to provide voltage, the other means that
@@ -63,6 +61,10 @@ public class Shooter {
   private final DoublePublisher shooterSpeedDesiredPub = shooter.getDoubleTopic("Shooter Speed Desired").publish();
   private final DoublePublisher flywheelErrorPub = shooter.getDoubleTopic("Flywheel Error").publish();
   private final DoublePublisher hoodErrorPub = shooter.getDoubleTopic("Hood Error").publish();
+  private final DoublePublisher hoodFudgePub = shooter.getDoubleTopic("Hood Fudge Factor").publish();
+  private final DoublePublisher FlywheelFudgePub = shooter.getDoubleTopic("Flywheel Fudge Factor").publish();
+  private final DoublePublisher flywheelRequestedPub = shooter.getDoubleTopic("Flywheel Requested Voltage").publish();
+  private final DoublePublisher hoodRequestedPub = shooter.getDoubleTopic("Hood Requested Voltage").publish();
 
   // a
 
@@ -115,9 +117,14 @@ public class Shooter {
     shooterSpeedDesiredPub.set(setpointVelocity);
     flywheelErrorPub.set(setpointVelocity - inputs.actualLeaderVelocityRadPerSec);
     hoodErrorPub.set(setpointPosition - inputs.actualHoodPosition);
+    hoodFudgePub.set(hoodFudgeFactor);
+    FlywheelFudgePub.set(leaderFudgeFactor);
 
     StatusPage.reportStatus(StatusPage.SHOOTER_SUBSYSTEM, inputs.leader.isConnected && inputs.follower.isConnected);
-
+    //TODO remove eventually
+    SmartDashboard.putBoolean("Near Trench", drive.nearTrench());
+    SmartDashboard.putBoolean("Near Blue trench", drive.approachingBlueTrench(.25));
+    SmartDashboard.putBoolean("Near Red Trench", drive.approachingRedTrench(.25));
     if (drive.nearTrench()) {
       setpointPosition = 0;
       setHoodPose(setpointPosition);
@@ -130,7 +137,7 @@ public class Shooter {
       io.setLeaderVolts(0);
     } else if (controlMode == ControlMode.Setpoint) {
       leaderPIDController.pid.setGoal(setpointVelocity);
-      double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec + flywheelFudge);
+      double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
       double leaderVolts = leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec,
           setpointVelocity) + leaderPID;
       double hoodFeedback = hoodPIDController.pid.calculate(inputs.actualHoodPosition, setpointPosition);
@@ -143,6 +150,9 @@ public class Shooter {
 
       io.setHoodVolts(hoodFeedback);
       io.setLeaderVolts(leaderVolts);
+      
+      flywheelRequestedPub.set(leaderVolts);
+      hoodRequestedPub.set(hoodFeedback);
     } else if (controlMode == ControlMode.Voltage) {
       io.setHoodVolts(hoodSetpointVolts);
       io.setLeaderVolts(flySetpointVolts);
@@ -150,7 +160,6 @@ public class Shooter {
 
     // If the robot is near the trench, set the hood to 0 degrees to prevent hitting
     // the trench.
-
     StatusPage.reportStatus(StatusPage.SHOOTER_READY, readyToShoot());
   }
 
@@ -229,7 +238,11 @@ public class Shooter {
   public void setHoodPose(double pose) {
     controlMode = ControlMode.Setpoint;
     pose = MathUtil.clamp(pose, 0, hoodMaxHeading);
-    setpointPosition = pose + hoodFudgeFactor;
+    if (pose == 0){
+      setpointPosition = pose;
+    } else {
+      setpointPosition = pose + hoodFudgeFactor;
+    }
   }
 
   /**
@@ -289,6 +302,20 @@ public class Shooter {
    */
   public boolean readyToShoot() {
     return hoodInPosition() && flywheelAtSpeed(); // && isShotValid();
+  }
+
+  public boolean readyToPass() {
+    return hoodInPositionPass() && flywheelAtSpeedPass(); // && isShotValid();
+  }
+
+  public boolean flywheelAtSpeedPass() {
+    return Math.abs(inputs.actualLeaderVelocityRadPerSec
+        - setpointVelocity) < Constants.TurretShooterConstants.FLYWHEEL_READY_PASS_VEL_TOLERANCE;
+  }
+
+  public boolean hoodInPositionPass() {
+    return Math.abs(inputs.actualHoodPosition
+        - hoodPIDController.pid.getSetpoint()) < Constants.TurretShooterConstants.HOOD_READY_PASS_TOLERANCE && !autoHoodDown;
   }
 
   /**
