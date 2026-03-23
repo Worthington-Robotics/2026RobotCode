@@ -129,6 +129,8 @@ public class Constants {
     public final static double SHOT_CALC_PERP_VEL_A_GAIN = 1.1;
     public final static double SHOT_CALC_PERP_VEL_B_GAIN = 2.0;
 
+    public final static double SHOT_CALC_PERP_VEL_RANGE_GAIN = 1.0;
+
     public final static double ACCELERATION_FACTOR = 0.25; //How many seconds of acceleration to apply to velocity in shot calculation. Should probably be about the time we expect systems to take to respond
 
     //Manual shots

@@ -174,6 +174,7 @@ public class ShotCalculator {
     Rotation2d turretAngle = new Rotation2d(Math.atan2(dy, dx)).rotateBy(new Rotation2d(angle_adj));
     double range_adj = (para_vel > 0 ? Constants.TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN_TOWARDS : Constants.TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN_AWAY) * (para_vel);
     dist_to_target += range_adj;//* TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN);
+    dist_to_target += Math.abs(perp_vel) * Constants.TurretShooterConstants.SHOT_CALC_PERP_VEL_RANGE_GAIN; //Factor in perp velocity into range
     dist_to_target = Math.max(1.528, dist_to_target); // Do not allow interpolation within the hub space, it doesn't make sense
     SmartDashboard.putNumber("ShotCalc/Range_ADJ", range_adj);
     SmartDashboard.putNumber("ShotCalc/Angle_ADJ", angle_adj);
