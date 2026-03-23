@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -501,7 +502,7 @@ public class Drive extends SubsystemBase {
    */
   public ChassisSpeeds getAcceleration(){
     if(gyroIOInputs.connected){
-      return new ChassisSpeeds(gyroIOInputs.xAcceleration, gyroIOInputs.yAcceleration, 0);
+      return ChassisSpeeds.fromRobotRelativeSpeeds(new ChassisSpeeds(gyroIOInputs.xAcceleration, gyroIOInputs.yAcceleration, 0), getYaw());
     } else {
       return new ChassisSpeeds();
     }

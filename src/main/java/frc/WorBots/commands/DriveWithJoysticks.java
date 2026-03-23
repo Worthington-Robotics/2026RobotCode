@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.Constants;
 import frc.WorBots.RobotContainer;
@@ -57,7 +58,11 @@ public class DriveWithJoysticks extends Command {
     if(lockGyroSupplier.get()){
       if(!gyroLockActive){
         gyroLockActive = true;
-        gyroLockSetpoint = drive.getYaw().getRadians();
+        if(Math.abs(drive.getYaw().getRadians()) < Units.degreesToRadians(90)){
+          gyroLockSetpoint = 0;
+        } else {
+          gyroLockSetpoint = Math.PI;
+        }
       }
       rightX = MathUtil.clamp((gyroLockSetpoint - drive.getYaw().getRadians()) * Constants.DriveConstants.GYRO_LOCK_KP, -0.5, 0.5);
     } else{
