@@ -1,10 +1,12 @@
 package frc.WorBots.subsystems.drive;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearAcceleration;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
 import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
@@ -16,6 +18,8 @@ public class GyroIOPigeon2 implements GyroIO {
   private final Pigeon2 pigeon;
 
   private final OptimalStatusSignal<AngularVelocity> yawVelSignal;
+  private final StatusSignal<LinearAcceleration> accelSignalX;
+  private final StatusSignal<LinearAcceleration> accelSignalY;
 
   private final Queue<Double> yawQueue;
 
@@ -27,7 +31,11 @@ public class GyroIOPigeon2 implements GyroIO {
             pigeon.getAngularVelocityZDevice(), Constants.RobotConstants.ROBOT_PERIOD / 2.0);
 
     final var yawSignal = pigeon.getYaw();
+    accelSignalX = pigeon.getAccelerationX();
+    accelSignalY = pigeon.getAccelerationY();
     yawSignal.setUpdateFrequency(1.0 / OdometryThread.PERIOD);
+    accelSignalX.setUpdateFrequency(1.0 / OdometryThread.PERIOD);
+    accelSignalY.setUpdateFrequency(1.0 / OdometryThread.PERIOD);
     yawQueue = OdometryThread.getInstance().registerSignal(yawSignal);
 
     pigeon.optimizeBusUtilization();
@@ -50,6 +58,8 @@ public class GyroIOPigeon2 implements GyroIO {
 
     inputs.yawVelocityRadPerSec =
         yawVelSignal.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond);
+    inputs.xAcceleration = accelSignalX.refresh().getValueAsDouble();
+    inputs.yAcceleration = accelSignalY.refresh().getValueAsDouble();
   }
 
   @Override
@@ -59,4 +69,5 @@ public class GyroIOPigeon2 implements GyroIO {
       pigeon.setYaw(heading.getDegrees());
     }
   }
+
 }

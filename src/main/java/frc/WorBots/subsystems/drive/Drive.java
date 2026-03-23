@@ -496,4 +496,14 @@ public class Drive extends SubsystemBase {
     gyroIO.resetHeading(new Rotation2d());
   }
 
+  /**
+   * Returns the robot's field relative acceleration
+   */
+  public ChassisSpeeds getAcceleration(){
+    if(gyroIOInputs.connected){
+      return new ChassisSpeeds(gyroIOInputs.xAcceleration, gyroIOInputs.yAcceleration, 0);
+    } else {
+      return new ChassisSpeeds();
+    }
+  }
 }
