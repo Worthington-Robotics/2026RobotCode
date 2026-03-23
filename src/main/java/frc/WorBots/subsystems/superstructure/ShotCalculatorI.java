@@ -26,9 +26,6 @@ public class ShotCalculatorI {
   private final static boolean USE_TOF_TABLES = true;
   private final static double MANUAL_TOF_FACTOR = 1.0;
 
-  private static Rotation2d turretAngle;
-  private static double hoodAngle = Double.NaN;
-
   /***
    * A class to represent all aspects of a shot
    */
@@ -36,10 +33,9 @@ public class ShotCalculatorI {
       boolean isValid,
       Rotation2d turretAngle,
       double hoodAngle,
-      double flywheelspeed) {
+      double flywheelspeed,
+      double turretSpeed) {
   }
-
-  static ShootingParams latestParams = null;
 
   private static double minScoreDistance;
   private static double maxScoreDistance;
@@ -139,7 +135,7 @@ public class ShotCalculatorI {
     Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
     Translation2d targetPose;
     if (GeomUtil.translation2dInBoundingBox(turretPose, AllianceFlipUtil.apply(FieldConstants.allianceZone))) {
-      return new ShootingParams(false, new Rotation2d(), 0, 0);
+      return new ShootingParams(false, new Rotation2d(), 0, 0,0);
     }
     if (pose.getY() > AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && !AllianceFlipUtil.shouldFlip()
         || pose.getY() < AllianceFlipUtil.apply(FieldConstants.hubPosition).getY() && AllianceFlipUtil.shouldFlip()) {
@@ -227,15 +223,24 @@ public class ShotCalculatorI {
       lookaheadTurretToTargetDistance = target.getDistance(lookAheadPose.getTranslation());
     }
 
+    double dx = target.getX() - lookAheadPose.getX();
+    double dy = target.getY() - lookAheadPose.getY();
+    double distSq = dx * dx + dy * dy;
+    double turretSpeed = 0.0;
+    if (distSq > 1e-6) {
+      turretSpeed = -(dx * turretVelocityY - dy * turretVelocityX) / distSq;
+    }
+
+
     // Calculate params
-    turretAngle = target.minus(lookAheadPose.getTranslation()).getAngle();
-    hoodAngle = hoodAngleMap.get(lookaheadTurretToTargetDistance).getRadians();
-    latestParams = new ShootingParams(lookaheadTurretToTargetDistance >= minDistance
+    Rotation2d turretAngle = target.minus(lookAheadPose.getTranslation()).getAngle();
+    double hoodAngle = hoodAngleMap.get(lookaheadTurretToTargetDistance).getRadians();
+    return new ShootingParams(lookaheadTurretToTargetDistance >= minDistance
         && lookaheadTurretToTargetDistance <= maxDistance && isValid,
         turretAngle,
         hoodAngle,
-        flywheelSpeedMap.get(lookaheadTurretToTargetDistance));
-    return latestParams;
+        flywheelSpeedMap.get(lookaheadTurretToTargetDistance),
+        turretSpeed);
   }
 
 }
