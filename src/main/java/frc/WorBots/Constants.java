@@ -129,6 +129,8 @@ public class Constants {
     public final static double SHOT_CALC_PERP_VEL_A_GAIN = 1.1;
     public final static double SHOT_CALC_PERP_VEL_B_GAIN = 2.0;
 
+    public final static double ACCELERATION_FACTOR = 0.25;
+
     //Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 146,0);
     public final static ShootingParams TOWER_SHOT = new ShootingParams(true, new Rotation2d(), 0.26, 150,0);

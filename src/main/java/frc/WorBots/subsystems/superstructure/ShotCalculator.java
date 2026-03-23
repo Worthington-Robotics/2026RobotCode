@@ -89,14 +89,13 @@ public class ShotCalculator {
    * 
    * @param pose          The current field relative robot position
    * @param robotVelocity The current field relative robot velocity
-   * @param doOverRide    Whether to override the controls to prevent the robot
-   *                      form illegally shooting
+   * @param robotAcceleration The robot's field relative acceleration
    * @return The parameters required to make a shot into the hub with the current
    *         robot position and velocity
    */
-  public static ShootingParams getHubParams(Pose2d pose, ChassisSpeeds robotVelocity) {
+  public static ShootingParams getHubParams(Pose2d pose, ChassisSpeeds robotVelocity, ChassisSpeeds robotAcceleration) {
     Translation2d target = AllianceFlipUtil.apply(FieldConstants.hubPosition);
-    return getParams(pose, robotVelocity, target, true, true);
+    return getParams(pose, robotVelocity, robotAcceleration, target, true, true);
   }
 
   /***
@@ -104,8 +103,9 @@ public class ShotCalculator {
    * 
    * @param Pose          The robot's position
    * @param robotVelocity The robot's velocity
+   * @param robotAcceleration The robot's field relative acceleration
    */
-  public static ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity) {
+  public static ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity,  ChassisSpeeds robotAcceleration) {
     boolean isValid = true;
     Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
     Translation2d targetPose;
@@ -123,7 +123,7 @@ public class ShotCalculator {
     if (GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))) { // TODO make sure alliance flip for arrays is working correctly
       isValid = false;
     }
-    return getParams(pose, robotVelocity, targetPose, false, isValid);
+    return getParams(pose, robotVelocity, robotAcceleration, targetPose, false, isValid);
   }
 
   /***
@@ -131,10 +131,11 @@ public class ShotCalculator {
    * 
    * @param robotPose        The position of the robot
    * @param robotVelocity    The robot's velocity
+   * @param robotAcceleration The robot's field relative acceleration
    * @param target           The target of the shot
    * @param isValid          If the shot is a valid shot
    */
-  private static ShootingParams getParams(Pose2d robotPose, ChassisSpeeds robotVelocity, Translation2d target, boolean isHub, boolean isValid) {
+  private static ShootingParams getParams(Pose2d robotPose, ChassisSpeeds robotVelocity, ChassisSpeeds robotAcceleration, Translation2d target, boolean isHub, boolean isValid) {
     // Calculate the distance from the turret to the target
     Pose2d turretPosition = robotPose.transformBy(Constants.TurretShooterConstants.ROBOT_TO_TURRET);
     turretPosition.rotateAround(robotPose.getTranslation(), robotPose.getRotation());
@@ -155,6 +156,7 @@ public class ShotCalculator {
             * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * cos
                 - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * sin);
     Translation2d robotVelocityVector = new Translation2d(turretVelocityX, turretVelocityY);
+    robotVelocityVector = robotVelocityVector.plus(new Translation2d(robotAcceleration.vxMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR, robotAcceleration.vyMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR));
     Translation2d aimVector = new Translation2d(dx, dy);
     double dist_to_target = aimVector.getNorm();
 

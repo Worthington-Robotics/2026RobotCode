@@ -70,16 +70,16 @@ public class Superstructure extends SubsystemBase {
     //Publish values
     controlModePub.set(controlMode.toString());
     if (controlMode == SuperstructureControlMode.Disabled) {
-      currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+      currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
       turret.setTurretMode(TurretControlMode.Disabled);
       shooter.setShooterMode(ControlMode.Disabled);
     } else if (controlMode == SuperstructureControlMode.AutomaticShot) {
       //Calculate new params
       if (!drive.inOurAllianceZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
-        currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+        currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
         isPassing = true;
       } else {
-        currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+        currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
         isPassing = false;
       }
       //Apply params
