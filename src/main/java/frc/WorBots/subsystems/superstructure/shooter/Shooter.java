@@ -86,9 +86,9 @@ public class Shooter {
 
     // Set PID gains if ! in Sim
     if (!Constants.getSim()) {
-      leaderPIDController.setGains(0.04, 0, 0);
+      leaderPIDController.setGains(0.052, 0, 0);
       leaderPIDController.setConstraints(0, 0);
-      hoodPIDController.setGains(3, 0.0, 0);
+      hoodPIDController.setGains(5.8, 0.0, 0);
     }
     // When in Sim
     else {

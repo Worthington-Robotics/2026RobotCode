@@ -68,7 +68,7 @@ public class TagVision extends SubsystemBase {
           // TODO angle up is 30 degrees
           Units.degreesToRadians(0),
           Units.degreesToRadians(-30),
-          Units.degreesToRadians(90)));
+          Units.degreesToRadians(93)));
 
   // Transform for the outward-facing camera on the right
   private static final Transform3d RIGHT_CAMERA_TRANSFORM = new Transform3d(
@@ -79,7 +79,7 @@ public class TagVision extends SubsystemBase {
       new Rotation3d(
           Units.degreesToRadians(0),
           Units.degreesToRadians(-30),
-          Units.degreesToRadians(-95)));
+          Units.degreesToRadians(-93)));
 
   /** The transforms for the cameras to robot center */
   private static final Transform3d[] CAMERA_TRANSFORMS = new Transform3d[] { LEFT_CAMERA_TRANSFORM,

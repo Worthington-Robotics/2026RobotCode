@@ -14,7 +14,7 @@ public class Constants {
   //TODO figure out if we have all our GRs inverted
   //General Constants
   public static final boolean IS_COMP = false;
-  public static final boolean ENABLE_DEBUG_ROUTINES = false;
+  public static final boolean ENABLE_DEBUG_ROUTINES = true;
   public static final boolean getSim(){
     return Robot.isSimulation();
   }
@@ -108,7 +108,7 @@ public class Constants {
     public final static double TURRET_POSE_TOLERANCE = Units.degreesToRadians(0.5);
     public final static double TURRET_VEL_TOLERANCE = Units.degreesToRadians(5);
     public final static double HOOD_POS_TOLERANCE = Units.degreesToRadians(0.1);
-    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(20); //TODO should be 0
+    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(0); //TODO should be 0
 
     //Ready to shoot tolerances
     //TODO set real numbers
@@ -124,8 +124,8 @@ public class Constants {
     public final static double HOOD_STATIC_FEEDFORWARD_VOLTAGE = .22;
 
     // Shot calculator constant
-    public final static double SHOT_CALC_PARA_VEL_GAIN_TOWARDS = -0.7;
-    public final static double SHOT_CALC_PARA_VEL_GAIN_AWAY = -0.9;
+    public final static double SHOT_CALC_PARA_VEL_GAIN_TOWARDS = -1.07;
+    public final static double SHOT_CALC_PARA_VEL_GAIN_AWAY = -2.0; //-1.5 worked decent at 1m/s
     public final static double SHOT_CALC_PERP_VEL_A_GAIN = 1.1;
     public final static double SHOT_CALC_PERP_VEL_B_GAIN = 2.0;
 

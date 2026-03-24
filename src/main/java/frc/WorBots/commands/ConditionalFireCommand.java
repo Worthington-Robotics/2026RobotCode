@@ -37,7 +37,7 @@ public class ConditionalFireCommand extends Command {
   public void execute() {
     // Lowers drive max speed and if we are ready to fire fires
     if(!superstructure.isPassing()){
-      drive.setDriveMaxSpeed(Constants.DriveConstants.DRIVE_MAX_VELOCITY / 2);
+      //drive.setDriveMaxSpeed(Constants.DriveConstants.DRIVE_MAX_VELOCITY / 2);
     }
     if (FireController.getInstance().readyToFire()) {
       spin.runSpindexerVoltage(voltage);
@@ -49,7 +49,7 @@ public class ConditionalFireCommand extends Command {
   @Override
   public void end(boolean interupted) {
     spin.stopSpindexer();
-    drive.setDriveMaxSpeed(Constants.DriveConstants.DRIVE_MAX_VELOCITY);
+    //drive.setDriveMaxSpeed(Constants.DriveConstants.DRIVE_MAX_VELOCITY);
   }
 
   @Override
