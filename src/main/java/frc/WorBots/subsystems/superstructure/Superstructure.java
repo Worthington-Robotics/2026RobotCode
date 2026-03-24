@@ -74,6 +74,7 @@ public class Superstructure extends SubsystemBase {
       turret.setTurretMode(TurretControlMode.Disabled);
       shooter.setShooterMode(ControlMode.Disabled);
     } else if (controlMode == SuperstructureControlMode.AutomaticShot) {
+      Lights.getInstance().setManualShooting(false);
       //Calculate new params
       if (!drive.inOurAllianceZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
         currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
@@ -88,6 +89,7 @@ public class Superstructure extends SubsystemBase {
       shooter.setHoodPose(currentShootingParams.hoodAngle());
       turret.setPosition(currentShootingParams, drive.getPose());
     } else if (controlMode == SuperstructureControlMode.ManualShot) {
+      Lights.getInstance().setManualShooting(true);
       //Apply params
       shotValid = currentShootingParams.isValid();
       shooter.setFlywheelSpeed(currentShootingParams.flywheelspeed());
