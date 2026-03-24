@@ -91,8 +91,6 @@ public class FireController {
       Lights.getInstance().setTarget(LightsTarget.Pass);
     }
 
-    //System.out.println(drive.inRedZone());
-
     Lights.getInstance().runEffect(LightEffects.invalidShotFlash);
     return output;
   }
