@@ -503,6 +503,6 @@ public class Drive extends SubsystemBase {
    * Returns the robot's field relative acceleration
    */
   public ChassisSpeeds getAcceleration(){
-    return measuredSpeeds.minus(lastMeasuredSpeeds);
+    return measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
   }
 }
