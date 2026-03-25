@@ -58,7 +58,7 @@ public class Constants {
     */
     public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
-    public static final double GYRO_LOCK_KP = 1.0;
+    public static final double GYRO_LOCK_KP = 1.5;
   }
 
   /**Spindexer Constants*/
@@ -105,7 +105,7 @@ public class Constants {
     public static final double TURRET_MAX_VOLTAGE = 7.0;
 
     //PID tolerances
-    public final static double TURRET_POSE_TOLERANCE = Units.degreesToRadians(0.5);
+    public final static double TURRET_POSE_TOLERANCE = Units.degreesToRadians(0.35);
     public final static double TURRET_VEL_TOLERANCE = Units.degreesToRadians(5);
     public final static double HOOD_POS_TOLERANCE = Units.degreesToRadians(0.1);
     public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(0); //TODO should be 0
@@ -131,7 +131,9 @@ public class Constants {
 
     public final static double SHOT_CALC_PERP_VEL_RANGE_GAIN = 1.0;
 
-    public final static double ACCELERATION_FACTOR = 0.25; //How many seconds of acceleration to apply to velocity in shot calculation. Should probably be about the time we expect systems to take to respond
+    public final static double ACCELERATION_FACTOR = 0.0; //How many seconds of acceleration to apply to velocity in shot calculation. Should probably be about the time we expect systems to take to respond
+      //0.15
+
 
     //Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 146,0);

@@ -4,8 +4,10 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.Constants;
 import frc.WorBots.RobotContainer;
@@ -22,6 +24,7 @@ public class DriveWithJoysticks extends Command {
   private final Supplier<Boolean> lockGyroSupplier;
   private boolean gyroLockActive = false;
   private double gyroLockSetpoint;
+  private PIDController gyroLockPid;
 
   /**
    * The main teleop drive command. Controls the robot with joystick input
@@ -43,6 +46,8 @@ public class DriveWithJoysticks extends Command {
     this.rightXSupplier = rightXSupplier;
     this.slowSupplier = slowSupplier;
     this.lockGyroSupplier = lockGyroSupplier;
+    gyroLockPid = new PIDController(Constants.DriveConstants.GYRO_LOCK_KP, 0, 0);
+    gyroLockPid.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override
@@ -58,13 +63,14 @@ public class DriveWithJoysticks extends Command {
     if(lockGyroSupplier.get()){
       if(!gyroLockActive){
         gyroLockActive = true;
-        if(Math.abs(drive.getYaw().getRadians()) < Units.degreesToRadians(90)){
+        
+        if(Math.abs(MathUtil.angleModulus(drive.getYaw().getRadians())) < Units.degreesToRadians(90)){
           gyroLockSetpoint = 0;
         } else {
           gyroLockSetpoint = Math.PI;
         }
       }
-      rightX = MathUtil.clamp((gyroLockSetpoint - drive.getYaw().getRadians()) * Constants.DriveConstants.GYRO_LOCK_KP, -0.5, 0.5);
+      rightX = MathUtil.clamp(gyroLockPid.calculate(MathUtil.angleModulus(drive.getYaw().getRadians()), gyroLockSetpoint), -1, 1);
     } else{
       gyroLockActive = false;
     }

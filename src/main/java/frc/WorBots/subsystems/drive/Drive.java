@@ -502,6 +502,8 @@ public class Drive extends SubsystemBase {
    */
   public ChassisSpeeds getAcceleration(){
     if(gyroIOInputs.connected){
+      SmartDashboard.putNumber("Gyro accel x", gyroIOInputs.xAcceleration);
+      SmartDashboard.putNumber("Gyro accel y", gyroIOInputs.yAcceleration);
       return ChassisSpeeds.fromRobotRelativeSpeeds(new ChassisSpeeds(gyroIOInputs.xAcceleration, gyroIOInputs.yAcceleration, 0), getYaw());
     } else {
       return new ChassisSpeeds();

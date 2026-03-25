@@ -42,7 +42,7 @@ public class ConditionalFireCommand extends Command {
     if (FireController.getInstance().readyToFire()) {
       spin.runSpindexerVoltage(voltage);
     } else {
-      spin.runSpindexerVoltage(0);
+      // spin.runSpindexerVoltage(0);
     }
   }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -19,6 +20,7 @@ import frc.WorBots.Constants;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.superstructure.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.math.GeneralMath;
 
 public class Turret {
@@ -45,8 +47,10 @@ public class Turret {
   private TurretControlMode controlMode = TurretControlMode.Disabled;
 
   private Constraints turretConstraints = new Constraints((8 * Math.PI), (12 * Math.PI));
-  /// p 3.3 d 0.1 //7.1, 0, 0.3
-  private ProfiledPIDController turretFeedBack = new ProfiledPIDController(15, 0, 0.3, turretConstraints);
+  /// p 15 d 0 I 0.3, 0, 0.3  //4, 0, 0.3
+  private ProfiledPIDController turretFeedBack = new ProfiledPIDController(5.25, 0.00, 0.1, turretConstraints);
+  private SimpleMotorFeedforward turretFeedforward = new SimpleMotorFeedforward(0.33, 1.1);
+  
 
   public enum TurretControlMode {
     Disabled,
@@ -91,13 +95,15 @@ public class Turret {
       if (controlMode == TurretControlMode.Position) {
         turretFeedBack.setGoal(new TrapezoidProfile.State(goalPosition, goalVelocity));
         double feedback = turretFeedBack.calculate(inputs.turretFusedAngle);
+        double feedforward = turretFeedforward.calculate(turretFeedBack.getSetpoint().velocity);
 
-        if (!turretFeedBack.atSetpoint()) {
-          final double KS = (inputs.turretFusedAngle < goalPosition) ? 0.33 : -0.33;
-          feedback += KS;
-        }
+        // if (!turretFeedBack.atSetpoint()) {
+        //   final double KS = (inputs.turretFusedAngle < goalPosition) ? 0.33 : -0.33;
+        //   feedback += KS;
+        // }
 
-        double volts = feedback; // + feedforward;
+        double volts = feedback + feedforward; // + feedforward;
+        SmartDashboard.putNumber("Turret Velocity", turretFeedBack.getSetpoint().velocity);
 
         volts = MathUtil.clamp(volts, Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE,
             Constants.TurretShooterConstants.TURRET_MAX_VOLTAGE);
@@ -109,7 +115,6 @@ public class Turret {
 
         requestedVoltagePub.set(volts);
       }
-
     }
 
     absConnectedPub.set(inputs.absEncoderConnected);

@@ -60,10 +60,6 @@ public class ShotCalculator {
       { 5.475, 0.233, 232, 1.4}, //New
       };
 
-      double[][] potato = {{2.378, 0.079, 171, 1.2},
-      {4.23, 0.198, 200, 1.3},
-      {}};
-
     // Stored as distance (m), hood angle (radians), flywheel speed (Rads/sec), time of
     // flight (sec)
     //TODO actually find this, just using hub right now

@@ -24,7 +24,7 @@ public class SpindexerIOTalon implements SpindexerIO{
 
   public SpindexerIOTalon(){
     talon.setNeutralMode(NeutralModeValue.Coast);
-    kicker.setNeutralMode(NeutralModeValue.Brake);
+    kicker.setNeutralMode(NeutralModeValue.Coast);
     kicker.setControl(new Follower(CanIDs.SuperStructure.SPINDEXER_ID, MotorAlignmentValue.Aligned));
     kicker.setPosition(0);
     talon.setPosition(0);

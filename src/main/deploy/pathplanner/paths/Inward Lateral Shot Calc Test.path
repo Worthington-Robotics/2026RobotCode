@@ -35,7 +35,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 2.75,
         "maxAcceleration": 12.192,
         "maxAngularVelocity": 720.0,
         "maxAngularAcceleration": 3000.0,
@@ -47,15 +47,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Use the Force",
+      "name": "Sustained Fire",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Dracarys!",
-      "waypointRelativePos": 0.2511870845204191,
-      "endWaypointRelativePos": 0.7488129154795818,
       "command": null
     }
   ],
