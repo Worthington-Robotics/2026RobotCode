@@ -10,8 +10,6 @@ public interface GyroIO {
     public double yawPositionRad = 0.0;
     public double yawVelocityRadPerSec = 0.0;
     public ArrayList<Double> yawPositionUpdates = new ArrayList<>();
-    public double xAcceleration = 0.0;
-    public double yAcceleration = 0.0;
   }
 
   /**

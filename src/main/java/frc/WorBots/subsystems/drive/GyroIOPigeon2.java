@@ -57,9 +57,7 @@ public class GyroIOPigeon2 implements GyroIO {
     }
 
     inputs.yawVelocityRadPerSec =
-        yawVelSignal.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond);
-    inputs.xAcceleration = -accelSignalX.refresh().getValueAsDouble();
-    inputs.yAcceleration = -accelSignalY.refresh().getValueAsDouble();
+        yawVelSignal.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond); 
   }
 
   @Override
