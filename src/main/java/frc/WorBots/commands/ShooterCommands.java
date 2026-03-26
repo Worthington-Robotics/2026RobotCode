@@ -48,7 +48,7 @@ public class ShooterCommands {
    */
   public Command forceFeedShooter(Spindexer spin) {
     return spin.runEnd(() -> {
-      spin.runSpindexerVoltage(Constants.SpindexerConstants.SPINDEXER_VOLTAGE);
+      spin.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY, Constants.SpindexerConstants.KICKER_VELOCITY);
     }, () -> {
       spin.stopSpindexer();
     });

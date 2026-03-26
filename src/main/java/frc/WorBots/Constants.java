@@ -64,10 +64,13 @@ public class Constants {
   /**Spindexer Constants*/
   public class SpindexerConstants{
     public static final double SPINDEXER_VOLTAGE = 9;
+
+    public static final double SPINDEXER_VELOCITY = 6.0;
+    public static final double KICKER_VELOCITY = 6.0;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
-    public static final double SPINDEXER_GEAR_RATIO = 1.0/3.0;
-    public static final double KICKER_GEAR_RATIO = 1.0; //TODO set
+    public static final double SPINDEXER_GEAR_RATIO = 6.0;
+    public static final double KICKER_GEAR_RATIO = 3.0; 
 
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
     public static final double SPINDEXER_KS = 1;
