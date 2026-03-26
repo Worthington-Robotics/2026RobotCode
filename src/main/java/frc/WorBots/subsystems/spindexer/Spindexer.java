@@ -1,5 +1,6 @@
 package frc.WorBots.subsystems.spindexer;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 
 public class Spindexer extends SubsystemBase{
@@ -21,6 +23,10 @@ public class Spindexer extends SubsystemBase{
 
   private TunableProfiledPIDController spinPid = new TunableProfiledPIDController("Spindexer", "Spin PID", Constants.SpindexerConstants.SPINDEXER_KP, Constants.SpindexerConstants.SPINDEXER_KI, Constants.SpindexerConstants.SPINDEXER_KD, Constants.SpindexerConstants.SPINDEXER_MAX_VEL, Constants.SpindexerConstants.SPINDEXER_MAX_ACCEL);
   private TunableProfiledPIDController kickerPid = new TunableProfiledPIDController("Spindexer", "Kicker PID", Constants.SpindexerConstants.KICKER_KP, Constants.SpindexerConstants.KICKER_KI, Constants.SpindexerConstants.KICKER_KD, Constants.SpindexerConstants.KICKER_MAX_VEL, Constants.SpindexerConstants.KICKER_MAX_ACCEL);
+  private TunableDouble kickerKs = new TunableDouble("Spindexer", "Tuning", "Kicker Ks");
+  private TunableDouble kickerKv = new TunableDouble("Spindexer", "Tuning", "Kicker Kv");
+  private SimpleMotorFeedforward kickerFeedforward = new SimpleMotorFeedforward(Constants.SpindexerConstants.KICKER_KS, Constants.SpindexerConstants.KICKER_KV);
+  private SimpleMotorFeedforward spinFeedforward = new SimpleMotorFeedforward(Constants.SpindexerConstants.SPIN_KS, Constants.SpindexerConstants.SPIN_KV);
 
   private enum ControlMode{
     Disabled,
@@ -53,6 +59,8 @@ public class Spindexer extends SubsystemBase{
   public void periodic(){
     spinPid.update();
     kickerPid.update();
+    kickerFeedforward.setKs(kickerKs.get());
+    kickerFeedforward.setKv(kickerKv.get());
 
     io.updateInputs(inputs);
     StatusPage.reportStatus(StatusPage.SPINDEXER_SUBSYSTEM, inputs.talon.isConnected && inputs.follower.isConnected);
@@ -70,8 +78,10 @@ public class Spindexer extends SubsystemBase{
       io.setSpinVoltage(goalVoltage);
       io.setKickerVoltage(goalVoltage);
     } else {
-      io.setKickerVoltage(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity));
-      io.setSpinVoltage(spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity));
+      double kickerFeedback = kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity);
+      double spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
+      io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(spinPid.pid.getSetpoint().position));
+      io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinPid.pid.getSetpoint().position));
     }
 
     activePublisher.set(inputs.active);
@@ -98,7 +108,9 @@ public class Spindexer extends SubsystemBase{
 
   public void stopSpindexer(){
     io.stop();
-    runSpindexerVoltage(0);;
+    runSpindexerVoltage(0);
+    spinGoalVelocity = 0;
+    kickerGoalVelocity = 0;
   }
 
   public void toggleOverrideJam(){
