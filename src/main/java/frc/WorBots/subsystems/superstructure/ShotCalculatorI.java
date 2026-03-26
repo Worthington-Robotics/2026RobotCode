@@ -60,16 +60,27 @@ public class ShotCalculatorI {
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of
     // flight (sec)
     double[][] scoringData = {
-      { Units.inchesToMeters(55), 0, 146, 1},
-      { 1.341, 0.0, 167.65, 1.08}, //new TIF
+      // { Units.inchesToMeters(55), 0, 146, 1},
+      { 1.341, 0.0, 167.65, 1.08}, //new TIF //TODO possibly change
+      {1.64, 0.020, 154.3, 1.05}, //Newer
+      {1.828, 0.0355, 158, 1.10},
       { 2.046, 0.0534, 167.95, 1.231}, //New TIF
-      { 2.378, 0.079, 171, 1.329}, //New TIF
+      { 2.371, 0.0534, 168, 1.23}, //Newer TIF 
+      { 2.62, 0.0932, 178.3, 1.25}, //Newer
       { 2.972, 0.114028, 179, 1.23}, //New TIF
-      { 3.506, 0.1533, 191.9, 1.30}, //New TIF
-      { 3.989, 0.185881, 197.558, 1.403}, //New TIF 
+      { 3.29, 0.1227, 184.7, 1.29}, //Newer
+      { 3.506, 0.1533, 191.9, 1.30},//New TIF
+      {3.740, 0.169, 102, 1.30},
+      { 3.989, 0.185881, 197.558, 1.30}, //Newer TIF  
+      {4.237, 0.190, 201, 1.33},
+      {4.24, 0.210, 209, 1.34},
+      {Units.inchesToMeters(182), 0.225, 205, 1.37},
+      {4.4464, 0.194, 208, 1.35}, //Newer TIF
       { 4.595, 0.2102, 207.158, 1.374}, //new TIF
+      {Units.inchesToMeters(214), 0.227, 230, 1.75}, //Look at TIF
       { 5.074, 0.23784, 221.2, 1.36}, //New TIF
       { 5.475, 0.233, 232, 1.38}, //New
+      {Units.inchesToMeters(241), 0.283, 234,  }
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of
@@ -195,12 +206,12 @@ public class ShotCalculatorI {
           + robotVelocity.omegaRadiansPerSecond
               * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * cos
                   - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * sin) +
-                    phaseDelay * Constants.TurretShooterConstants.ACCELERATION_FACTOR;
+                    robotAcceleration.vxMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR;
       turretVelocityY = robotVelocity.vyMetersPerSecond
           + robotVelocity.omegaRadiansPerSecond
               * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * cos
                   - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * sin)+
-                    phaseDelay * Constants.TurretShooterConstants.ACCELERATION_FACTOR;
+                    robotAcceleration.vyMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR;
     }
     SmartDashboard.putNumber("ShotCalc/Velocity X", turretVelocityX);
     SmartDashboard.putNumber("ShotCalc/Velocity Y", turretVelocityY);
