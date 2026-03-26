@@ -20,12 +20,12 @@ public class SpindexerIOTalon implements SpindexerIO{
   private TalonSignalsPositional spinSignal = new TalonSignalsPositional(talon);
   private TalonSignals kickerSignal = new TalonSignals(kicker);
 
-  private double voltage = 0.0;
+  private double spinVoltage = 0.0;
+  private double kickerVoltage = 0.0;
 
   public SpindexerIOTalon(){
     talon.setNeutralMode(NeutralModeValue.Coast);
     kicker.setNeutralMode(NeutralModeValue.Coast);
-    kicker.setControl(new Follower(CanIDs.SuperStructure.SPINDEXER_ID, MotorAlignmentValue.Aligned));
     kicker.setPosition(0);
     talon.setPosition(0);
   }
@@ -36,20 +36,28 @@ public class SpindexerIOTalon implements SpindexerIO{
     inputs.jammed = isJammed();
     //Modifies the talons output velocity to be in radians and be the spindexers velocity
     inputs.spinVelocity = talon.getVelocity().getValueAsDouble() * 2 * Math.PI * Constants.SpindexerConstants.SPINDEXER_GEAR_RATIO;
+    inputs.kickerVelocity = kicker.getVelocity().getValueAsDouble() * 2 * Math.PI * Constants.SpindexerConstants.KICKER_GEAR_RATIO;
     spinSignal.update(inputs.talon, talon);
     kickerSignal.update(inputs.follower, kicker);
 
   }
 
   @Override
-  public void setVoltage(double volts){
-    this.voltage = volts;
-    talon.setVoltage(voltage);
+  public void setSpinVoltage(double volts){
+    this.spinVoltage = volts;
+    talon.setVoltage(spinVoltage);
+  }
+
+  @Override
+  public void setKickerVoltage(double volts){
+    this.kickerVoltage = volts;
+    kicker.setVoltage(kickerVoltage);
   }
 
   @Override
   public void stop(){
-    setVoltage(0);
+    setSpinVoltage(0);
+    setKickerVoltage(0);
   }
 
   private boolean isActive(){

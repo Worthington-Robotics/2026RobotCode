@@ -70,17 +70,17 @@ public class ShotCalculatorI {
       { 2.972, 0.114028, 179, 1.23}, //New TIF
       { 3.29, 0.1227, 184.7, 1.29}, //Newer
       { 3.506, 0.1533, 191.9, 1.30},//New TIF
-      {3.740, 0.169, 102, 1.30},
+      // {3.740, 0.169, 102, 1.30}, TODO look at flywheel speed
       { 3.989, 0.185881, 197.558, 1.30}, //Newer TIF  
       {4.237, 0.190, 201, 1.33},
       {4.24, 0.210, 209, 1.34},
       {Units.inchesToMeters(182), 0.225, 205, 1.37},
       {4.4464, 0.194, 208, 1.35}, //Newer TIF
       { 4.595, 0.2102, 207.158, 1.374}, //new TIF
-      {Units.inchesToMeters(214), 0.227, 230, 1.75}, //Look at TIF
+      // {Units.inchesToMeters(214), 0.227, 230, 1.75}, //TODO Look at TIF
       { 5.074, 0.23784, 221.2, 1.36}, //New TIF
       { 5.475, 0.233, 232, 1.38}, //New
-      {Units.inchesToMeters(241), 0.283, 234,  }
+      // {Units.inchesToMeters(241), 0.283, 234,  } //TODO missing TIF
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of

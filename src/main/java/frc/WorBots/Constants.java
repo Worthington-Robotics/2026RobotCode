@@ -66,7 +66,9 @@ public class Constants {
     public static final double SPINDEXER_VOLTAGE = 9;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
-    public static final double SPINDEXER_GEAR_RATIO = 1;
+    public static final double SPINDEXER_GEAR_RATIO = 1.0/3.0;
+    public static final double KICKER_GEAR_RATIO = 1.0; //TODO set
+
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
     public static final double SPINDEXER_KS = 1;
     public static final double SPINDEXER_KV = 1;
@@ -76,6 +78,18 @@ public class Constants {
     public static final double KICKER_CURRENT_LIMIT = 40;
     //PID Tolerance
     public static final double SPINDEXER_VEL_TOLERANCE = Units.degreesToRadians(30);
+
+    public static final double SPINDEXER_KP = 0.0;
+    public static final double SPINDEXER_KI = 0.0;
+    public static final double SPINDEXER_KD = 0.0;
+    public static final double SPINDEXER_MAX_ACCEL = 0.0;
+    public static final double SPINDEXER_MAX_VEL = 0.0;
+
+    public static final double KICKER_KP = 0.0;
+    public static final double KICKER_KI = 0.0;
+    public static final double KICKER_KD = 0.0;
+    public static final double KICKER_MAX_VEL = 0.0;
+    public static final double KICKER_MAX_ACCEL = 0.0;
   }
 
   /**Turret and Shooter Constants*/

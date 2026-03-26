@@ -9,17 +9,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 
 public class Spindexer extends SubsystemBase{
   SpindexerIO io;
   SpindexerIOInputs inputs = new SpindexerIOInputs();
-  private double goalVelocity;
+  private double spinGoalVelocity;
+  private double kickerGoalVelocity;
   private double goalVoltage;
   private boolean override = false;
 
+  private TunableProfiledPIDController spinPid = new TunableProfiledPIDController("Spindexer", "Spin PID", Constants.SpindexerConstants.SPINDEXER_KP, Constants.SpindexerConstants.SPINDEXER_KI, Constants.SpindexerConstants.SPINDEXER_KD, Constants.SpindexerConstants.SPINDEXER_MAX_VEL, Constants.SpindexerConstants.SPINDEXER_MAX_ACCEL);
+  private TunableProfiledPIDController kickerPid = new TunableProfiledPIDController("Spindexer", "Kicker PID", Constants.SpindexerConstants.KICKER_KP, Constants.SpindexerConstants.KICKER_KI, Constants.SpindexerConstants.KICKER_KD, Constants.SpindexerConstants.KICKER_MAX_VEL, Constants.SpindexerConstants.KICKER_MAX_ACCEL);
+
   private enum ControlMode{
     Disabled,
-    Voltage
+    Voltage,
+    Velocity
   }
 
   private ControlMode controlMode = ControlMode.Disabled;
@@ -32,8 +38,10 @@ public class Spindexer extends SubsystemBase{
   private final BooleanPublisher jammedPublisher = spinTable.getBooleanTopic("Jammed").publish();
   private final BooleanPublisher overridePublisher = spinTable.getBooleanTopic("Overrided").publish();
   private final BooleanPublisher connectionPublisher = spinTable.getBooleanTopic("Connected").publish();
-  private final DoublePublisher velocityPublisher = spinTable.getDoubleTopic("Rotational Velocity").publish();
-  private final DoublePublisher goalVelocityPublisher = spinTable.getDoubleTopic("Goal Rotational Velocity").publish();
+  private final DoublePublisher velocityPublisher = spinTable.getDoubleTopic("Spindexer Rotational Velocity").publish();
+  private final DoublePublisher kickerVelocityPublisher = spinTable.getDoubleTopic("Kicker Rotational Velocity").publish();
+  private final DoublePublisher spinGoalVelocityPublisher = spinTable.getDoubleTopic("Spindexer Goal Rotational Velocity").publish();
+  private final DoublePublisher kickerGoalVelocityPublisher = spinTable.getDoubleTopic("Kicker Goal Rotational Velocity").publish();
   private final DoublePublisher voltagePublisher = spinTable.getDoubleTopic("Voltage").publish();
   private final DoublePublisher currentPublisher = spinTable.getDoubleTopic("Current").publish();
   private final DoublePublisher temperaturePublisher = spinTable.getDoubleTopic("Temperature").publish();
@@ -43,6 +51,9 @@ public class Spindexer extends SubsystemBase{
   }
     
   public void periodic(){
+    spinPid.update();
+    kickerPid.update();
+
     io.updateInputs(inputs);
     StatusPage.reportStatus(StatusPage.SPINDEXER_SUBSYSTEM, inputs.talon.isConnected && inputs.follower.isConnected);
     StatusPage.reportStatus(StatusPage.SPINDEXER_JAM, isJammed());
@@ -51,18 +62,25 @@ public class Spindexer extends SubsystemBase{
     }
     //TODO add something to try to resolve jamming
     if(controlMode == ControlMode.Disabled){
-      goalVelocity = 0;
+      spinGoalVelocity = 0;
+      kickerGoalVelocity = 0;
       goalVoltage = 0;
       io.stop();
+    } else  if (controlMode == ControlMode.Voltage){
+      io.setSpinVoltage(goalVoltage);
+      io.setKickerVoltage(goalVoltage);
     } else {
-      io.setVoltage(goalVoltage);
+      io.setKickerVoltage(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity));
+      io.setSpinVoltage(spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity));
     }
 
     activePublisher.set(inputs.active);
     jammedPublisher.set(inputs.jammed);
     overridePublisher.set(override);
-    velocityPublisher.set(inputs.talon.velocityRadsPerSec);
-    goalVelocityPublisher.set(goalVelocity);
+    velocityPublisher.set(inputs.spinVelocity);
+    kickerVelocityPublisher.set(inputs.kickerVelocity);
+    spinGoalVelocityPublisher.set(spinGoalVelocity);
+    kickerGoalVelocityPublisher.set(kickerGoalVelocity);
     voltagePublisher.set(inputs.talon.supplyVoltage);
     currentPublisher.set(inputs.talon.currentDrawAmps);
     temperaturePublisher.set(inputs.talon.temperatureCelsius);
@@ -110,5 +128,11 @@ public class Spindexer extends SubsystemBase{
 
   public void setContolMode(ControlMode controlmode){
     this.controlMode = controlmode;
+  }
+
+  public void setVelocity(double spinVelocity, double kickerVelocity){
+    controlMode = ControlMode.Velocity;
+    spinGoalVelocity = spinVelocity;
+    kickerGoalVelocity = kickerVelocity;
   }
 }

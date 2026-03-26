@@ -8,13 +8,16 @@ public interface SpindexerIO {
         TalonInputsPositional talon = new TalonInputsPositional("Spindexer", "Lead Signals");
         TalonInputs follower = new TalonInputs("Spindexer", "Follower Signals");
         public double spinVelocity = 0;
+        public double kickerVelocity = 0;
         public boolean active = false;
         public boolean jammed = false;
     }
 
     public default void updateInputs(SpindexerIOInputs inputs){}
 
-    public default void setVoltage(double volts){}
+    public default void setKickerVoltage(double volts){}
+
+    public default void setSpinVoltage(double volts){}
 
     public default void stop(){}
 }
