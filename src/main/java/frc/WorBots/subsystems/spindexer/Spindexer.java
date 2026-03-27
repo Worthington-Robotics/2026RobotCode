@@ -1,16 +1,19 @@
 package frc.WorBots.subsystems.spindexer;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunableDouble;
+import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 
 public class Spindexer extends SubsystemBase{
@@ -21,10 +24,8 @@ public class Spindexer extends SubsystemBase{
   private double goalVoltage;
   private boolean override = false;
 
-  private TunableProfiledPIDController spinPid = new TunableProfiledPIDController("Spindexer", "Spin PID", Constants.SpindexerConstants.SPINDEXER_KP, Constants.SpindexerConstants.SPINDEXER_KI, Constants.SpindexerConstants.SPINDEXER_KD, Constants.SpindexerConstants.SPINDEXER_MAX_VEL, Constants.SpindexerConstants.SPINDEXER_MAX_ACCEL);
-  private TunableProfiledPIDController kickerPid = new TunableProfiledPIDController("Spindexer", "Kicker PID", Constants.SpindexerConstants.KICKER_KP, Constants.SpindexerConstants.KICKER_KI, Constants.SpindexerConstants.KICKER_KD, Constants.SpindexerConstants.KICKER_MAX_VEL, Constants.SpindexerConstants.KICKER_MAX_ACCEL);
-  private TunableDouble kickerKs = new TunableDouble("Spindexer", "Tuning", "Kicker Ks");
-  private TunableDouble kickerKv = new TunableDouble("Spindexer", "Tuning", "Kicker Kv");
+  private TunablePIDController spinPid = new TunablePIDController("Spindexer", "Spin PID", Constants.SpindexerConstants.SPINDEXER_KP, Constants.SpindexerConstants.SPINDEXER_KI, Constants.SpindexerConstants.SPINDEXER_KD);
+  private TunablePIDController kickerPid = new TunablePIDController("Spindexer", "Kicker PID", Constants.SpindexerConstants.KICKER_KP, Constants.SpindexerConstants.KICKER_KI, Constants.SpindexerConstants.KICKER_KD);
   private SimpleMotorFeedforward kickerFeedforward = new SimpleMotorFeedforward(Constants.SpindexerConstants.KICKER_KS, Constants.SpindexerConstants.KICKER_KV);
   private SimpleMotorFeedforward spinFeedforward = new SimpleMotorFeedforward(Constants.SpindexerConstants.SPIN_KS, Constants.SpindexerConstants.SPIN_KV);
 
@@ -54,13 +55,12 @@ public class Spindexer extends SubsystemBase{
 
   public Spindexer(SpindexerIO spindexerIo){
     io = spindexerIo;
+    spinPid.pid.setTolerance(Constants.SpindexerConstants.SPINDEXER_VEL_TOLERANCE);
   }
     
   public void periodic(){
     spinPid.update();
     kickerPid.update();
-    kickerFeedforward.setKs(kickerKs.get());
-    kickerFeedforward.setKv(kickerKv.get());
 
     io.updateInputs(inputs);
     StatusPage.reportStatus(StatusPage.SPINDEXER_SUBSYSTEM, inputs.talon.isConnected && inputs.follower.isConnected);
@@ -78,10 +78,10 @@ public class Spindexer extends SubsystemBase{
       io.setSpinVoltage(goalVoltage);
       io.setKickerVoltage(goalVoltage);
     } else {
-      double kickerFeedback = kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity);
+      double kickerFeedback = MathUtil.clamp(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity),0,12);
       double spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
-      io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(spinPid.pid.getSetpoint().position));
-      io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinPid.pid.getSetpoint().position));
+      io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
+      io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinGoalVelocity));
     }
 
     activePublisher.set(inputs.active);

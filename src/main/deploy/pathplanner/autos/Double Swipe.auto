@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Traverse Top Trench from Start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "First Swipe"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top Bump"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top Reset"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Traverse Top Full Trench from Start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Second Swipe"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top Bump"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Sustained Fire"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

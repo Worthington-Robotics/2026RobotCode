@@ -65,39 +65,38 @@ public class Constants {
   public class SpindexerConstants{
     public static final double SPINDEXER_VOLTAGE = 9;
 
-    public static final double SPINDEXER_VELOCITY = 60.0;
-    public static final double KICKER_VELOCITY = 60.0;
+    public static final double SPINDEXER_VELOCITY = 90.0;
+    public static final double KICKER_VELOCITY = 180.0;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;
     public static final double KICKER_GEAR_RATIO = 1/ 3.0; 
 
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
-    public static final double SPINDEXER_KS = 1;
-    public static final double SPINDEXER_KV = 1;
     public static final double SPINDEXER_STALL_CURRENT = 40;
     public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
     public static final double SPINDEXER_CURRENT_LIMIT = 40;
     public static final double KICKER_CURRENT_LIMIT = 40;
     //PID Tolerance
-    public static final double SPINDEXER_VEL_TOLERANCE = Units.degreesToRadians(30);
 
     public static final double SPINDEXER_KP = 0.0;
     public static final double SPINDEXER_KI = 0.0;
     public static final double SPINDEXER_KD = 0.0;
-    public static final double SPINDEXER_MAX_ACCEL = 4.0 * SPINDEXER_VELOCITY;
-    public static final double SPINDEXER_MAX_VEL = SPINDEXER_VELOCITY;
+    public static final double SPINDEXER_MAX_ACCEL = 20.0 * SPINDEXER_VELOCITY;
+    public static final double SPINDEXER_MAX_VEL = SPINDEXER_VELOCITY * 1.1;
+
+    public static final double SPINDEXER_VEL_TOLERANCE = 5;
 
     public static final double KICKER_KP = 0.0;
     public static final double KICKER_KI = 0.0;
     public static final double KICKER_KD = 0.0;
-    public static final double KICKER_MAX_VEL = KICKER_VELOCITY;
-    public static final double KICKER_MAX_ACCEL = 8.0 * KICKER_VELOCITY;
+    public static final double KICKER_MAX_VEL = KICKER_VELOCITY * 1.1;
+    public static final double KICKER_MAX_ACCEL = 20.0 * KICKER_VELOCITY;
 
     public static final double SPIN_KS = 0.19;
-    public static final double KICKER_KS = 0.0;
-    public static final double SPIN_KV = 0.0;
-    public static final double KICKER_KV = 0.1075;
+    public static final double SPIN_KV = 0.1075;
+    public static final double KICKER_KS = 0.175;
+    public static final double KICKER_KV = 0.0565 * 1.175;
   }
 
   /**Turret and Shooter Constants*/

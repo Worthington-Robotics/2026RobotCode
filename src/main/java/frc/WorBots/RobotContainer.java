@@ -242,7 +242,7 @@ public class RobotContainer {
     new EventTrigger("Dude Chill").onTrue(new PathplannerIntakeCommands().stopIntakeAuto(intake));
     new EventTrigger("Hit The Deck").whileTrue(new ShooterCommands().hoodDown(superstructure));
     new EventTrigger("Deploy Intake").onTrue(new IntakeCommands().extend(intake));
-    new EventTrigger("Retract Intake").onTrue(new IntakeCommands().retract(intake));
+    new EventTrigger("Retract Intake").onTrue(new IntakeCommands().agitate(intake));
     new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Use the Force").onTrue(new StartAutoAim(superstructure));
 

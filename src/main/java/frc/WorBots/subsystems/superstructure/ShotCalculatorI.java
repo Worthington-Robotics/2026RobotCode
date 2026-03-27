@@ -61,7 +61,7 @@ public class ShotCalculatorI {
     // flight (sec)
     double[][] scoringData = {
       // { Units.inchesToMeters(55), 0, 146, 1},
-      { 1.341, 0.0, 167.65, 1.08}, //new TIF //TODO possibly change
+      { 1.341, 0.0, 167.65, 1.08}, //new TIF 
       {1.64, 0.020, 154.3, 1.05}, //Newer
       {1.828, 0.0355, 158, 1.10},
       { 2.046, 0.0534, 167.95, 1.231}, //New TIF
@@ -70,17 +70,17 @@ public class ShotCalculatorI {
       { 2.972, 0.114028, 179, 1.23}, //New TIF
       { 3.29, 0.1227, 184.7, 1.29}, //Newer
       { 3.506, 0.1533, 191.9, 1.30},//New TIF
-      // {3.740, 0.169, 102, 1.30}, TODO look at flywheel speed
+      {3.730, 0.163, 194.5, 1.32}, 
       { 3.989, 0.185881, 197.558, 1.30}, //Newer TIF  
       {4.237, 0.190, 201, 1.33},
       {4.24, 0.210, 209, 1.34},
-      {Units.inchesToMeters(182), 0.225, 205, 1.37},
       {4.4464, 0.194, 208, 1.35}, //Newer TIF
       { 4.595, 0.2102, 207.158, 1.374}, //new TIF
-      // {Units.inchesToMeters(214), 0.227, 230, 1.75}, //TODO Look at TIF
+      {4.795, 0.230, 210.7, 1.4},
       { 5.074, 0.23784, 221.2, 1.36}, //New TIF
       { 5.475, 0.233, 232, 1.38}, //New
-      // {Units.inchesToMeters(241), 0.283, 234,  } //TODO missing TIF
+      { 5.770, 0.238, 240, 1.66 }, //New TIF
+      { 6.258, 0.248, 252, 1.72 }
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of
@@ -95,7 +95,7 @@ public class ShotCalculatorI {
       { 10.787, 0.500, 205, 1 },
       };
     minScoreDistance = 1.0; // TODO set this //Thee minimum distance the robot can shoot
-    maxScoreDistance = 10.78; // TODO set this //The maximum distance the robot can shoot
+    maxScoreDistance = 6.258; // TODO set this //The maximum distance the robot can shoot
     minPassDistance = 1.0;
     maxPassDistance = 10.5;
     phaseDelay = 0.03; // TODO set this
