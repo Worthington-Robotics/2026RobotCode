@@ -59,6 +59,8 @@ public class Constants {
     public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
     public static final double GYRO_LOCK_KP = 1.5;
+
+    public static final double ACCELERATION_FILTER_FACTOR = 0.5; //Should be between 0 and 1
   }
 
   /**Spindexer Constants*/

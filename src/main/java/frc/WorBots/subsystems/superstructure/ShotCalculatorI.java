@@ -228,8 +228,8 @@ public class ShotCalculatorI {
         timeOfFlight = lookaheadTurretToTargetDistance * MANUAL_TOF_FACTOR;
       }
       timeOfFlightsLog[i] = timeOfFlight;
-      double offsetX = turretVelocityX * timeOfFlight;
-      double offsetY = turretVelocityY * timeOfFlight;
+      double offsetX = turretVelocityX * timeOfFlight + robotAcceleration.vxMetersPerSecond * 1 / 2 * timeOfFlight * timeOfFlight;
+      double offsetY = turretVelocityY * timeOfFlight + robotAcceleration.vyMetersPerSecond * 1 / 2 * timeOfFlight * timeOfFlight;
       lookAheadPose = new Pose2d(
           turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
           turretPosition.getRotation());

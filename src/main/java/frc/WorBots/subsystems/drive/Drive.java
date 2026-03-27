@@ -52,6 +52,8 @@ public class Drive extends SubsystemBase {
   /* Measured speeds from odom, robot relative */
   private ChassisSpeeds measuredSpeeds = new ChassisSpeeds();
   private ChassisSpeeds lastMeasuredSpeeds = new ChassisSpeeds();
+  private ChassisSpeeds acceleration = new ChassisSpeeds();
+  private ChassisSpeeds lastAcceleration = new ChassisSpeeds();
 
   private Rotation2d lastGyroYaw = new Rotation2d();
 
@@ -503,7 +505,10 @@ public class Drive extends SubsystemBase {
    * Returns the robot's field relative acceleration
    */
   public ChassisSpeeds getAcceleration(){
-    SmartDashboard.putNumberArray("Acceleration", Logger.chassisSpeedsToArray(measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY)));
-    return measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
+    acceleration = measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
+    acceleration = (acceleration.times(Constants.DriveConstants.ACCELERATION_FILTER_FACTOR)).plus(lastAcceleration.times(1.0-Constants.DriveConstants.ACCELERATION_FILTER_FACTOR));
+    SmartDashboard.putNumberArray("Acceleration", Logger.chassisSpeedsToArray(acceleration));
+    lastAcceleration = acceleration;
+    return acceleration;
   }
 }
