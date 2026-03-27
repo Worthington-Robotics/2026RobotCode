@@ -60,7 +60,7 @@ public class Constants {
 
     public static final double GYRO_LOCK_KP = 1.5;
 
-    public static final double ACCELERATION_FILTER_FACTOR = 0.5; //Should be between 0 and 1
+    public static final double ACCELERATION_FILTER_FACTOR = 0.25; //Should be between 0 and 1
   }
 
   /**Spindexer Constants*/

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -54,6 +55,8 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds lastMeasuredSpeeds = new ChassisSpeeds();
   private ChassisSpeeds acceleration = new ChassisSpeeds();
   private ChassisSpeeds lastAcceleration = new ChassisSpeeds();
+  private LinearFilter accelerationFilterX = LinearFilter.movingAverage(10);
+  private LinearFilter accelerationFilterY = LinearFilter.movingAverage(10);
 
   private Rotation2d lastGyroYaw = new Rotation2d();
 
@@ -506,7 +509,10 @@ public class Drive extends SubsystemBase {
    */
   public ChassisSpeeds getAcceleration(){
     acceleration = measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
-    acceleration = (acceleration.times(Constants.DriveConstants.ACCELERATION_FILTER_FACTOR)).plus(lastAcceleration.times(1.0-Constants.DriveConstants.ACCELERATION_FILTER_FACTOR));
+    double x = accelerationFilterX.calculate(acceleration.vxMetersPerSecond);
+    double y = accelerationFilterY.calculate(acceleration.vyMetersPerSecond);
+    acceleration = new ChassisSpeeds(x, y, acceleration.omegaRadiansPerSecond);
+    // acceleration = (acceleration.times(Constants.DriveConstants.ACCELERATION_FILTER_FACTOR)).plus(lastAcceleration.times(1.0-Constants.DriveConstants.ACCELERATION_FILTER_FACTOR));
     SmartDashboard.putNumberArray("Acceleration", Logger.chassisSpeedsToArray(acceleration));
     lastAcceleration = acceleration;
     return acceleration;
