@@ -3,6 +3,7 @@ package frc.WorBots.subsystems.drive;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -510,7 +511,9 @@ public class Drive extends SubsystemBase {
   public ChassisSpeeds getAcceleration(){
     acceleration = measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
     double x = accelerationFilterX.calculate(acceleration.vxMetersPerSecond);
+    x = MathUtil.clamp(x, -7, 7);
     double y = accelerationFilterY.calculate(acceleration.vyMetersPerSecond);
+    y = MathUtil.clamp(y, -7, 7);
     acceleration = new ChassisSpeeds(x, y, acceleration.omegaRadiansPerSecond);
     // acceleration = (acceleration.times(Constants.DriveConstants.ACCELERATION_FILTER_FACTOR)).plus(lastAcceleration.times(1.0-Constants.DriveConstants.ACCELERATION_FILTER_FACTOR));
     SmartDashboard.putNumberArray("Acceleration", Logger.chassisSpeedsToArray(acceleration));
