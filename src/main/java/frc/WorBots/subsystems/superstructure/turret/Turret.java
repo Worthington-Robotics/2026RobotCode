@@ -46,10 +46,10 @@ public class Turret {
   private TurretIOInputs inputs = new TurretIOInputs();
   private TurretControlMode controlMode = TurretControlMode.Disabled;
 
-  private Constraints turretConstraints = new Constraints((8 * Math.PI), (12 * Math.PI)); //TODO lower these values and retune
-  /// 5.25, .01, .1
-  private ProfiledPIDController turretFeedBack = new ProfiledPIDController(3.0, 0.0, 0.1, turretConstraints);
-  private SimpleMotorFeedforward turretFeedforward = new SimpleMotorFeedforward(0.23, .925);
+  private Constraints turretConstraints = new Constraints((4 * Math.PI), (6 * Math.PI)); //TODO lower these values and retune
+  /// 5.25, .01, .1  //3,0,.1 // 3.7,.7,.16
+  private ProfiledPIDController turretFeedBack = new ProfiledPIDController(0, 0.0, 0.0, turretConstraints);
+  private SimpleMotorFeedforward turretFeedforward = new SimpleMotorFeedforward(0.26, .935, 0.02);
   
 
   public enum TurretControlMode {
@@ -62,6 +62,7 @@ public class Turret {
   private double debugVoltage = 0;
   private double goalPosition = 0;
   private double goalVelocity = 0;
+  private double lastVelocitySetpoint = 0.0;
 
   public Turret(TurretIO io) {
     this.io = io;
@@ -93,27 +94,29 @@ public class Turret {
         io.setVoltage(debugVoltage);
       }
       if (controlMode == TurretControlMode.Position) {
-        turretFeedBack.setGoal(new TrapezoidProfile.State(goalPosition, goalVelocity));
-        double feedback = turretFeedBack.calculate(inputs.turretFusedAngle);
-        double feedforward = turretFeedforward.calculate(turretFeedBack.getSetpoint().velocity);
+        // turretFeedBack.setGoal(new TrapezoidProfile.State(goalPosition, goalVelocity));
+        // double feedback = turretFeedBack.calculate(inputs.turretFusedAngle);
+        // double feedforward = turretFeedforward.calculateWithVelocities(lastVelocitySetpoint, turretFeedBack.getSetpoint().velocity);
+        // lastVelocitySetpoint = turretFeedBack.getSetpoint().velocity;
 
-        // if (!turretFeedBack.atSetpoint()) {
-        //   final double KS = (inputs.turretFusedAngle < goalPosition) ? 0.33 : -0.33;
-        //   feedback += KS;
-        // }
+        // // if (!turretFeedBack.atSetpoint()) {
+        // //   final double KS = (inputs.turretFusedAngle < goalPosition) ? 0.33 : -0.33;
+        // //   feedback += KS;
+        // // }
 
-        double volts = feedback + feedforward; // + feedforward;
-        SmartDashboard.putNumber("Turret Velocity", turretFeedBack.getSetpoint().velocity);
+        // double volts = feedback + feedforward; // + feedforward;
+        // SmartDashboard.putNumber("Turret Velocity", turretFeedBack.getSetpoint().velocity);
 
-        volts = MathUtil.clamp(volts, Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE,
-            Constants.TurretShooterConstants.TURRET_MAX_VOLTAGE);
+        // volts = MathUtil.clamp(volts, Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE,
+        //     Constants.TurretShooterConstants.TURRET_MAX_VOLTAGE);
 
-        volts = GeneralMath.hardLimitVelocity(volts, inputs.turretFusedAngle,
-            Constants.TurretShooterConstants.TURRET_MIN_ANGLE, Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
+        // volts = GeneralMath.hardLimitVelocity(volts, inputs.turretFusedAngle,
+        //     Constants.TurretShooterConstants.TURRET_MIN_ANGLE, Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
 
-        io.setVoltage(volts);
+        // io.setVoltage(volts);
 
-        requestedVoltagePub.set(volts);
+        // requestedVoltagePub.set(volts);
+        io.setPosition(new TrapezoidProfile.State(goalPosition, goalVelocity));
       }
     }
 

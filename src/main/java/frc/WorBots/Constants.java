@@ -177,7 +177,7 @@ public class Constants {
     //These values need to be modified
     public static final double INTAKE_MAX_TEMP = 80.0;
     public static final double TIME_OF_FLIGHT_THRES = 0.255;
-    public static final double INTAKE_PIVOT_GR = 6.33;
+    public static final double INTAKE_PIVOT_GR = 6.33 * 3;
     public static final double MOMENT_OF_INERTIA = 1;
     public static final double INTAKE_INTAKE_GR = 1;
     
@@ -200,17 +200,12 @@ public class Constants {
     //PID / Feedforward Values
     public static final double INTAKE_EXTEND_TOLERANCE = 0.15;
     public static final double INTAKE_EXTEND_EXTEND_POSE_TOLERANCE = 0.4;
-    public static final double INTAKE_EXTENDING_KP = 3.0; //3
-    public static final double INTAKE_EXTENDING_KI = 1.0; //1
+    public static final double INTAKE_EXTENDING_KP = 3; //3
+    public static final double INTAKE_EXTENDING_KI = 0.0; //1
     public static final double INTAKE_EXTENDING_KD = 0.00;
-    public static final double EXTENDER_KS = 0.1;
-    public static final double EXTENDER_KG = 3.0; 
-    public static final double EXTENDER_KV = 0.5;
-    
-    //New intake controls constants
-    public static final double EXTEND_MULT_DOWNWARD = 1.6; //Controls downward force when extending
-    public static final double EXTEND_MULT_UPWARD = 1.53; //Controls upward force when extending
-    public static final double RETRACT_MULT = 7.0; // Controls upward force when retracting
+    public static final double EXTENDER_KS = 0.5;
+    public static final double EXTENDER_KG = 0.5; 
+    public static final double EXTENDER_KV = 0.0;
 
     public static final double INTAKE_PULSE_INTAKING_SEC = 3.0;
     public static final double INTAKE_PULSE_SPIT_SEC = 0.3;

@@ -110,9 +110,9 @@ public class Intake extends SubsystemBase {
     } else if (intakeMotorControlMode == IntakeMotorControlMode.Voltage){
       double finalSetpointIntake = 0;
       // Don't try to intake when we are too high, grinds gears
-      if (inputs.extendPosition <= IntakePoses.HALF.get()){
+      // if (inputs.extendPosition <= IntakePoses.HALF.get()){
         finalSetpointIntake = setPointVoltageIntake;
-      }
+      // }
       if(isJammed()){
         pulseCount = (pulseCount+1)%7;
         if(pulseCount>5){
