@@ -56,6 +56,7 @@ public class Spindexer extends SubsystemBase{
   public Spindexer(SpindexerIO spindexerIo){
     io = spindexerIo;
     spinPid.pid.setTolerance(Constants.SpindexerConstants.SPINDEXER_VEL_TOLERANCE);
+    kickerPid.pid.setTolerance(Constants.SpindexerConstants.KICKER_VEL_TOLERANCE);
   }
     
   public void periodic(){
@@ -79,7 +80,10 @@ public class Spindexer extends SubsystemBase{
       io.setKickerVoltage(goalVoltage);
     } else {
       double kickerFeedback = MathUtil.clamp(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity),0,12);
-      double spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
+      double spinFeedback = 0;
+      if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY)){
+        spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
+      }
       io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
       io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinGoalVelocity));
     }

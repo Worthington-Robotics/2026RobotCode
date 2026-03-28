@@ -3,6 +3,8 @@ package frc.WorBots.subsystems.drive;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.Line;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -42,6 +44,9 @@ public class Drive extends SubsystemBase {
   private final Module[] modules = new Module[4];
   private final GyroIO gyroIO;
   private final GyroIOInputs gyroIOInputs = new GyroIOInputs();
+
+  //TODO remove
+  LinearFilter timeFilter = LinearFilter.movingAverage(10000);
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private DriveFilter filter = new DriveFilter(Constants.DriveConstants.DRIVE_MAX_VELOCITY,
@@ -391,7 +396,13 @@ public class Drive extends SubsystemBase {
   }
 
   public void addVisionUpdate(List<TimestampedVisionUpdate> update) {
+    double start = System.nanoTime();
     poseEstimator.addVisionData(update);
+    double end = System.nanoTime();
+    SmartDashboard.putNumber("Vision integrate time", (end-start) * .000001);
+    double i = timeFilter.calculate((end-start) * .000001);
+    SmartDashboard.putNumber("Vision integrate time filtered", i);
+    SmartDashboard.putNumber("Vision Update #", update.size());
   }
 
   /*
@@ -502,8 +513,18 @@ public class Drive extends SubsystemBase {
   }
 
   public void resetYaw(){
-    gyroIO.resetHeading(new Rotation2d());
+    resetYaw(new Rotation2d());
   }
+
+  public void resetYaw(Rotation2d rotation){
+     gyroIO.resetHeading(rotation);
+    lastGyroYaw = rotation;
+    final Pose2d currentPose = poseEstimator.getLatestPose();
+    poseEstimator.resetPose(
+        new Pose2d(currentPose.getX(), currentPose.getY(), AllianceFlipUtil.apply(rotation)));
+  }
+
+  //TODO write a gyro reset for post auto that uses our current heading
 
   /**
    * Returns the robot's field relative acceleration

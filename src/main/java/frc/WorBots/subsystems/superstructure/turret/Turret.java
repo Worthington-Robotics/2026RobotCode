@@ -172,11 +172,11 @@ public class Turret {
   }
 
   public boolean readyToShoot(){
-    return Math.abs(turretFeedBack.getGoal().position - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_TOLERANCE;
+    return Math.abs(goalPosition - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_TOLERANCE;
   }
 
   public boolean readyToPass(){
-    return Math.abs(turretFeedBack.getGoal().position - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_PASS_TOLERANCE;
+    return Math.abs(goalPosition - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_PASS_TOLERANCE;
   }
 
   /**

@@ -3,6 +3,7 @@ package frc.WorBots.subsystems.superstructure;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
@@ -44,6 +45,7 @@ public class ShotCalculatorI {
   private static double minPassDistance;
   private static double maxPassDistance;
   private static double phaseDelay;
+  private static double thetaExtraDelay = 0.1;
   // Set up interpolating tree maps for scoring
   private static final InterpolatingTreeMap<Double, Rotation2d> shotHoodAngleMap = new InterpolatingTreeMap<>(
       InverseInterpolator.forDouble(), Rotation2d::interpolate);
@@ -98,7 +100,7 @@ public class ShotCalculatorI {
     maxScoreDistance = 6.258; // TODO set this //The maximum distance the robot can shoot
     minPassDistance = 1.0;
     maxPassDistance = 10.5;
-    phaseDelay = 0.03; // TODO set this
+    phaseDelay = 0.13; // TODO set this
 
     for (double[] i : scoringData) {
       shotHoodAngleMap.put(i[0], Rotation2d.fromRadians(i[1]));
@@ -138,7 +140,7 @@ public class ShotCalculatorI {
    */
   public static ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity, ChassisSpeeds robotAcceleration) {
     boolean isValid = true;
-    Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
+    Translation2d turretPose = pose.transformBy(Constants.TurretShooterConstants.ROBOT_TO_TURRET).getTranslation();
     Translation2d targetPose;
     if (GeomUtil.translation2dInBoundingBox(turretPose, AllianceFlipUtil.apply(FieldConstants.allianceZone))) {
       return new ShootingParams(false, new Rotation2d(), 0, 0,0);
@@ -228,8 +230,8 @@ public class ShotCalculatorI {
         timeOfFlight = lookaheadTurretToTargetDistance * MANUAL_TOF_FACTOR;
       }
       timeOfFlightsLog[i] = timeOfFlight;
-      double offsetX = turretVelocityX * timeOfFlight + robotAcceleration.vxMetersPerSecond * 1 / 2 * timeOfFlight * timeOfFlight;
-      double offsetY = turretVelocityY * timeOfFlight + robotAcceleration.vyMetersPerSecond * 1 / 2 * timeOfFlight * timeOfFlight;
+      double offsetX = turretVelocityX * timeOfFlight;// + robotAcceleration.vxMetersPerSecond * 1 / 2 * timeOfFlight * timeOfFlight;
+      double offsetY = turretVelocityY * timeOfFlight;// + robotAcceleration.vyMetersPerSecond * 1 / 2 * timeOfFlight * timeOfFlight;
       lookAheadPose = new Pose2d(
           turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
           turretPosition.getRotation());
@@ -239,14 +241,14 @@ public class ShotCalculatorI {
     double dx = target.getX() - lookAheadPose.getX();
     double dy = target.getY() - lookAheadPose.getY();
     double distSq = dx * dx + dy * dy;
-    double turretSpeed = 0.0;
-    if (distSq > 1e-6) {
-      turretSpeed = -(dx * turretVelocityY - dy * turretVelocityX) / distSq;
-    }
+    double turretSpeed = robotVelocity.omegaRadiansPerSecond;
+    // if (distSq > 1e-6) {
+    //   turretSpeed += -(dx * turretVelocityY - dy * turretVelocityX) / distSq;
+    // }
 
 
     // Calculate params
-    Rotation2d turretAngle = target.minus(lookAheadPose.getTranslation()).getAngle();
+    Rotation2d turretAngle = target.minus(lookAheadPose.getTranslation()).getAngle().minus(new Rotation2d(robotVelocity.omegaRadiansPerSecond * thetaExtraDelay));
     double hoodAngle = hoodAngleMap.get(lookaheadTurretToTargetDistance).getRadians();
     double[] turretPose = {robotPose.getX(), robotPose.getY(), turretAngle.getRadians()};
     SmartDashboard.putNumberArray("ShotCalc/Turret angle pose", turretPose);

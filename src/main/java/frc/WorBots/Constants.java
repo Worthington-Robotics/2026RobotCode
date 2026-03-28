@@ -27,8 +27,8 @@ public class Constants {
     public static final double ROBOT_MASS = Units.lbsToKilograms(115.8);
     public static final double ROBOT_MOI = 4.7089; //Kg * m^2
     // Robot period in seconds
-    public static final double ROBOT_PERIOD = 0.01;
-    public static final double ROBOT_FREQUENCY = 1.0 / ROBOT_PERIOD;
+    public static final double ROBOT_FREQUENCY = 50.0;
+    public static final double ROBOT_PERIOD = 1.0 / ROBOT_FREQUENCY;
   }
   
   /**Drive Constants*/
@@ -67,8 +67,8 @@ public class Constants {
   public class SpindexerConstants{
     public static final double SPINDEXER_VOLTAGE = 9;
 
-    public static final double SPINDEXER_VELOCITY = 90.0;
-    public static final double KICKER_VELOCITY = 180.0;
+    public static final double SPINDEXER_VELOCITY = 45.0;
+    public static final double KICKER_VELOCITY = 115.0;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;
@@ -88,6 +88,7 @@ public class Constants {
     public static final double SPINDEXER_MAX_VEL = SPINDEXER_VELOCITY * 1.1;
 
     public static final double SPINDEXER_VEL_TOLERANCE = 5;
+    public static final double KICKER_VEL_TOLERANCE = 5;
 
     public static final double KICKER_KP = 0.0;
     public static final double KICKER_KI = 0.0;
@@ -173,7 +174,7 @@ public class Constants {
 
   /**Intake Constants*/
   public class IntakeConstants{
-    public static final double INTAKE_VOLTAGE = 6;
+    public static final double INTAKE_VOLTAGE = 8;
     //These values need to be modified
     public static final double INTAKE_MAX_TEMP = 80.0;
     public static final double TIME_OF_FLIGHT_THRES = 0.255;
@@ -200,7 +201,7 @@ public class Constants {
     //PID / Feedforward Values
     public static final double INTAKE_EXTEND_TOLERANCE = 0.15;
     public static final double INTAKE_EXTEND_EXTEND_POSE_TOLERANCE = 0.4;
-    public static final double INTAKE_EXTENDING_KP = 8.2; //3
+    public static final double INTAKE_EXTENDING_KP = 9.5; //3
     public static final double INTAKE_EXTENDING_KI = 0.0; //1
     public static final double INTAKE_EXTENDING_KD = 0.00;
     public static final double EXTENDER_KS = 0.5;

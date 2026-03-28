@@ -38,4 +38,6 @@ public interface ShooterIO {
      * @param volts
      */
     public default void setHoodVolts(double volts){};
+
+    public default void setFlywheelVelocity(double velocity){}
 }

@@ -40,8 +40,10 @@ public class TurretIOTalon implements TurretIO {
   private double fusEncoderOffset;
   private boolean shouldSetEncoderOffset = true;
 
-  final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints((1 * Math.PI), (1 * Math.PI)));
+  final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints((20 * Math.PI), (20 * Math.PI)));
   TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+
+  private final double kv = 0.2;
 
   public TurretIOTalon() {
 
@@ -70,9 +72,9 @@ public class TurretIOTalon implements TurretIO {
      var slot0Configs = new Slot0Configs();
      slot0Configs.kS = 0.29;
      slot0Configs.kV = 0.0; //3.5
-     slot0Configs.kP = 1.0;
+     slot0Configs.kP = 9.5;
      slot0Configs.kI = 0.0;
-     slot0Configs.kD = 0.0;
+     slot0Configs.kD = 0.1; //0.2;
      turretMotor.getConfigurator().apply(slot0Configs);
 
      updateInputs(inputs);
@@ -99,8 +101,8 @@ public class TurretIOTalon implements TurretIO {
 
   @Override
   public void setPosition(TrapezoidProfile.State goalState){
-    setpoint = profile.calculate(Constants.RobotConstants.ROBOT_PERIOD, setpoint, goalState);
-    PositionVoltage request = new PositionVoltage(0);
+    setpoint = goalState;//profile.calculate(Constants.RobotConstants.ROBOT_PERIOD, setpoint, goalState);
+    PositionVoltage request = new PositionVoltage(0).withSlot(0).withFeedForward(setpoint.velocity * kv);
     request.Position = fusedToRelMotor(setpoint.position);
     request.Velocity = fusedToRelMotor(setpoint.velocity);
     turretMotor.setControl(request);

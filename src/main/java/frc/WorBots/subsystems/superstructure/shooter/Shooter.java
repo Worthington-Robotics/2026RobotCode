@@ -149,7 +149,8 @@ public class Shooter {
       }
 
       io.setHoodVolts(hoodFeedback);
-      io.setLeaderVolts(leaderVolts);
+      // io.setLeaderVolts(leaderVolts);
+      io.setFlywheelVelocity(setpointVelocity);
       
       flywheelRequestedPub.set(leaderVolts);
       hoodRequestedPub.set(hoodFeedback);

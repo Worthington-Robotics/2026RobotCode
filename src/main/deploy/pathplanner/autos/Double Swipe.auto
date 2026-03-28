@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Deploy Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Traverse Top Trench from Start"
@@ -53,9 +59,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Sustained Fire"
+            "pathName": "Top Reset"
           }
         }
       ]

@@ -14,6 +14,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,6 +56,7 @@ import frc.WorBots.subsystems.vision.apriltags.TagVisionIONew;
 import frc.WorBots.util.FireController;
 import frc.WorBots.util.control.DriveController;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.math.AllianceFlipUtil;
 
 public class RobotContainer {
   // Subsystems
@@ -277,7 +279,11 @@ public class RobotContainer {
     if (ranAuto){
       intake.teleopInit();
       superstructure.enableAutoAiming();
-      
+      if(AllianceFlipUtil.shouldFlip()){
+        drive.resetYaw(new Rotation2d(drive.getRotation().getRadians() - Math.PI));
+      } else {
+        drive.resetYaw(drive.getRotation());
+      }
     }
   }
 
