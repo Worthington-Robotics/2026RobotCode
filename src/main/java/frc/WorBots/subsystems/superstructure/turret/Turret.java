@@ -46,10 +46,10 @@ public class Turret {
   private TurretIOInputs inputs = new TurretIOInputs();
   private TurretControlMode controlMode = TurretControlMode.Disabled;
 
-  private Constraints turretConstraints = new Constraints((8 * Math.PI), (12 * Math.PI));
-  /// p 15 d 0 I 0.3, 0, 0.3  //4, 0, 0.3
-  private ProfiledPIDController turretFeedBack = new ProfiledPIDController(5.25, 0.00, 0.1, turretConstraints);
-  private SimpleMotorFeedforward turretFeedforward = new SimpleMotorFeedforward(0.33, 1.1);
+  private Constraints turretConstraints = new Constraints((8 * Math.PI), (12 * Math.PI)); //TODO lower these values and retune
+  /// 5.25, .01, .1
+  private ProfiledPIDController turretFeedBack = new ProfiledPIDController(3.0, 0.0, 0.1, turretConstraints);
+  private SimpleMotorFeedforward turretFeedforward = new SimpleMotorFeedforward(0.23, .925);
   
 
   public enum TurretControlMode {

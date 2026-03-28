@@ -184,4 +184,8 @@ public class DriveFilter {
   public double getMaxRotationalAcceleration() {
     return maxRotationalAcceleration;
   }
+
+  public ChassisSpeeds getLastAcceleration() {
+    return new ChassisSpeeds(xFilter.getLastDerivative(), yFilter.getLastDerivative(), thetaFilter.getLastDerivative());
+  }
 }

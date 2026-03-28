@@ -104,7 +104,7 @@ public class RobotContainer {
       superstructure = new Superstructure(new ShooterIOSim(), new TurretIOSim(), drive);
       intake = new Intake(new IntakeIOSim());
     }
-    vision = new TagVision(new TagVisionIONew("left_cam"), new TagVisionIONew("right_cam"));
+    vision = new TagVision(new TagVisionIONew("left_cam"), new TagVisionIONew("right_cam"), new TagVisionIONew("back_cam"));
     vision.setDataInterfaces(drive::addVisionUpdate, () -> drive.getRotation(), () -> drive.getFieldRelativeSetpointSpeeds());
 
     FireController fireController = new FireController(superstructure, drive, spin);

@@ -509,13 +509,14 @@ public class Drive extends SubsystemBase {
    * Returns the robot's field relative acceleration
    */
   public ChassisSpeeds getAcceleration(){
-    acceleration = measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
-    double x = accelerationFilterX.calculate(acceleration.vxMetersPerSecond);
-    x = MathUtil.clamp(x, -7, 7);
-    double y = accelerationFilterY.calculate(acceleration.vyMetersPerSecond);
-    y = MathUtil.clamp(y, -7, 7);
-    acceleration = new ChassisSpeeds(x, y, acceleration.omegaRadiansPerSecond);
-    // acceleration = (acceleration.times(Constants.DriveConstants.ACCELERATION_FILTER_FACTOR)).plus(lastAcceleration.times(1.0-Constants.DriveConstants.ACCELERATION_FILTER_FACTOR));
+    // acceleration = measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
+    // double x = accelerationFilterX.calculate(acceleration.vxMetersPerSecond);
+    // x = MathUtil.clamp(x, -7, 7);
+    // double y = accelerationFilterY.calculate(acceleration.vyMetersPerSecond);
+    // y = MathUtil.clamp(y, -7, 7);
+    // acceleration = new ChassisSpeeds(x, y, acceleration.omegaRadiansPerSecond);
+    acceleration = filter.getLastAcceleration();
+    acceleration = (acceleration.times(Constants.DriveConstants.ACCELERATION_FILTER_FACTOR)).plus(lastAcceleration.times(1.0-Constants.DriveConstants.ACCELERATION_FILTER_FACTOR));
     SmartDashboard.putNumberArray("Acceleration", Logger.chassisSpeedsToArray(acceleration));
     lastAcceleration = acceleration;
     return acceleration;

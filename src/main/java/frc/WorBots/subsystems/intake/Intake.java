@@ -1,6 +1,7 @@
 package frc.WorBots.subsystems.intake;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
@@ -41,9 +42,9 @@ public class Intake extends SubsystemBase {
       Constants.IntakeConstants.INTAKE_EXTENDING_KD,
       new Constraints(Constants.IntakeConstants.INTAKE_EXTENDING_MAX_VEL,
           Constants.IntakeConstants.INTAKE_EXTENDING_MAX_ACEL));
-  // private ArmFeedforward feedforwardController = new ArmFeedforward(Constants.IntakeConstants.EXTENDER_KS,
-  //     Constants.IntakeConstants.EXTENDER_KG,
-  //     Constants.IntakeConstants.EXTENDER_KV);
+  private ArmFeedforward extendFeedforwardController = new ArmFeedforward(Constants.IntakeConstants.EXTENDER_KS,
+      Constants.IntakeConstants.EXTENDER_KG,
+      Constants.IntakeConstants.EXTENDER_KV);
 
   // The setpoint voltages for both the intaking and extending motors
   private double setPointVoltageIntake = 0.0;
@@ -171,22 +172,23 @@ public class Intake extends SubsystemBase {
         final double goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
             Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
         final double feedback = extendController.calculate(inputs.extendPosition, goal);
-        double volts;
-        if(goal == IntakePoses.RETRACTED.pose){
-          volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
-        } else if(goal == IntakePoses.HALF.pose){
-          volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
-        } else if(goal == IntakePoses.EXTENDED.pose){
-          volts = (Math.cos(inputs.extendPosition) * Constants.IntakeConstants.EXTEND_MULT_UPWARD) + (-Math.sin(inputs.extendPosition)*Constants.IntakeConstants.EXTEND_MULT_DOWNWARD);
-          if(Math.abs(setPointPositionExtending - inputs.extendPosition) < Constants.IntakeConstants.INTAKE_EXTEND_EXTEND_POSE_TOLERANCE){
-            volts = 0;
-          }
-        } else {
-          volts = 0;
-        }
-        if (extendController.atGoal() && goal != IntakePoses.HALF.pose){
-          volts = 0;
-        }
+        final double feedforward = extendFeedforwardController.calculate(extendController.getSetpoint().position, extendController.getSetpoint().velocity);
+        double volts = feedforward + feedback;
+        // if(goal == IntakePoses.RETRACTED.pose){
+        //   volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
+        // } else if(goal == IntakePoses.HALF.pose){
+        //   volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
+        // } else if(goal == IntakePoses.EXTENDED.pose){
+        //   volts = (Math.cos(inputs.extendPosition) * Constants.IntakeConstants.EXTEND_MULT_UPWARD) + (-Math.sin(inputs.extendPosition)*Constants.IntakeConstants.EXTEND_MULT_DOWNWARD);
+        //   if(Math.abs(setPointPositionExtending - inputs.extendPosition) < Constants.IntakeConstants.INTAKE_EXTEND_EXTEND_POSE_TOLERANCE){
+        //     volts = 0;
+        //   }
+        // } else {
+        //   volts = 0;
+        // }
+        // if (extendController.atGoal() && goal != IntakePoses.HALF.pose){
+        //   volts = 0;
+        // }
         voltsPublisher.set(volts);
         io.setExtendingMotorVolts(MathUtil.clamp(volts, -8, 8));
       }
