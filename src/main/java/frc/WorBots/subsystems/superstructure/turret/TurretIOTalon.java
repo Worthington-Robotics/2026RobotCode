@@ -66,7 +66,6 @@ public class TurretIOTalon implements TurretIO {
 
     turretMotor.setNeutralMode(NeutralModeValue.Brake);
     turretMotor.setPosition(0);
-     HardwareUtils.setCurrentLimit(turretMotor, Constants.TurretShooterConstants.FLYWHEEL_CURRENT_LIMIT);
 
      var slot0Configs = new Slot0Configs();
      slot0Configs.kS = 0.29;
@@ -79,8 +78,8 @@ public class TurretIOTalon implements TurretIO {
      updateInputs(inputs);
      //Set rotation limits
      var limitConfigs = new SoftwareLimitSwitchConfigs();
-     limitConfigs.ForwardSoftLimitThreshold = Units.radiansToRotations((Constants.TurretShooterConstants.TURRET_MAX_ANGLE - fusEncoderOffset) * Constants.TurretShooterConstants.TURRET_GEAR_RATIO);
-     limitConfigs.ReverseSoftLimitThreshold = Units.radiansToRotations((Constants.TurretShooterConstants.TURRET_MIN_ANGLE - fusEncoderOffset) * Constants.TurretShooterConstants.TURRET_GEAR_RATIO);
+     limitConfigs.ForwardSoftLimitThreshold = fusedToRelMotor(Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
+     limitConfigs.ReverseSoftLimitThreshold = fusedToRelMotor(Constants.TurretShooterConstants.TURRET_MIN_ANGLE);
 
      limitConfigs.ForwardSoftLimitEnable = true;
      limitConfigs.ReverseSoftLimitEnable = true;
@@ -102,8 +101,8 @@ public class TurretIOTalon implements TurretIO {
   public void setPosition(TrapezoidProfile.State goalState){
     setpoint = profile.calculate(Constants.RobotConstants.ROBOT_PERIOD, setpoint, goalState);
     PositionVoltage request = new PositionVoltage(0);
-    request.Position = Units.radiansToRotations(setpoint.position);
-    request.Velocity = setpoint.velocity / 2 / Math.PI;
+    request.Position = fusedToRelMotor(setpoint.position);
+    request.Velocity = fusedToRelMotor(setpoint.velocity);
     turretMotor.setControl(request);
   }
 
@@ -157,5 +156,12 @@ public class TurretIOTalon implements TurretIO {
 
   public TurretIOInputs getInputs() {
     return inputs;
+  }
+
+  /**
+   * Converts a fused angle in radians to an angle in rotations that can be given to the turret motor
+   */
+  public double fusedToRelMotor(double angle){
+    return Units.radiansToRotations((angle - fusEncoderOffset) * Constants.TurretShooterConstants.TURRET_GEAR_RATIO);
   }
 }
