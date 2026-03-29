@@ -14,12 +14,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.debug.TunablePIDController;
+import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeneralMath;
 import java.util.Optional;
 
@@ -241,7 +243,18 @@ public class DriveController {
     return driveFilter.calculate(axis) * maximumSpeed;
   }
 
-  public void resetDriveRotation(Rotation2d offset){
-    rotationOffset = offset;
+  /**
+   * Changes the offset applied to the drives 0 (forward orrientation)
+   * @param fieldAngle the field relative rotation of the robot
+   */
+  public void resetDriveRotation(Rotation2d fieldAngle, Rotation2d gyroAngle){
+    Rotation2d goal;
+    if(AllianceFlipUtil.shouldFlip()){
+      goal = new Rotation2d(Units.degreesToRadians(180));
+    } else {
+      goal = new Rotation2d();
+    }
+    
+    rotationOffset = new Rotation2d(MathUtil.angleModulus(goal.getRadians() - gyroAngle.getRadians() + fieldAngle.getRadians()));
   }
 }

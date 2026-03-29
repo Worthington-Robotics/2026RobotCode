@@ -280,11 +280,7 @@ public class RobotContainer {
     if (ranAuto){
       intake.teleopInit();
       superstructure.enableAutoAiming();
-      if(AllianceFlipUtil.shouldFlip()){
-        drive.setDriveZeroOffset(drive.getRotation());
-      } else {
-        drive.setDriveZeroOffset(new Rotation2d(MathUtil.angleModulus(drive.getRotation().getRadians() - Math.PI)));
-      }
+      drive.setDriveZeroOffset();
     }
   }
 

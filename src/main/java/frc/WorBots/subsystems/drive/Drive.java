@@ -523,11 +523,10 @@ public class Drive extends SubsystemBase {
 
   /**
    * Changes the rotational zero drive controller uses for converting to field relative
-   * @param offset the offset from starting orientation;
+   * Relies on having a acurate pose.
    */
-  public void setDriveZeroOffset(Rotation2d offset){
-    System.out.println("Reset Drive 0, requested offset: " + offset.getDegrees());
-    RobotContainer.driveController.resetDriveRotation(offset);
+  public void setDriveZeroOffset(){
+    RobotContainer.driveController.resetDriveRotation(getRotation(), getYaw());
   }
 
   /**
