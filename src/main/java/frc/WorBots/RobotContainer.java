@@ -14,6 +14,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -280,9 +281,9 @@ public class RobotContainer {
       intake.teleopInit();
       superstructure.enableAutoAiming();
       if(AllianceFlipUtil.shouldFlip()){
-        drive.resetYaw(new Rotation2d(drive.getRotation().getRadians() - Math.PI));
+        drive.setDriveZeroOffset(drive.getRotation());
       } else {
-        drive.resetYaw(drive.getRotation());
+        drive.setDriveZeroOffset(new Rotation2d(MathUtil.angleModulus(drive.getRotation().getRadians() - Math.PI)));
       }
     }
   }

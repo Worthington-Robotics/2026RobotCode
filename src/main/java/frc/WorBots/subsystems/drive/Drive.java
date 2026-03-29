@@ -3,9 +3,6 @@ package frc.WorBots.subsystems.drive;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.sampled.Line;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,7 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -30,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.RobotContainer;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
@@ -524,7 +521,14 @@ public class Drive extends SubsystemBase {
         new Pose2d(currentPose.getX(), currentPose.getY(), AllianceFlipUtil.apply(rotation)));
   }
 
-  //TODO write a gyro reset for post auto that uses our current heading
+  /**
+   * Changes the rotational zero drive controller uses for converting to field relative
+   * @param offset the offset from starting orientation;
+   */
+  public void setDriveZeroOffset(Rotation2d offset){
+    System.out.println("Reset Drive 0, requested offset: " + offset.getDegrees());
+    RobotContainer.driveController.resetDriveRotation(offset);
+  }
 
   /**
    * Returns the robot's field relative acceleration

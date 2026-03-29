@@ -48,6 +48,9 @@ public class DriveController {
   public static final TunableDouble BRAKE_DELAY =
       new TunableDouble("Tuning", "Drive", "Brake Delay", 0.3);
 
+  /** Drive orientation offset for correcting for non zero starts */
+  public static Rotation2d rotationOffset = new Rotation2d();
+
   /**
    * How much to multiply the rotational velocity by before adding it to the steady-state rotation.
    * This is done to predict where the driver will end up turning before they get there
@@ -223,7 +226,7 @@ public class DriveController {
     }
 
     // Convert to field relative based on the alliance
-    final var driveRotation = robotRotation;
+    final var driveRotation = new Rotation2d(MathUtil.angleModulus(robotRotation.getRadians() + rotationOffset.getRadians()));
     speeds =
         ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds.vxMetersPerSecond,
@@ -236,5 +239,9 @@ public class DriveController {
   public double driveSingleAxis(double axis, double maxSpeed) {
     final double maximumSpeed = maxSpeedFilter.calculate(maxSpeed * DRIVE_SPEED_MULTIPLIER);
     return driveFilter.calculate(axis) * maximumSpeed;
+  }
+
+  public void resetDriveRotation(Rotation2d offset){
+    rotationOffset = offset;
   }
 }
