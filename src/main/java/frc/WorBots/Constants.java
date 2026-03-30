@@ -211,6 +211,8 @@ public class Constants {
     public static final double INTAKE_PULSE_INTAKING_SEC = 3.0;
     public static final double INTAKE_PULSE_SPIT_SEC = 0.3;
     public static final double INTAKE_JAMMED_THRESHHOLD = 0.25;
+
+    public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 2.0;
   }
 
   public class ClimberConstants{
