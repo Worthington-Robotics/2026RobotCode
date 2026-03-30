@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "First Swipe"
+            "pathName": "Top First Swipe"
           }
         },
         {
@@ -79,13 +79,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Second Swipe"
+            "pathName": "Start Top Second Swipe"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Second Swipe"
+            "pathName": "Top Second Swipe"
           }
         },
         {
