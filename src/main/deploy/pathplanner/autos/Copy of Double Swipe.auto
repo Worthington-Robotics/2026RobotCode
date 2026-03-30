@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of First Swipe"
+            "pathName": "First Swipe"
           }
         },
         {
@@ -79,13 +79,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test Thing"
+            "pathName": "Start Second Swipe"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Second Swipe"
+            "pathName": "Second Swipe"
           }
         },
         {
