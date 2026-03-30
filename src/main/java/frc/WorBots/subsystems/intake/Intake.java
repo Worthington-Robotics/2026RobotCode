@@ -158,16 +158,14 @@ public class Intake extends SubsystemBase {
       if(controlMode == ControlMode.Agitate && (agitateInAuto || !DriverStation.isAutonomous())){
         //Agitate control mode running on top of position control mode
         if(FireController.getInstance().shouldAgitate() && setPointVoltageIntake == 0){
-          agitatedLast = true;
-          if(setPointPositionExtending == IntakePoses.EXTENDED.pose && atGoal()){
-            setPointPositionExtending = IntakePoses.HALF.pose;
-          } else if(setPointPositionExtending == IntakePoses.HALF.pose && atGoal()) {
-            setPointPositionExtending = IntakePoses.EXTENDED.pose;
+          if(setPointPositionExtending < IntakePoses.HALF.pose){
+            setPointPositionExtending += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE;
           }
           io.setIntakeMotorVolts(7);
-        } else if (agitatedLast){
-          setPointPositionExtending = IntakePoses.EXTENDED.pose;
-          agitatedLast = false;
+        } else{
+          if(setPointPositionExtending != IntakePoses.RETRACTED.pose && setPointPositionExtending != IntakePoses.HALF.pose){
+            setPointPositionExtending = IntakePoses.EXTENDED.pose;
+          }
         }
       }
         final double goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
