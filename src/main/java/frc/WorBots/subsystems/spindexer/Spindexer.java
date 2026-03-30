@@ -82,7 +82,7 @@ public class Spindexer extends SubsystemBase{
     } else {
       double kickerFeedback = MathUtil.clamp(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity),0,12);
       double spinFeedback = 0;
-      if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY)){
+      if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY) || spinGoalVelocity < 0.0){
         spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
       }
       io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
