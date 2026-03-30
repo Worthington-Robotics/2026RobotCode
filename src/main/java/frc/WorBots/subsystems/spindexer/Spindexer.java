@@ -118,7 +118,7 @@ public class Spindexer extends SubsystemBase{
 
   public void stopSpindexer(){
     io.stop();
-    runSpindexerVoltage(0);
+    controlMode = ControlMode.Disabled;
     spinGoalVelocity = 0;
     kickerGoalVelocity = 0;
   }
@@ -146,10 +146,6 @@ public class Spindexer extends SubsystemBase{
 
   public double getVoltage(){
     return goalVoltage;
-  }
-
-  public void setContolMode(ControlMode controlmode){
-    this.controlMode = controlmode;
   }
 
   public void setVelocity(double spinVelocity, double kickerVelocity){
