@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
     Lights.getInstance().periodic();
     TimeCache.getInstance().update();
     StatusPage.periodic();
+    m_robotContainer.updatePowerLogs();
   }
 
   @Override

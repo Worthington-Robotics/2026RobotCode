@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.superstructure.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.debug.StatusPage;
@@ -371,5 +372,11 @@ public class Turret {
 
   public double getDesiredAngle() {
     return turretFeedBack.getGoal().position;
+  }
+
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Turret", new String[]{"Turret Motor"}, 
+      new double[]{inputs.turret.appliedPowerVolts}, 
+       new double[]{inputs.turret.currentDrawAmps});
   }
 }

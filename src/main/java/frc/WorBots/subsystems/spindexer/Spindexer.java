@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunableDouble;
@@ -81,7 +82,7 @@ public class Spindexer extends SubsystemBase{
     } else {
       double kickerFeedback = MathUtil.clamp(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity),0,12);
       double spinFeedback = 0;
-      if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY)){
+      if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY) || spinGoalVelocity < 0.0){
         spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
       }
       io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
@@ -150,5 +151,11 @@ public class Spindexer extends SubsystemBase{
     controlMode = ControlMode.Velocity;
     spinGoalVelocity = spinVelocity;
     kickerGoalVelocity = kickerVelocity;
+  }
+
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Spindexer", new String[]{"Spindexer Motor, Kicker Motor"}, 
+      new double[]{inputs.talon.appliedPowerVolts, inputs.follower.appliedPowerVolts}, 
+        new double[]{inputs.talon.currentDrawAmps, inputs.follower.currentDrawAmps});
   }
 }

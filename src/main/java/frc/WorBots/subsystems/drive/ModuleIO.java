@@ -1,5 +1,6 @@
 package frc.WorBots.subsystems.drive;
 
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.HardwareUtils.TalonInputsPositional;
 import java.util.ArrayList;
 
@@ -44,4 +45,6 @@ public interface ModuleIO {
 
   /** Run the turn motor at the specified voltage. */
   public default void setTurnVoltage(double volts) {}
+
+  public default SubsystemLog getMotorReports(){return null;}
 }
