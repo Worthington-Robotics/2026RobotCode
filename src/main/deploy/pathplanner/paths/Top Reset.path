@@ -35,9 +35,9 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 2.0,
+        "maxVelocity": 1.5,
         "maxAcceleration": 2.0,
-        "maxAngularVelocity": 60.0,
+        "maxAngularVelocity": 45.0,
         "maxAngularAcceleration": 3000.0,
         "nominalVoltage": 12.0,
         "unlimited": false
@@ -49,18 +49,18 @@
     {
       "name": "Dracarys!",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "endWaypointRelativePos": 0.8789552988448068,
       "command": null
     },
     {
       "name": "Retract Intake",
-      "waypointRelativePos": 0.4284172661870498,
+      "waypointRelativePos": 0.35258663987945843,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Deploy Intake",
-      "waypointRelativePos": 0.7503766951280754,
+      "waypointRelativePos": 0.8247112004018068,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -74,14 +74,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }

@@ -67,8 +67,8 @@ public class Constants {
   public class SpindexerConstants{
     public static final double SPINDEXER_VOLTAGE = 9;
 
-    public static final double SPINDEXER_VELOCITY = 45.0;
-    public static final double KICKER_VELOCITY = 115.0;
+    public static final double SPINDEXER_VELOCITY = 65.0;
+    public static final double KICKER_VELOCITY = 175.0;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;
@@ -182,8 +182,8 @@ public class Constants {
     public static final double MOMENT_OF_INERTIA = 1;
     public static final double INTAKE_INTAKE_GR = 1;
     
-    public static final double INTAKE_EXTENDING_MAX_VEL = 3.5;
-    public static final double INTAKE_EXTENDING_MAX_ACEL = 3.5;
+    public static final double INTAKE_EXTENDING_MAX_VEL = 7.5;
+    public static final double INTAKE_EXTENDING_MAX_ACEL = 10.5;
 
     //Current limits
     public static final double INTAKE_CURRENT_LIMIT = 120;
@@ -201,7 +201,7 @@ public class Constants {
     //PID / Feedforward Values
     public static final double INTAKE_EXTEND_TOLERANCE = 0.15;
     public static final double INTAKE_EXTEND_EXTEND_POSE_TOLERANCE = 0.4;
-    public static final double INTAKE_EXTENDING_KP = 9.5; //3
+    public static final double INTAKE_EXTENDING_KP = 12; //3
     public static final double INTAKE_EXTENDING_KI = 0.0; //1
     public static final double INTAKE_EXTENDING_KD = 0.00;
     public static final double EXTENDER_KS = 0.5;

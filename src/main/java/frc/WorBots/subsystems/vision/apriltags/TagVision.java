@@ -68,7 +68,7 @@ public class TagVision extends SubsystemBase {
           // TODO angle up is 30 degrees
           Units.degreesToRadians(0),
           Units.degreesToRadians(-30),
-          Units.degreesToRadians(93)));
+          Units.degreesToRadians(90)));
 
   // Transform for the outward-facing camera on the right
   private static final Transform3d RIGHT_CAMERA_TRANSFORM = new Transform3d(
