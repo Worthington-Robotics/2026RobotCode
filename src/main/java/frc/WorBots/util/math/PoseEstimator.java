@@ -158,7 +158,7 @@ public class PoseEstimator {
     }
 
     // Recalculate latest pose once
-    update();
+    // update();
   }
 
   /** Clears old data and calculates the latest pose. */
