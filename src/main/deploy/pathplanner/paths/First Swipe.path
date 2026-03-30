@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.0,
-        "y": 7.45
+        "x": 7.951378565008497,
+        "y": 6.133501681015613
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 6.362602409638554
       },
       "prevControl": {
-        "x": 7.326807228915661,
-        "y": 7.018265060240963
+        "x": 7.184906368196527,
+        "y": 6.502725248827638
       },
       "nextControl": {
-        "x": 7.873192771084338,
-        "y": 5.706939759036145
+        "x": 8.05265732153155,
+        "y": 6.209799224494156
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 5.3
       },
       "prevControl": {
-        "x": 7.709277108433735,
-        "y": 5.775355421686747
+        "x": 7.8498686737233925,
+        "y": 5.291897784765109
       },
       "nextControl": {
-        "x": 7.490722891566264,
-        "y": 4.8246445783132526
+        "x": 7.284945294800904,
+        "y": 5.310215930609668
       },
       "isLocked": false,
       "linkedName": null
@@ -49,11 +49,27 @@
     {
       "anchor": {
         "x": 6.7,
-        "y": 5.6
+        "y": 5.2
       },
       "prevControl": {
-        "x": 7.273704819277109,
-        "y": 5.231189759036144
+        "x": 6.940277905572569,
+        "y": 5.122850326318501
+      },
+      "nextControl": {
+        "x": 6.461969058328653,
+        "y": 5.276428206881044
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5,
+        "y": 5.2
+      },
+      "prevControl": {
+        "x": 4.474049963576482,
+        "y": 5.585550366684064
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,12 +78,16 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7322834645669332,
+      "waypointRelativePos": 0.1978206202849968,
       "rotationDegrees": -70.0
     },
     {
       "waypointRelativePos": 2.1080314960629822,
       "rotationDegrees": -110.0
+    },
+    {
+      "waypointRelativePos": 3.2690695725062864,
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [
@@ -90,6 +110,12 @@
     {
       "name": "Mine Mine Mine",
       "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Use the Force",
+      "waypointRelativePos": 3.740833751883463,
       "endWaypointRelativePos": null,
       "command": null
     }

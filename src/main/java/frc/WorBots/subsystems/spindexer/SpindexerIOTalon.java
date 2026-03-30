@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
@@ -44,12 +45,14 @@ public class SpindexerIOTalon implements SpindexerIO{
 
   @Override
   public void setSpinVoltage(double volts){
+    volts = MathUtil.clamp(volts, -10, 10);
     this.spinVoltage = volts;
     talon.setVoltage(spinVoltage);
   }
 
   @Override
   public void setKickerVoltage(double volts){
+    volts = MathUtil.clamp(volts, -10, 10);
     this.kickerVoltage = volts;
     kicker.setVoltage(kickerVoltage);
   }

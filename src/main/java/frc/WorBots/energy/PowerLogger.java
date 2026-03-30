@@ -79,7 +79,7 @@ public class PowerLogger {
     }
     double totalSystemPowerDraw = 0.0;
     for (int i = 0; i < log.motorIds.length; i++) {
-      double motorPowerDraw = log.motorCurrents[i] * log.motorVolts[i];
+      double motorPowerDraw = log.motorCurrents[i] * Math.abs(log.motorVolts[i]);
       if (LOG_INDIVIDUAL_MOTORS) {
         MotorData previousData = motorDataMap.get(log.motorIds[i]);
         previousData.energy = previousData.energy  + motorPowerDraw * Constants.RobotConstants.ROBOT_PERIOD;

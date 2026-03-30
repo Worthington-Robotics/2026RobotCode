@@ -67,8 +67,8 @@ public class Constants {
   public class SpindexerConstants{
     public static final double SPINDEXER_VOLTAGE = 9;
 
-    public static final double SPINDEXER_VELOCITY = 65.0;
-    public static final double KICKER_VELOCITY = 175.0;
+    public static final double SPINDEXER_VELOCITY = 75.0;
+    public static final double KICKER_VELOCITY = 230.0;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;
@@ -100,6 +100,9 @@ public class Constants {
     public static final double SPIN_KV = 0.1075;
     public static final double KICKER_KS = 0.175;
     public static final double KICKER_KV = 0.0565 * 1.175;
+
+    public static final double KICKER_UNJAM_VOLTAGE = 5.0;
+    public static final double SPIN_UNJAM_VOLTAGE = 5.0;
   }
 
   /**Turret and Shooter Constants*/
@@ -136,7 +139,7 @@ public class Constants {
 
     //Ready to shoot tolerances
     //TODO set real numbers
-    public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(2);
+    public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(20); //TODO make a smaller value while accounting for turret lagging behind
     public final static double HOOD_READY_TOLERANCE = Units.degreesToRadians(2);
     public final static double FLYWHEEL_READY_VEL_TOLERANCE = 20;
 
