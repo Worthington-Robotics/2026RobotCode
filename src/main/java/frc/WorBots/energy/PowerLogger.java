@@ -11,7 +11,7 @@ import frc.WorBots.Constants;
 
 public class PowerLogger {
   // Flags
-  private final boolean LOG_INDIVIDUAL_MOTORS = false;
+  private final boolean LOG_INDIVIDUAL_MOTORS = true;
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("Energy Management");
 
@@ -74,6 +74,9 @@ public class PowerLogger {
   }
 
   public void integrateLog(SubsystemLog log) {
+    if(log == null){
+      return;
+    }
     double totalSystemPowerDraw = 0.0;
     for (int i = 0; i < log.motorIds.length; i++) {
       double motorPowerDraw = log.motorCurrents[i] * log.motorVolts[i];

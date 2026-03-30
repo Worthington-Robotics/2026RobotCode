@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.Constants.TurretShooterConstants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIO.ShooterIOInputs;
@@ -343,5 +344,11 @@ public class Shooter {
    */
   public boolean getPassing() {
     return passing;
+  }
+
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Shooter", new String[]{"Flywheel Leader","Flywheel Follower","Hood Motor"},
+       new double[]{inputs.leader.appliedPowerVolts, inputs.follower.appliedPowerVolts, inputs.hood.appliedPowerVolts}, 
+        new double[]{inputs.leader.currentDrawAmps, inputs.follower.currentDrawAmps, inputs.hood.currentDrawAmps});
   }
 }

@@ -11,6 +11,7 @@ import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.CanIDs;
 
 public class IntakeIOTalon implements IntakeIO {

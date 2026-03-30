@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.util.FireController;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.intake.IntakeIO.IntakeIOInputs;
 
 public class Intake extends SubsystemBase {
@@ -268,4 +269,9 @@ public class Intake extends SubsystemBase {
     this.agitateInAuto = agitateInAuto;
   }
 
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Intake", new String[]{"Intake Motor","Extend Motor"}, 
+      new double[]{inputs.intakeMotor.appliedPowerVolts, inputs.extendingMotor.appliedPowerVolts}, 
+        new double[]{inputs.intakeMotor.currentDrawAmps, inputs.extendingMotor.currentDrawAmps});
+  }
 }

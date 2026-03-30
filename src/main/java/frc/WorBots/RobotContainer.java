@@ -29,6 +29,7 @@ import frc.WorBots.commands.HoodControlFudgeCommand;
 import frc.WorBots.commands.IntakeCommands;
 import frc.WorBots.commands.pathPlannerCommands.IntakeExtendNoRequirements;
 import frc.WorBots.commands.pathPlannerCommands.PathplannerIntakeCommands;
+import frc.WorBots.energy.PowerLogger;
 import frc.WorBots.commands.PitTest;
 import frc.WorBots.commands.StartAutoAim;
 import frc.WorBots.commands.ShooterCommands;
@@ -70,6 +71,8 @@ public class RobotContainer {
   // Joysticks
   public final CommandXboxController driver = new CommandXboxController(0);
   public final CommandXboxController operator = new CommandXboxController(1);
+
+  public PowerLogger powerlogger = new PowerLogger(5, 17);
 
   // Drive Controller
   public static final DriveController driveController = new DriveController();
@@ -141,6 +144,12 @@ public class RobotContainer {
 
     registerAutos();
     configureBindings();
+    powerlogger.registerSubsystem("Drive", new String[]{"Front Left Drive","Front Left Turn","Front Right Drive",
+      "Front Right Turn","Back Left Drive","Back Left Turn","Back Right Drive","Back Right Turn"});
+    powerlogger.registerSubsystem("Intake", new String[]{"Intake Motor","Extend Motor"});
+    powerlogger.registerSubsystem("Shooter", new String[]{"Flywheel Leader","Flywheel Follower","Hood Motor"});
+    powerlogger.registerSubsystem("Turret", new String[]{"Turret Motor"});
+    powerlogger.registerSubsystem("Spindexer", new String[]{"Spindexer Motor, Kicker Motor"});
   }
 
   public void configureBindings() {
@@ -286,5 +295,14 @@ public class RobotContainer {
 
   public void ranAuto(){
     ranAuto = true;
+  }
+
+  public void updatePowerLogs(){
+    powerlogger.integrateLog(drive.getPowerLog());
+    powerlogger.integrateLog(intake.getPowerLog());
+    powerlogger.integrateLog(superstructure.getShooterPowerLog());
+    powerlogger.integrateLog(superstructure.getTurretPowerLog());
+    powerlogger.integrateLog(spin.getPowerLog());
+    powerlogger.publishLogs();
   }
 }

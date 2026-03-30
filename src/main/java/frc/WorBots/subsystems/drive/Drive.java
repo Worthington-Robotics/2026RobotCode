@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
 import frc.WorBots.RobotContainer;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
@@ -544,5 +545,22 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumberArray("Acceleration", Logger.chassisSpeedsToArray(acceleration));
     lastAcceleration = acceleration;
     return acceleration;
+  }
+
+  public SubsystemLog getPowerLog(){
+    SubsystemLog flLog = modules[0].getModulePowerLog();
+    SubsystemLog frLog = modules[1].getModulePowerLog();
+    SubsystemLog blLog = modules[2].getModulePowerLog();
+    SubsystemLog brLog = modules[3].getModulePowerLog();
+    if(flLog == null){
+      return null;
+    }
+    return new SubsystemLog("Drive", 
+      new String[]{"Front Left Drive","Front Left Turn","Front Right Drive",
+        "Front Right Turn","Back Left Drive","Back Left Turn","Back Right Drive","Back Right Turn"}, 
+          new double[]{flLog.motorVolts()[0], flLog.motorVolts()[1], frLog.motorVolts()[0], frLog.motorVolts()[1], blLog.motorVolts()[0],
+              blLog.motorVolts()[1], brLog.motorVolts()[0], brLog.motorVolts()[1]}, 
+                new double[]{flLog.motorCurrents()[0], flLog.motorCurrents()[1], frLog.motorCurrents()[0], frLog.motorCurrents()[1], blLog.motorCurrents()[0],
+                  blLog.motorCurrents()[1], brLog.motorCurrents()[0], brLog.motorCurrents()[1]});
   }
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunableDouble;
@@ -150,5 +151,11 @@ public class Spindexer extends SubsystemBase{
     controlMode = ControlMode.Velocity;
     spinGoalVelocity = spinVelocity;
     kickerGoalVelocity = kickerVelocity;
+  }
+
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Spindexer", new String[]{"Spindexer Motor, Kicker Motor"}, 
+      new double[]{inputs.talon.appliedPowerVolts, inputs.follower.appliedPowerVolts}, 
+        new double[]{inputs.talon.currentDrawAmps, inputs.follower.currentDrawAmps});
   }
 }
