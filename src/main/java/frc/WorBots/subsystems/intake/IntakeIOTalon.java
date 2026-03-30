@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
@@ -79,10 +80,12 @@ public class IntakeIOTalon implements IntakeIO {
   // TODO Set actual max voltage
 
   public void setIntakeMotorVolts(double volts) {
+    volts = MathUtil.clamp(volts, -10, 10);
     intakeMotor.setVoltage(volts);
   }
 
   public void setExtendingMotorVolts(double volts) {
+    volts = MathUtil.clamp(volts, -10, 10);
     extendingMotor.setVoltage(volts);
   }
 }

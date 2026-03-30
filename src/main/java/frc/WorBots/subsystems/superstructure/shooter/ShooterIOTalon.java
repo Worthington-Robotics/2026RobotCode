@@ -66,6 +66,7 @@ public class ShooterIOTalon implements ShooterIO {
   
   @Override
   public void setLeaderVolts(double volts){
+    volts = MathUtil.clamp(volts, -10, 10);
     leader.setVoltage(volts);
   }
 

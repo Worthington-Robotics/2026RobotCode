@@ -80,13 +80,18 @@ public class Spindexer extends SubsystemBase{
       io.setSpinVoltage(goalVoltage);
       io.setKickerVoltage(goalVoltage);
     } else {
-      double kickerFeedback = MathUtil.clamp(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity),0,12);
-      double spinFeedback = 0;
-      if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY) || spinGoalVelocity < 0.0){
-        spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
+      if(isJammed()){
+        io.setSpinVoltage(-Constants.SpindexerConstants.SPIN_UNJAM_VOLTAGE);
+        io.setKickerVoltage(-Constants.SpindexerConstants.KICKER_UNJAM_VOLTAGE);
+      } else {
+        double kickerFeedback = MathUtil.clamp(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity),0,12);
+        double spinFeedback = 0;
+        if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY)){
+          spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
+        }
+        io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
+        io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinGoalVelocity));
       }
-      io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
-      io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinGoalVelocity));
     }
 
     activePublisher.set(inputs.active);
