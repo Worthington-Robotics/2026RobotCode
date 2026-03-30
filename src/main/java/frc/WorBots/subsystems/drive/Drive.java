@@ -394,13 +394,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void addVisionUpdate(List<TimestampedVisionUpdate> update) {
-    double start = System.nanoTime();
     poseEstimator.addVisionData(update);
-    double end = System.nanoTime();
-    SmartDashboard.putNumber("Vision integrate time", (end-start) * .000001);
-    double i = timeFilter.calculate((end-start) * .000001);
-    SmartDashboard.putNumber("Vision integrate time filtered", i);
-    SmartDashboard.putNumber("Vision Update #", update.size());
   }
 
   /*
