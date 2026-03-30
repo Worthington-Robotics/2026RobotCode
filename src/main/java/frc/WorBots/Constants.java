@@ -13,7 +13,7 @@ import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 public class Constants {
   //TODO figure out if we have all our GRs inverted
   //General Constants
-  public static final boolean IS_COMP = false;
+  public static final boolean IS_COMP = true;
   public static final boolean ENABLE_DEBUG_ROUTINES = true;
   public static final boolean getSim(){
     return Robot.isSimulation();
