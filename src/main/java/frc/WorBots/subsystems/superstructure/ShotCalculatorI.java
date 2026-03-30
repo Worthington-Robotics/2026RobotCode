@@ -238,9 +238,6 @@ public class ShotCalculatorI {
       lookaheadTurretToTargetDistance = target.getDistance(lookAheadPose.getTranslation());
     }
 
-    double dx = target.getX() - lookAheadPose.getX();
-    double dy = target.getY() - lookAheadPose.getY();
-    double distSq = dx * dx + dy * dy;
     double turretSpeed = robotVelocity.omegaRadiansPerSecond;
     // if (distSq > 1e-6) {
     //   turretSpeed += -(dx * turretVelocityY - dy * turretVelocityX) / distSq;
