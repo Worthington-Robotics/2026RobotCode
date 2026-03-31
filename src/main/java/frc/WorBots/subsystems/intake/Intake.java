@@ -54,6 +54,8 @@ public class Intake extends SubsystemBase {
 
   private double setPointPositionExtending = 0.0;
 
+  private double agitatePoseMod = 0.0;
+
   private int pulseCount = 0;
 
   private boolean unJamming = false;
@@ -155,21 +157,23 @@ public class Intake extends SubsystemBase {
         setpointExtendingPub.set(setPointVoltageExtending);
     }else {
       //Position control mode
+      final double goal;
       if(controlMode == ControlMode.Agitate && (agitateInAuto || !DriverStation.isAutonomous())){
         //Agitate control mode running on top of position control mode
         if(FireController.getInstance().shouldAgitate() && setPointVoltageIntake == 0){
-          if(setPointPositionExtending < IntakePoses.HALF.pose){
-            setPointPositionExtending += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE;
-          }
+          agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY;
           io.setIntakeMotorVolts(7);
+          goal = MathUtil.clamp(setPointPositionExtending+agitatePoseMod, Constants.IntakeConstants.EXTENDER_MIN_LIMIT, 
+            IntakePoses.HALF.pose);
         } else{
-          if(setPointPositionExtending != IntakePoses.RETRACTED.pose && setPointPositionExtending != IntakePoses.HALF.pose){
-            setPointPositionExtending = IntakePoses.EXTENDED.pose;
-          }
-        }
-      }
-        final double goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
+          agitatePoseMod = 0.0;
+          goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
             Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
+        }
+      } else {
+        goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
+            Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
+      }
         final double feedback = extendController.calculate(inputs.extendPosition, goal);
         final double feedforward = extendFeedforwardController.calculate(extendController.getSetpoint().position, extendController.getSetpoint().velocity);
         double volts = feedforward + feedback;
@@ -232,13 +236,13 @@ public class Intake extends SubsystemBase {
   }
 
   public void retract() {
-    controlMode = ControlMode.Position;
+    controlMode = ControlMode.Agitate;
     setPointPositionExtending = IntakePoses.RETRACTED.get();
     extendController.reset(inputs.extendPosition);
   }
 
   public void agitate(){
-    controlMode = ControlMode.Position;
+    controlMode = ControlMode.Agitate;
     setPointPositionExtending = IntakePoses.HALF.get();
     extendController.reset(inputs.extendPosition);
   }
