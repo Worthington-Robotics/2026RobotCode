@@ -4,6 +4,7 @@
 
 package frc.WorBots;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -61,6 +62,7 @@ public class Robot extends TimedRobot {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
     super.robotInit();
+    CameraServer.startAutomaticCapture();
   }
 
   @Override

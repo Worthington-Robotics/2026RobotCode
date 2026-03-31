@@ -158,18 +158,12 @@ public class Intake extends SubsystemBase {
     }else {
       //Position control mode
       final double goal;
-      if(controlMode == ControlMode.Agitate && (agitateInAuto || !DriverStation.isAutonomous())){
+      if(controlMode == ControlMode.Agitate){
         //Agitate control mode running on top of position control mode
-        if(FireController.getInstance().shouldAgitate() && setPointVoltageIntake == 0){
-          agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/(Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY);
-          io.setIntakeMotorVolts(7);
-          goal = MathUtil.clamp(setPointPositionExtending+agitatePoseMod, Constants.IntakeConstants.EXTENDER_MIN_LIMIT, 
-            IntakePoses.HALF.pose + .1);
-        } else{
-          agitatePoseMod = 0.0;
-          goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
-            Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
-        }
+        agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/(Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY);
+        io.setIntakeMotorVolts(7);
+        goal = MathUtil.clamp(setPointPositionExtending+agitatePoseMod, Constants.IntakeConstants.EXTENDER_MIN_LIMIT, 
+          IntakePoses.HALF.pose + .1);
       } else {
         goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
             Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
@@ -245,6 +239,15 @@ public class Intake extends SubsystemBase {
     controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.HALF.get();
     extendController.reset(inputs.extendPosition);
+  }
+
+  public void agigateAuto(){
+    controlMode = ControlMode.Agitate;
+    agitatePoseMod = 0.0;
+  }
+
+  public void stopAgitateAuto(){
+    controlMode = ControlMode.Position;
   }
 
   public boolean isExtended() {

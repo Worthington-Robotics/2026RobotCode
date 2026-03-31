@@ -259,7 +259,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Wait Then Fire", Commands.waitUntil(() -> FireController.getInstance().readyToFire())
         .andThen(new ShooterCommands().forceFeedShooterAuto(spin)));
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
-    NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
+    NamedCommands.registerCommand("Annoy", Commands.runOnce(() -> intake.agigateAuto()));
     NamedCommands.registerCommand("Mag Dump",
         new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
     NamedCommands.registerCommand("Dunk",
