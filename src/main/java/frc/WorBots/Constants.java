@@ -77,7 +77,7 @@ public class Constants {
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
     public static final double SPINDEXER_STALL_CURRENT = 40;
     public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
-    public static final double SPINDEXER_CURRENT_LIMIT = 40;
+    public static final double SPINDEXER_CURRENT_LIMIT = 30; //TODO make sure this is high enough
     public static final double KICKER_CURRENT_LIMIT = 40;
     //PID Tolerance
 
@@ -122,7 +122,7 @@ public class Constants {
     
     //Current Limits
     public final static double TURRET_CURRENT_LIMIT = 40;
-    public final static double FLYWHEEL_CURRENT_LIMIT = 200;
+    public final static double FLYWHEEL_CURRENT_LIMIT = 90; //TODO make sure this is high enough
     public final static double HOOD_CURRENT_LIMIT = 40;
 
     //Turret Saftey Limits
@@ -189,7 +189,7 @@ public class Constants {
     public static final double INTAKE_EXTENDING_MAX_ACEL = 10.5;
 
     //Current limits
-    public static final double INTAKE_CURRENT_LIMIT = 120;
+    public static final double INTAKE_CURRENT_LIMIT = 95; //TODO make sure this is high enough
     public static final double EXTENDER_CURRENT_LIMIT = 200;
  
     //Position constants for intake logic
