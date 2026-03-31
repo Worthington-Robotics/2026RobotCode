@@ -35,7 +35,7 @@ public class DriveController {
   public static final double ROTATIONAL_SPEED = 3.55; //Used to be 3.75, turned down on driver request
 
   /** The amount of input deadband to apply */
-  public static final double DEADBAND = 0.2;
+  public static final double DEADBAND = 0.15;
 
   /** The minimum speed output that will make the drive stop */
   public static final double MINIMUM_SPEED = 1e-3;
@@ -66,7 +66,7 @@ public class DriveController {
   private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(24);
 
   private final TunablePIDController turnController =
-      new TunablePIDController("Drive/Gains", "Drive Heading", 5.2, 0.0, 0.0);
+      new TunablePIDController("Drive/Gains", "Drive Heading", 6.75, 0.0, 0.0);
 
   public Optional<Double> temporarySpeedMultiplier = Optional.empty();
 

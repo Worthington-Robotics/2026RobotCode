@@ -514,6 +514,7 @@ public class Drive extends SubsystemBase {
     final Pose2d currentPose = poseEstimator.getLatestPose();
     poseEstimator.resetPose(
         new Pose2d(currentPose.getX(), currentPose.getY(), AllianceFlipUtil.apply(rotation)));
+    setDriveZeroOffset();
   }
 
   /**

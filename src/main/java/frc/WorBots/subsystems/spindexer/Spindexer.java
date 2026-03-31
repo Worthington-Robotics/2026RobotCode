@@ -148,6 +148,10 @@ public class Spindexer extends SubsystemBase{
     return goalVoltage;
   }
 
+  public double getSpinGoalVelocity(){
+    return spinGoalVelocity;
+  }
+
   public void setVelocity(double spinVelocity, double kickerVelocity){
     controlMode = ControlMode.Velocity;
     spinGoalVelocity = spinVelocity;

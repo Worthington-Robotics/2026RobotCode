@@ -371,7 +371,7 @@ public class Turret {
   }
 
   public double getDesiredAngle() {
-    return turretFeedBack.getGoal().position;
+    return goalPosition;
   }
 
   public SubsystemLog getPowerLog(){

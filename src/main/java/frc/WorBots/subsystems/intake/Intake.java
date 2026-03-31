@@ -161,10 +161,10 @@ public class Intake extends SubsystemBase {
       if(controlMode == ControlMode.Agitate && (agitateInAuto || !DriverStation.isAutonomous())){
         //Agitate control mode running on top of position control mode
         if(FireController.getInstance().shouldAgitate() && setPointVoltageIntake == 0){
-          agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY;
+          agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/(Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY);
           io.setIntakeMotorVolts(7);
           goal = MathUtil.clamp(setPointPositionExtending+agitatePoseMod, Constants.IntakeConstants.EXTENDER_MIN_LIMIT, 
-            IntakePoses.HALF.pose);
+            IntakePoses.HALF.pose + .1);
         } else{
           agitatePoseMod = 0.0;
           goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
@@ -230,19 +230,19 @@ public class Intake extends SubsystemBase {
   }
 
   public void extend() {
-    controlMode = ControlMode.Agitate;
+    controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.EXTENDED.get();
     extendController.reset(inputs.extendPosition);
   }
 
   public void retract() {
-    controlMode = ControlMode.Agitate;
+    controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.RETRACTED.get();
     extendController.reset(inputs.extendPosition);
   }
 
   public void agitate(){
-    controlMode = ControlMode.Agitate;
+    controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.HALF.get();
     extendController.reset(inputs.extendPosition);
   }

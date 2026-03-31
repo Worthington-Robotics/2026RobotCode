@@ -67,7 +67,7 @@ public class Constants {
   public class SpindexerConstants{
     public static final double SPINDEXER_VOLTAGE = 9;
 
-    public static final double SPINDEXER_VELOCITY = 75.0;
+    public static final double SPINDEXER_VELOCITY = 70.0;
     public static final double KICKER_VELOCITY = 230.0;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
@@ -75,7 +75,7 @@ public class Constants {
     public static final double KICKER_GEAR_RATIO = 1/ 3.0; 
 
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
-    public static final double SPINDEXER_STALL_CURRENT = 40;
+    public static final double SPINDEXER_STALL_CURRENT = 30;
     public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
     public static final double SPINDEXER_CURRENT_LIMIT = 30; //TODO make sure this is high enough
     public static final double KICKER_CURRENT_LIMIT = 40;
@@ -122,7 +122,7 @@ public class Constants {
     
     //Current Limits
     public final static double TURRET_CURRENT_LIMIT = 40;
-    public final static double FLYWHEEL_CURRENT_LIMIT = 90; //TODO make sure this is high enough
+    public final static double FLYWHEEL_CURRENT_LIMIT = 85; //TODO make sure this is high enough
     public final static double HOOD_CURRENT_LIMIT = 40;
 
     //Turret Saftey Limits
@@ -215,7 +215,7 @@ public class Constants {
     public static final double INTAKE_PULSE_SPIT_SEC = 0.3;
     public static final double INTAKE_JAMMED_THRESHHOLD = 0.25;
 
-    public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 2.0;
+    public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 2.5;
   }
 
   public class ClimberConstants{
