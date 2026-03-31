@@ -57,7 +57,7 @@ public class DriveController {
    * How much to multiply the rotational velocity by before adding it to the steady-state rotation.
    * This is done to predict where the driver will end up turning before they get there
    */
-  public static final double TURN_PREDICTION_FACTOR = 40.0;
+  public static final double TURN_PREDICTION_FACTOR = 20.0;
 
   private static final LinearFilter driveFilter = LinearFilter.movingAverage(5);
   private static final LinearFilter xFilter = LinearFilter.movingAverage(10);
@@ -66,7 +66,7 @@ public class DriveController {
   private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(24);
 
   private final TunablePIDController turnController =
-      new TunablePIDController("Drive/Gains", "Drive Heading", 6.75, 0.0, 0.0);
+      new TunablePIDController("Drive/Gains", "Drive Heading", 5.0, 0.0, 0.0);
 
   public Optional<Double> temporarySpeedMultiplier = Optional.empty();
 
@@ -225,6 +225,7 @@ public class DriveController {
         speeds.omegaRadiansPerSecond +=
             turnController.pid.calculate(robotRotation.getRadians(), lastYaw.get().getRadians());
       }
+      lastYaw = Optional.of(robotRotation);
     }
 
     // Convert to field relative based on the alliance

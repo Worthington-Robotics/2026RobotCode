@@ -56,11 +56,8 @@ public class Drive extends SubsystemBase {
 
   /* Measured speeds from odom, robot relative */
   private ChassisSpeeds measuredSpeeds = new ChassisSpeeds();
-  private ChassisSpeeds lastMeasuredSpeeds = new ChassisSpeeds();
   private ChassisSpeeds acceleration = new ChassisSpeeds();
   private ChassisSpeeds lastAcceleration = new ChassisSpeeds();
-  private LinearFilter accelerationFilterX = LinearFilter.movingAverage(10);
-  private LinearFilter accelerationFilterY = LinearFilter.movingAverage(10);
 
   private Rotation2d lastGyroYaw = new Rotation2d();
 
@@ -281,7 +278,6 @@ public class Drive extends SubsystemBase {
     }
     moduleMeasuredPublisher.set(Logger.statesToArray(measuredStates));
 
-    lastMeasuredSpeeds = measuredSpeeds;
     measuredSpeeds = kinematics.toChassisSpeeds(measuredStates);
 
     OdometryThread.odometryLock.lock();
