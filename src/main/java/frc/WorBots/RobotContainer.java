@@ -127,8 +127,8 @@ public class RobotContainer {
         () -> drive.getRobotRelativeSpeeds(), // Robot Relative Speed Supplier
         speeds -> driveController.drive(drive, speeds), // Output Command
         new PPHolonomicDriveController( // Holonomic Drive Controller Used by PathPlanner
-            new PIDConstants(2.4, 0.0, 0.15), // Translation PID Constants
-            new PIDConstants(3.2, 0.0, 0.0), // Rotational PID Constants
+            new PIDConstants(9.3, 0.0, 0.75), // Translation PID Constants
+            new PIDConstants(3.4, 0.0, 0.2), // Rotational PID Constants
             Constants.RobotConstants.ROBOT_PERIOD), // PID Period
         Constants.PathPlannerConstants.PATHPLANNER_CONFIG,
         () -> {
