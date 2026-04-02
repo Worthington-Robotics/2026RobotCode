@@ -123,7 +123,6 @@ public class HardwareUtils {
 
   /** Base status signals for a TalonFX */
   public static class TalonSignals {
-    //TODO testing adding current to signal
     private final OptimalStatusSignal<Voltage> voltsSignal;
     private final OptimalStatusSignal<Current> currentSignal;
 
@@ -253,6 +252,8 @@ public class HardwareUtils {
     CurrentLimitsConfigs limitsConfig = new CurrentLimitsConfigs();
     limitsConfig.StatorCurrentLimit = limit;
     limitsConfig.StatorCurrentLimitEnable = true;
+    limitsConfig.SupplyCurrentLimit = limit;
+    limitsConfig.SupplyCurrentLimitEnable = true;
     motor.getConfigurator().apply(limitsConfig);
   }
 
