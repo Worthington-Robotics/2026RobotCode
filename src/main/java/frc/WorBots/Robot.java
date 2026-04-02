@@ -7,6 +7,7 @@ package frc.WorBots;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +42,7 @@ public class Robot extends TimedRobot {
 
     OdometryThread.getInstance();
     Lights.getInstance();
+    RobotController.setBrownoutVoltage(Constants.RobotConstants.BROWNOUT_THRESHHOLD);
   }
 
   public void realRobotPeriodic() {

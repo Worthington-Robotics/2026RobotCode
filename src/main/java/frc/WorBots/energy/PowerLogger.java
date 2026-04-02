@@ -7,11 +7,14 @@ import java.util.List;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.WorBots.Constants;
 
 public class PowerLogger {
   // Flags
   private final boolean LOG_INDIVIDUAL_MOTORS = true;
+
+  private DoublePublisher batteryVoltPub;
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("Energy Management");
 
@@ -27,11 +30,13 @@ public class PowerLogger {
       double energy;
       DoublePublisher powerPub;
       DoublePublisher energyPub;
-      public MotorData(String subsystem, double energy, DoublePublisher powerPub, DoublePublisher energyPub){
+      DoublePublisher currentPub;
+      public MotorData(String subsystem, double energy, DoublePublisher powerPub, DoublePublisher energyPub, DoublePublisher currentPub){
         this.subsystem = subsystem;
         this.energy = energy;
         this.powerPub = powerPub;
         this.energyPub = energyPub;
+        this.currentPub = currentPub;
       }
     }
 
@@ -56,6 +61,8 @@ public class PowerLogger {
     subsystemDataMap = new HashMap<>(numberSubsystems);
     motors = new ArrayList<>(numberMotors);
     motorDataMap = new HashMap<>(numberMotors);
+    batteryVoltPub = table.getDoubleTopic("Battery Voltage").publish();
+
   }
 
   public void registerSubsystem(String systemId, String... motorIds) {
@@ -69,6 +76,8 @@ public class PowerLogger {
           (LOG_INDIVIDUAL_MOTORS) ? table.getDoubleTopic(systemId + "/Motors/" + motorId + "/Power draw").publish()
               : null,
           (LOG_INDIVIDUAL_MOTORS) ? table.getDoubleTopic(systemId + "/Motors/" + motorId + "/Energy draw").publish()
+              : null,
+          (LOG_INDIVIDUAL_MOTORS) ? table.getDoubleTopic(systemId + "/Motors/" + motorId + "/Current draw").publish()
               : null));
     }
   }
@@ -84,6 +93,7 @@ public class PowerLogger {
         MotorData previousData = motorDataMap.get(log.motorIds[i]);
         previousData.energy = previousData.energy  + motorPowerDraw * Constants.RobotConstants.ROBOT_PERIOD;
         previousData.powerPub.set(motorPowerDraw);
+        previousData.currentPub.set(log.motorCurrents[i]);
       }
       totalSystemPowerDraw += motorPowerDraw;
     }
@@ -93,6 +103,7 @@ public class PowerLogger {
   }
 
   public void publishLogs() {
+    batteryVoltPub.set(RobotController.getBatteryVoltage());
     if (LOG_INDIVIDUAL_MOTORS) {
       for (String i : motors) {
         motorDataMap.get(i).energyPub.set(motorDataMap.get(i).energy);

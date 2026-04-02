@@ -110,6 +110,7 @@ public class Shooter {
 
     inputs.hood.publish();
     inputs.leader.publish();
+    inputs.follower.publish();
     controlModePub.set(controlMode.toString());
     hoodPosePub.set(inputs.actualHoodPosition);
     hoodPoseDesiredPub.set(setpointPosition);
