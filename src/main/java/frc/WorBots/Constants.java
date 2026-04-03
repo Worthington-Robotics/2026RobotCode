@@ -192,7 +192,7 @@ public class Constants {
 
     //Current limits
     public static final double INTAKE_CURRENT_LIMIT = 95; //TODO make sure this is high enough
-    public static final double EXTENDER_CURRENT_LIMIT = 200;
+    public static final double EXTENDER_CURRENT_LIMIT = 40;
  
     //Position constants for intake logic
     public static final double EXTENDER_MIN_LIMIT = 0.027;
