@@ -191,9 +191,9 @@ public class Intake extends SubsystemBase {
         // } else {
         //   volts = 0;
         // }
-        // if (extendController.atGoal() && goal != IntakePoses.HALF.pose){
-        //   volts = 0;
-        // }
+        if (extendController.atGoal() && goal != IntakePoses.HALF.pose){
+          volts = 0;
+        }
         voltsPublisher.set(volts);
         io.setExtendingMotorVolts(MathUtil.clamp(volts, -8, 8));
       }

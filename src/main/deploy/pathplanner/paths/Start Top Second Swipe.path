@@ -58,6 +58,12 @@
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
+    },
+    {
+      "name": "Hit The Deck",
+      "waypointRelativePos": 1.3532763532763332,
+      "endWaypointRelativePos": 1.7521367521367521,
+      "command": null
     }
   ],
   "globalConstraints": {

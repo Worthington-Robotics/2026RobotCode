@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
+import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.HardwareUtils.TalonSignals;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 
@@ -29,6 +30,9 @@ public class SpindexerIOTalon implements SpindexerIO{
     kicker.setNeutralMode(NeutralModeValue.Coast);
     kicker.setPosition(0);
     talon.setPosition(0);
+
+    HardwareUtils.setCurrentLimit(kicker, Constants.SpindexerConstants.KICKER_CURRENT_LIMIT);
+    HardwareUtils.setCurrentLimit(talon, Constants.SpindexerConstants.SPINDEXER_CURRENT_LIMIT);
   }
 
   @Override

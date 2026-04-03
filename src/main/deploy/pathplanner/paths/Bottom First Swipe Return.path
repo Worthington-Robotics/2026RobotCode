@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.575603988708492,
-        "y": 0.5283366798488469
+        "x": 5.619344114482877,
+        "y": 0.5094726461613329
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 0.55
       },
       "prevControl": {
-        "x": 5.16719356297488,
-        "y": 0.5629167616362267
+        "x": 5.045193812688449,
+        "y": 0.5379959225874094
       },
       "nextControl": {
-        "x": 3.54024771233123,
-        "y": 0.5269761729281691
+        "x": 3.344118974876973,
+        "y": 0.5821267204324764
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 0.5
       },
       "prevControl": {
-        "x": 3.1735434681212955,
-        "y": 0.4032544684899749
+        "x": 3.4187637964264206,
+        "y": 0.2649805185505056
       },
       "nextControl": {
-        "x": 2.464678855348069,
-        "y": 0.6543813599510394
+        "x": 2.57129576329614,
+        "y": 0.6492535077624506
       },
       "isLocked": false,
       "linkedName": null
@@ -52,8 +52,8 @@
         "y": 0.75
       },
       "prevControl": {
-        "x": 3.111228264622008,
-        "y": 0.5037691849659861
+        "x": 2.878447847457313,
+        "y": 0.5502440374547445
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,18 +61,6 @@
     }
   ],
   "rotationTargets": [
-    {
-      "waypointRelativePos": 0.0,
-      "rotationDegrees": 70.0
-    },
-    {
-      "waypointRelativePos": 0.0,
-      "rotationDegrees": 110.0
-    },
-    {
-      "waypointRelativePos": 0.0,
-      "rotationDegrees": 0.0
-    },
     {
       "waypointRelativePos": 2.0,
       "rotationDegrees": 0.0
@@ -96,15 +84,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Mine Mine Mine",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Use the Force",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
+      "name": "Hit The Deck",
+      "waypointRelativePos": 0.445868945868946,
+      "endWaypointRelativePos": 1.4145299145299008,
       "command": null
     }
   ],
@@ -118,13 +100,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -14.999999999999998
+    "rotation": -25.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0.1,
-    "rotation": 180.0
+    "velocity": 0.0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

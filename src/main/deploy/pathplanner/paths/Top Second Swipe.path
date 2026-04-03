@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.991610496102529,
-        "y": 4.577325483123023
+        "x": 7.990831005551454,
+        "y": 4.532354418284362
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 5.283580599144081
       },
       "prevControl": {
-        "x": 6.644956948796451,
-        "y": 5.1885150920193075
+        "x": 6.590321368789041,
+        "y": 5.168641930190386
       },
       "nextControl": {
-        "x": 7.893668321318249,
-        "y": 5.309881163272542
+        "x": 7.881352265346103,
+        "y": 5.3123262621108625
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 4.093223965763196
       },
       "prevControl": {
-        "x": 7.10779171651642,
-        "y": 4.263106111368773
+        "x": 7.12501076186164,
+        "y": 4.257629053204383
       },
       "nextControl": {
-        "x": 6.638222320091767,
-        "y": 3.828176313411957
+        "x": 6.653113794651967,
+        "y": 3.8709383392824677
       },
       "isLocked": false,
       "linkedName": null
@@ -52,12 +52,12 @@
         "y": 4.934236804564907
       },
       "prevControl": {
-        "x": 5.686059034685909,
-        "y": 4.16685422282132
+        "x": 5.815740542871513,
+        "y": 4.365702297781979
       },
       "nextControl": {
-        "x": 6.318433430864593,
-        "y": 6.435111244358548
+        "x": 6.1823587992053195,
+        "y": 6.839432091987934
       },
       "isLocked": false,
       "linkedName": null
@@ -68,12 +68,12 @@
         "y": 7.5
       },
       "prevControl": {
-        "x": 6.384186299945604,
-        "y": 7.235571232635566
+        "x": 6.349257352780455,
+        "y": 7.210858919582137
       },
       "nextControl": {
-        "x": 5.652458963760693,
-        "y": 7.739206467888963
+        "x": 5.58781559230713,
+        "y": 7.841236752849782
       },
       "isLocked": false,
       "linkedName": null
@@ -84,12 +84,12 @@
         "y": 7.5
       },
       "prevControl": {
-        "x": 5.067450313638028,
-        "y": 7.579337982631528
+        "x": 4.939388708937803,
+        "y": 7.577436088818842
       },
       "nextControl": {
-        "x": 3.9942454434159407,
-        "y": 7.370306938387983
+        "x": 3.7640130894794974,
+        "y": 7.251532854714796
       },
       "isLocked": false,
       "linkedName": null
@@ -100,12 +100,12 @@
         "y": 7.5
       },
       "prevControl": {
-        "x": 3.3449379544057622,
-        "y": 7.570291957124709
+        "x": 3.286136442492922,
+        "y": 7.589488010947887
       },
       "nextControl": {
-        "x": 2.7273340622379787,
-        "y": 7.444435739350414
+        "x": 2.761396718189892,
+        "y": 7.425377792116246
       },
       "isLocked": false,
       "linkedName": null
@@ -116,8 +116,8 @@
         "y": 7.25
       },
       "prevControl": {
-        "x": 2.986187524847422,
-        "y": 7.628203459647115
+        "x": 2.628853327701437,
+        "y": 7.424675376542094
       },
       "nextControl": null,
       "isLocked": false,
@@ -155,6 +155,19 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 4.563627730294403,
+      "maxWaypointRelativePos": 7.0,
+      "constraints": {
+        "maxVelocity": 6.096,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
   "pointTowardsZones": [],
@@ -163,6 +176,12 @@
       "name": "Mine Mine Mine",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Hit The Deck",
+      "waypointRelativePos": 4.350902184235516,
+      "endWaypointRelativePos": 5.680436847103506,
       "command": null
     }
   ],

@@ -79,8 +79,8 @@ public class Constants {
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
     public static final double SPINDEXER_STALL_CURRENT = 30;
     public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
-    public static final double SPINDEXER_CURRENT_LIMIT = 30; //TODO make sure this is high enough
-    public static final double KICKER_CURRENT_LIMIT = 40;
+    public static final double SPINDEXER_CURRENT_LIMIT = 70; //TODO make sure this is high enough
+    public static final double KICKER_CURRENT_LIMIT = 80;
     //PID Tolerance
 
     public static final double SPINDEXER_KP = 0.0;
@@ -191,6 +191,9 @@ public class Constants {
     public static final double INTAKE_EXTENDING_MAX_VEL = 7.5;
     public static final double INTAKE_EXTENDING_MAX_ACEL = 10.5;
 
+    public static final double INTAKE_EXTENDING_MAX_VEL_UP = 2.75;
+    public static final double INTAKE_EXTENDING_MAX_ACEL_UP = 4.25;
+
     //Current limits
     public static final double INTAKE_CURRENT_LIMIT = 95; //TODO make sure this is high enough
     public static final double EXTENDER_CURRENT_LIMIT = 100;
@@ -218,7 +221,7 @@ public class Constants {
     public static final double INTAKE_PULSE_SPIT_SEC = 0.3;
     public static final double INTAKE_JAMMED_THRESHHOLD = 0.25;
 
-    public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 4.2;
+    public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 3.7;
 
     public static final double INTAKE_SPIN_UP_SECONDS = 0.1;
   }

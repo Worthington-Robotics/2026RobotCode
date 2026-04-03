@@ -105,7 +105,7 @@ public class Spindexer extends SubsystemBase{
     kickerVelocityPublisher.set(inputs.kickerVelocity);
     spinGoalVelocityPublisher.set(spinGoalVelocity);
     kickerGoalVelocityPublisher.set(kickerGoalVelocity);
-    voltagePublisher.set(inputs.talon.supplyVoltage);
+    voltagePublisher.set(inputs.talon.appliedPowerVolts);
     currentPublisher.set(inputs.talon.currentDrawAmps);
     temperaturePublisher.set(inputs.talon.temperatureCelsius);
     connectionPublisher.set(inputs.talon.isConnected);

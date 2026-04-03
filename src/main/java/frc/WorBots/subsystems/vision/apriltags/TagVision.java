@@ -152,8 +152,8 @@ public class TagVision extends SubsystemBase {
       0.75, // AprilTag 12
       1.0, // AprilTag 13
       1.0, // AprilTag 14
-      1.0, // AprilTag 15
-      1.0, // AprilTag 16
+      0.0, // AprilTag 15
+      0.0, // AprilTag 16
   };
 
   /** Factor for speed compensation */
