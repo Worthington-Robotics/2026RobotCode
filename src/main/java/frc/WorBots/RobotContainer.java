@@ -152,7 +152,7 @@ public class RobotContainer {
     powerlogger.registerSubsystem("Intake", new String[] { "Intake Motor", "Extend Motor" });
     powerlogger.registerSubsystem("Shooter", new String[] { "Flywheel Leader", "Flywheel Follower", "Hood Motor" });
     powerlogger.registerSubsystem("Turret", new String[] { "Turret Motor" });
-    powerlogger.registerSubsystem("Spindexer", new String[] { "Spindexer Motor, Kicker Motor" });
+    powerlogger.registerSubsystem("Spindexer", new String[] { "Spindexer Motor", "Kicker Motor" });
   }
 
   public void configureBindings() {
