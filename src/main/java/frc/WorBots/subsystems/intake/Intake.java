@@ -124,16 +124,16 @@ public class Intake extends SubsystemBase {
         finalSetpointIntake = intakeFilter.calculate(setPointVoltageIntake);
       }
       // }
-      if(isJammed()){
-        pulseCount = (pulseCount+1)%7;
-        if(pulseCount>5){
-          unJamming = false;
-          finalSetpointIntake = -Math.abs(finalSetpointIntake);
-        } else {
-          unJamming = true;
-          finalSetpointIntake = -Math.abs(finalSetpointIntake);
-        }
-      }
+      // if(isJammed()){
+      //   pulseCount = (pulseCount+1)%7;
+      //   if(pulseCount>5){
+      //     unJamming = false;
+      //     finalSetpointIntake = -Math.abs(finalSetpointIntake);
+      //   } else {
+      //     unJamming = true;
+      //     finalSetpointIntake = -Math.abs(finalSetpointIntake);
+      //   }
+      // }
       io.setIntakeMotorVolts(finalSetpointIntake);
       setpointIntakePub.set(finalSetpointIntake);
     } else {
