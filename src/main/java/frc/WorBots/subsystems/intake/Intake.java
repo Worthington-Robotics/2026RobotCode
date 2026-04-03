@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
   private double setPointVoltageIntake = 0.0;
 
   //TODO see how this filter seems
-  private DerivativeFilter intakeFilter = new DerivativeFilter(Constants.IntakeConstants.INTAKE_VOLTAGE / (Constants.RobotConstants.ROBOT_FREQUENCY * Constants.IntakeConstants.INTAKE_SPIN_UP_SECONDS));
+  private DerivativeFilter intakeFilter = new DerivativeFilter(Constants.IntakeConstants.INTAKE_VOLTAGE / (Constants.IntakeConstants.INTAKE_SPIN_UP_SECONDS));
 
   private double setPointVoltageExtending = 0.0;
 
