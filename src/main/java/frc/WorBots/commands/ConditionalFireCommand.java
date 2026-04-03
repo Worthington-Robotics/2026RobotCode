@@ -42,7 +42,7 @@ public class ConditionalFireCommand extends Command {
     if (FireController.getInstance().readyToFire()) {
       spin.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY, Constants.SpindexerConstants.KICKER_VELOCITY);
     } else {
-      // spin.runSpindexerVoltage(0);
+      spin.setVelocity(0.0, Constants.SpindexerConstants.KICKER_VELOCITY);
     }
   }
 

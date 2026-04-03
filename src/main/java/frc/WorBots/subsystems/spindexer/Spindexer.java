@@ -89,8 +89,12 @@ public class Spindexer extends SubsystemBase{
         if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY)){
           spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
         }
+        if(spinGoalVelocity == 0){
+          io.setSpinVoltage(0);
+        }else {
+          io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinGoalVelocity));
+        }
         io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
-        io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinGoalVelocity));
       }
     }
 

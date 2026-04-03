@@ -30,6 +30,7 @@ public class Shooter {
 
   private final SimpleMotorFeedforward leaderFeedForwardController;
   private double setpointVelocity;
+  private double trueFlywheelSetpoint;
   private double setpointPosition;
   
   private double flySetpointVolts;
@@ -141,6 +142,7 @@ public class Shooter {
       io.setHoodVolts(0);
       io.setLeaderVolts(0);
     } else if (controlMode == ControlMode.Setpoint) {
+      setpointVelocity = flywheelVelocityFilter.calculate(trueFlywheelSetpoint);
       leaderPIDController.pid.setGoal(setpointVelocity);
       double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
       double leaderVolts = leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec,
@@ -234,7 +236,7 @@ public class Shooter {
   public void setFlywheelSpeed(double speed) {
     controlMode = ControlMode.Setpoint;
     setpointVelocity = speed + leaderFudgeFactor;
-    setpointVelocity = flywheelVelocityFilter.calculate(setpointVelocity);
+    trueFlywheelSetpoint = setpointVelocity;
   }
 
   /***
