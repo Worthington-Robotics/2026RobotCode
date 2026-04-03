@@ -218,6 +218,8 @@ public class Constants {
     public static final double INTAKE_JAMMED_THRESHHOLD = 0.25;
 
     public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 4.2;
+
+    public static final double INTAKE_SPIN_UP_SECONDS = 0.25;
   }
 
   public class ClimberConstants{

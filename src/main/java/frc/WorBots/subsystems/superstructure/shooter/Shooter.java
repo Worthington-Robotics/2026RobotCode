@@ -2,6 +2,7 @@ package frc.WorBots.subsystems.superstructure.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -52,6 +53,8 @@ public class Shooter {
   }
 
   private ControlMode controlMode = ControlMode.Disabled;
+
+  private LinearFilter flywheelVelocityFilter = LinearFilter.movingAverage(5);
 
   // Publishers
   private final NetworkTable shooter = NetworkTableInstance.getDefault().getTable("Shooter");
@@ -231,6 +234,7 @@ public class Shooter {
   public void setFlywheelSpeed(double speed) {
     controlMode = ControlMode.Setpoint;
     setpointVelocity = speed + leaderFudgeFactor;
+    setpointVelocity = flywheelVelocityFilter.calculate(setpointVelocity);
   }
 
   /***

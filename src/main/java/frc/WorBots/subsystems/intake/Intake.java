@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.util.FireController;
+import frc.WorBots.util.control.DerivativeFilter;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.Constants;
 import frc.WorBots.energy.PowerLogger.SubsystemLog;
@@ -49,6 +50,9 @@ public class Intake extends SubsystemBase {
 
   // The setpoint voltages for both the intaking and extending motors
   private double setPointVoltageIntake = 0.0;
+
+  //TODO see how this filter seems
+  private DerivativeFilter intakeFilter = new DerivativeFilter(Constants.IntakeConstants.INTAKE_VOLTAGE / (Constants.RobotConstants.ROBOT_FREQUENCY * Constants.IntakeConstants.INTAKE_SPIN_UP_SECONDS));
 
   private double setPointVoltageExtending = 0.0;
 
@@ -114,7 +118,11 @@ public class Intake extends SubsystemBase {
       double finalSetpointIntake = 0;
       // Don't try to intake when we are too high, grinds gears
       // if (inputs.extendPosition <= IntakePoses.HALF.get()){
+      if(setPointVoltageIntake < 0.0){
         finalSetpointIntake = setPointVoltageIntake;
+      } else {
+        finalSetpointIntake = intakeFilter.calculate(setPointVoltageIntake);
+      }
       // }
       if(isJammed()){
         pulseCount = (pulseCount+1)%7;
