@@ -159,7 +159,7 @@ public class Spindexer extends SubsystemBase{
   }
 
   public SubsystemLog getPowerLog(){
-    return new SubsystemLog("Spindexer", new String[]{"Spindexer Motor, Kicker Motor"}, 
+    return new SubsystemLog("Spindexer", new String[]{"Spindexer Motor", "Kicker Motor"}, 
       new double[]{inputs.talon.appliedPowerVolts, inputs.follower.appliedPowerVolts}, 
         new double[]{inputs.talon.currentDrawAmps, inputs.follower.currentDrawAmps});
   }

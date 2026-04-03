@@ -29,7 +29,7 @@ import java.util.Optional;
 public class DriveController {
   // Constants
   /** The percentage of the max drive speed that the robot will drive at */
-  public static final double DRIVE_SPEED_MULTIPLIER = 0.55;
+  public static final double DRIVE_SPEED_MULTIPLIER = 0.58;
 
   /** The max rotational speed in radians per update that the robot will drive at */
   public static final double ROTATIONAL_SPEED = 3.55; //Used to be 3.75, turned down on driver request

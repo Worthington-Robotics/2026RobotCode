@@ -128,7 +128,7 @@ public class HardwareUtils {
 
     public TalonSignals(TalonFX motor) {
       voltsSignal = new OptimalStatusSignal<>(motor.getSupplyVoltage(), Constants.RobotConstants.ROBOT_FREQUENCY);
-      currentSignal = new OptimalStatusSignal<>(motor.getStatorCurrent(), Constants.RobotConstants.ROBOT_FREQUENCY);
+      currentSignal = new OptimalStatusSignal<>(motor.getSupplyCurrent(), Constants.RobotConstants.ROBOT_FREQUENCY);
 
       // For .get() calls we need the duty cycle
       motor.getDutyCycle().setUpdateFrequency(Constants.RobotConstants.ROBOT_FREQUENCY);

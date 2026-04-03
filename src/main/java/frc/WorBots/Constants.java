@@ -125,7 +125,7 @@ public class Constants {
     //Current Limits
     public final static double TURRET_CURRENT_LIMIT = 40;
     public final static double FLYWHEEL_CURRENT_LIMIT = 85; //TODO make sure this is high enough
-    public final static double HOOD_CURRENT_LIMIT = 40;
+    public final static double HOOD_CURRENT_LIMIT = 20;
 
     //Turret Saftey Limits
     public static final double TURRET_MIN_ANGLE = -Units.degreesToRadians(190.0);
@@ -220,7 +220,7 @@ public class Constants {
 
     public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 4.2;
 
-    public static final double INTAKE_SPIN_UP_SECONDS = 0.25;
+    public static final double INTAKE_SPIN_UP_SECONDS = 0.1;
   }
 
   public class ClimberConstants{
