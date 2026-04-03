@@ -16,7 +16,6 @@ import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeomUtil;
 
-/* Taken and modified from team 6328. */
 
 /***
  * A class that can be used to calclate the required parameters for the robot's
@@ -30,17 +29,6 @@ public class ShotCalculatorI {
   private final static double MANUAL_TOF_FACTOR = 1.0;
 
   private final static double UNIVERSAL_FLYWHEEL_MOD = -0.5;
-
-  /***
-   * A class to represent all aspects of a shot
-   */
-  // public record ShootingParams(
-  //     boolean isValid,
-  //     Rotation2d turretAngle,
-  //     double hoodAngle,
-  //     double flywheelspeed,
-  //     double turretSpeed) {
-  // }
 
   private static double minScoreDistance;
   private static double maxScoreDistance;
