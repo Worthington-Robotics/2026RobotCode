@@ -77,13 +77,22 @@ public class Superstructure extends SubsystemBase {
     } else if (controlMode == SuperstructureControlMode.AutomaticShot) {
       Lights.getInstance().setManualShooting(false);
       //Calculate new params
-      if (!drive.inOurAllianceZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
-        currentShootingParams = ShotCalculatorI.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
-        isPassing = true;
+      if(isPassing){
+        if(drive.shouldStartScoring()){
+          isPassing = false;
+          currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        } else {
+          currentShootingParams = ShotCalculatorI.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        }
       } else {
-        currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
-        isPassing = false;
+        if(drive.shouldStartPassing()){
+          isPassing = true;
+          currentShootingParams = ShotCalculatorI.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        } else {
+          currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        }
       }
+      SmartDashboard.putBoolean("Is Passing", isPassing);
       //Apply params
       shotValid = currentShootingParams.isValid();
       shooter.setFlywheelSpeed(currentShootingParams.flywheelspeed());

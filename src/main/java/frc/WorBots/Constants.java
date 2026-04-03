@@ -162,6 +162,7 @@ public class Constants {
 
     public final static double ACCELERATION_FACTOR = 0; //How many seconds of acceleration to apply to velocity in shot calculation. Should probably be about the time we expect systems to take to respond
       //0.15
+    public final static double CHANGE_TARGET_MARGIN = 0.5;
 
 
     //Manual shots

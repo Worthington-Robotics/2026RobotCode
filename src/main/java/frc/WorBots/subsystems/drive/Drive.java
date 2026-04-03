@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -422,6 +423,22 @@ public class Drive extends SubsystemBase {
       return inRedZone();
     } else {
       return inBlueZone();
+    }
+  }
+
+  public boolean shouldStartPassing(){
+    if(AllianceFlipUtil.shouldFlip()){
+      return getPose().getX() < Units.inchesToMeters(469.11) - Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN;
+    } else {
+      return getPose().getX() > Units.inchesToMeters(182.11) + Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN; 
+    }
+  }
+
+  public boolean shouldStartScoring(){
+    if(AllianceFlipUtil.shouldFlip()){
+      return getPose().getX() > Units.inchesToMeters(469.11) + Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN;
+    } else {
+      return getPose().getX() < Units.inchesToMeters(182.11) - Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN; 
     }
   }
 
