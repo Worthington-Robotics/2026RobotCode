@@ -85,6 +85,7 @@ public class ShotCalculatorI {
       { 4.809293308638241, 0.5, 140, 1},
       { 5.551, 0.5, 160, 1},
       { 10.787, 0.500, 255, 1 },
+      { 14.5, 0.500, 290, 1 },
       };
     minScoreDistance = 1.0; // TODO set this //Thee minimum distance the robot can shoot
     maxScoreDistance = 6.258; // TODO set this //The maximum distance the robot can shoot
