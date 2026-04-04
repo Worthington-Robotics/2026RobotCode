@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
+        "x": 2.6,
         "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.024545483460742,
-        "y": 4.189963678917082
+        "x": 2.4381833472232426,
+        "y": 5.245659722974809
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.6,
-        "y": 4.0
+        "x": 1.8,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 3.188338385891748,
-        "y": 3.98165438411695
+        "x": 1.9491694621899456,
+        "y": 5.318578476668515
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,14 +33,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Use the Force",
-      "waypointRelativePos": 0,
+      "name": "Stop Firing",
+      "waypointRelativePos": 0.26828110161443247,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "Deploy Intake",
-      "waypointRelativePos": 0.5723021582733773,
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0.7583095916429227,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

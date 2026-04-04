@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 4.0
+        "x": 1.8,
+        "y": 5.9
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.024545483460742,
-        "y": 4.189963678917082
+        "x": 2.6735695822291414,
+        "y": 5.920022752886669
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.6,
-        "y": 4.0
+        "x": 0.4,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 3.188338385891748,
-        "y": 3.98165438411695
+        "x": -0.2255376458491286,
+        "y": 5.881097976917693
+      },
+      "nextControl": {
+        "x": 2.43133412102644,
+        "y": 5.96138131685328
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.2,
+        "y": 5.9
+      },
+      "prevControl": {
+        "x": 1.8582374738073013,
+        "y": 5.920046649563314
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,20 +47,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Use the Force",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Deploy Intake",
-      "waypointRelativePos": 0.5723021582733773,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.096,
     "maxAcceleration": 6.75,
@@ -55,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

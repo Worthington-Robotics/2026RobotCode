@@ -149,7 +149,7 @@ public class TagVision extends SubsystemBase {
       1.0, // AprilTag 9
       1.0, // AprilTag 10
       1.0, // AprilTag 11
-      0.75, // AprilTag 12
+      1.0, // AprilTag 12
       1.0, // AprilTag 13
       1.0, // AprilTag 14
       0.0, // AprilTag 15
@@ -520,7 +520,7 @@ public class TagVision extends SubsystemBase {
   }
 
   private double getTagScore(int id) {
-    if (id > 0 && id <= TAG_WEIGHTS.length / 2) {
+    if (id > 0 && id <= TAG_WEIGHTS.length * 2) {
       final int index = (id - 1) % TAG_WEIGHTS.length;
       return TAG_WEIGHTS[index];
     } else {
