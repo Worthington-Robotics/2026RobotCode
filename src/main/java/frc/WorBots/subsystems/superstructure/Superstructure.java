@@ -71,7 +71,7 @@ public class Superstructure extends SubsystemBase {
     //Publish values
     controlModePub.set(controlMode.toString());
     if (controlMode == SuperstructureControlMode.Disabled) {
-      currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+      currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
       turret.setTurretMode(TurretControlMode.Disabled);
       shooter.setShooterMode(ControlMode.Disabled);
     } else if (controlMode == SuperstructureControlMode.AutomaticShot) {
@@ -80,16 +80,16 @@ public class Superstructure extends SubsystemBase {
       if(isPassing){
         if(drive.shouldStartScoring()){
           isPassing = false;
-          currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+          currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
         } else {
-          currentShootingParams = ShotCalculatorI.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+          currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
         }
       } else {
         if(drive.shouldStartPassing()){
           isPassing = true;
-          currentShootingParams = ShotCalculatorI.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+          currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
         } else {
-          currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+          currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
         }
       }
       SmartDashboard.putBoolean("Is Passing", isPassing);
