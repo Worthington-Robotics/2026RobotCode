@@ -32,7 +32,7 @@ public class DriveController {
   public static final double DRIVE_SPEED_MULTIPLIER = 0.61;
 
   /** The max rotational speed in radians per update that the robot will drive at */
-  public static final double ROTATIONAL_SPEED = 3.55; //Used to be 3.75, turned down on driver request
+  public static final double ROTATIONAL_SPEED = 3.55 * 0.95; //Used to be 3.75, turned down on driver request
 
   /** The amount of input deadband to apply */
   public static final double DEADBAND = 0.15;
@@ -41,7 +41,7 @@ public class DriveController {
   public static final double MINIMUM_SPEED = 1e-3;
 
   /** The amount of curving to apply to the drive inputs */
-  public static final double DRIVE_CURVE_AMOUNT = 2.0;
+  public static final double DRIVE_CURVE_AMOUNT = 0.9;
 
   /** The amount of curving to apply to the turn input */
   public static final double TURN_CURVE_AMOUNT = 2.0;
