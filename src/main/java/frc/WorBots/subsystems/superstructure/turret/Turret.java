@@ -83,19 +83,15 @@ public class Turret {
     // Command motors
     if (controlMode == TurretControlMode.Disabled) {
       io.setVoltage(0);
-        // volts = MathUtil.clamp(volts, Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE,
-        //     Constants.TurretShooterConstants.TURRET_MAX_VOLTAGE);
-
-        // volts = GeneralMath.hardLimitVelocity(volts, inputs.turretFusedAngle,
-        //     Constants.TurretShooterConstants.TURRET_MIN_ANGLE, Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
-
-        // io.setVoltage(volts);
-
-        // requestedVoltagePub.set(volts);
-        io.setPosition(new TrapezoidProfile.State(goalPosition, goalVelocity));
-      }
+    } else if (controlMode == TurretControlMode.Voltage) {
+      debugVoltage = MathUtil.clamp(debugVoltage, Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE,
+          Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
+      io.setVoltage(debugVoltage);
+    } else if (controlMode == TurretControlMode.Position) {
+      io.setPosition(new TrapezoidProfile.State(goalPosition, goalVelocity));
     }
 
+    // Publish values
     absConnectedPub.set(inputs.absEncoderConnected);
     absAnglePub.set(inputs.turretAbsAngle);
     relAnglePub.set(inputs.turretRelAngle);
@@ -109,10 +105,15 @@ public class Turret {
     readyPub.set(readyToShoot());
     errorPub.set(goalPosition - inputs.turretFusedAngle);
     inputs.turret.publish();
-
     StatusPage.reportStatus(StatusPage.TURRET_READY, atGoal());
   }
 
+  /**
+   * Clamps a setpoint to be within the turret's max angle range
+   * 
+   * @param setpoint The setpoint to clamp
+   * @return The clamped setpoint
+   */
   private double clampSetpoint(double setpoint) {
     return MathUtil.clamp(setpoint, Constants.TurretShooterConstants.TURRET_MIN_ANGLE,
         Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
@@ -143,11 +144,17 @@ public class Turret {
     return false;
   }
 
+  /**
+   * Returns if the turret is at it's goal
+   */
   public boolean atGoal() {
-    return turretFeedBack.atGoal();
+    return Math.abs(goalPosition - getPosition()) < Constants.TurretShooterConstants.TURRET_POSE_TOLERANCE;
   }
 
-  public boolean readyToShoot(){
+  /**
+   * Returns if the turret is close enough to it's goal to shoot
+   */
+  public boolean readyToShoot() {
     return Math.abs(goalPosition - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_TOLERANCE;
   }
 
