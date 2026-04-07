@@ -1,6 +1,8 @@
 package frc.WorBots.subsystems.superstructure.shooter;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -26,11 +28,14 @@ public class ShooterIOTalon implements ShooterIO {
   private final TalonSignals followerSignals;
   private final TalonSignalsPositional hoodSignals;
 
+  private final double kv = 0.020;
+
   public ShooterIOTalon(){
     //TODO set motor PID values
     leader.setNeutralMode(NeutralModeValue.Coast);
     follower.setNeutralMode(NeutralModeValue.Coast);
     hood.setNeutralMode(NeutralModeValue.Brake);
+
 
     HardwareUtils.setInverted(leader, true);
     //TODO: Make sure that they actually are aligned 
@@ -48,10 +53,20 @@ public class ShooterIOTalon implements ShooterIO {
     hood.setPosition(0.0);
     leader.setPosition(0);
     follower.setPosition(0);
+
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kS = 0.021;
+    slot0Configs.kV = 0.0; //3.5
+    slot0Configs.kP = 0.06 * 2 * Math.PI;
+    slot0Configs.kI = 0.0;
+    slot0Configs.kD = 0.0;
+    leader.getConfigurator().apply(slot0Configs);
+    follower.getConfigurator().apply(slot0Configs);
   }
   
   @Override
   public void setLeaderVolts(double volts){
+    volts = MathUtil.clamp(volts, -10, 10);
     leader.setVoltage(volts);
   }
 
@@ -60,6 +75,12 @@ public class ShooterIOTalon implements ShooterIO {
     SmartDashboard.putNumber("Voltage", volts);
     volts = MathUtil.clamp(volts, -1, 1);
     hood.setVoltage(volts);
+  }
+
+  @Override
+  public void setFlywheelVelocity(double velocity){
+    final VelocityVoltage request = new VelocityVoltage(velocity / (2 * Math.PI)).withSlot(0).withFeedForward(velocity * kv);
+    leader.setControl(request);
   }
 
   @Override  

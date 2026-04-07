@@ -1,6 +1,7 @@
 package frc.WorBots.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.WorBots.Constants;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 
 /** A command to run the spindexer */
@@ -22,7 +23,11 @@ public class RunSpindexer extends Command {
 
   @Override
   public void initialize() {
-    spin.runSpindexerVoltage(voltage);
+    if(voltage<0){
+      spin.runSpindexerVoltage(voltage);
+    } else {
+      spin.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY, Constants.SpindexerConstants.KICKER_VELOCITY);
+    }
   }
 
   @Override

@@ -1,0 +1,138 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 0.55
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.321223889107342,
+        "y": 2.6381581607987066
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.5,
+        "y": 1.637
+      },
+      "prevControl": {
+        "x": 7.196255150896315,
+        "y": 1.5947489770332455
+      },
+      "nextControl": {
+        "x": 7.747615927309574,
+        "y": 1.671443468794823
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.5,
+        "y": 2.65
+      },
+      "prevControl": {
+        "x": 7.728056210300058,
+        "y": 2.5475775173920496
+      },
+      "nextControl": {
+        "x": 7.271943789699942,
+        "y": 2.75242248260795
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.652667617689016,
+        "y": 2.191241084165479
+      },
+      "prevControl": {
+        "x": 7.005694174861617,
+        "y": 2.6038072969532853
+      },
+      "nextControl": {
+        "x": 6.1823534193978364,
+        "y": 1.6416060958989807
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 0.6
+      },
+      "prevControl": {
+        "x": 6.167199704780467,
+        "y": 1.0473259235373265
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.1039584166333494,
+      "rotationDegrees": 55.0
+    },
+    {
+      "waypointRelativePos": 2.1080314960629822,
+      "rotationDegrees": 110.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.2832747363134096,
+      "maxWaypointRelativePos": 2.5012556504269163,
+      "constraints": {
+        "maxVelocity": 1.4,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 3000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Use the Force",
+      "waypointRelativePos": 3.740833751883463,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.096,
+    "maxAcceleration": 6.75,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 3000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 1.0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

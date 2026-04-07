@@ -5,12 +5,14 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.CanIDs;
 
 public class IntakeIOTalon implements IntakeIO {
@@ -40,7 +42,7 @@ public class IntakeIOTalon implements IntakeIO {
      * extending and intaking motors.
      */
     intakeMotor.setNeutralMode(NeutralModeValue.Coast);
-    HardwareUtils.setInverted(extendingMotor, false);
+    HardwareUtils.setInverted(extendingMotor, true);
     extendingMotor.setNeutralMode(NeutralModeValue.Brake);
     HardwareUtils.setInverted(intakeMotor, false);
 
@@ -78,10 +80,12 @@ public class IntakeIOTalon implements IntakeIO {
   // TODO Set actual max voltage
 
   public void setIntakeMotorVolts(double volts) {
+    volts = MathUtil.clamp(volts, -10, 10);
     intakeMotor.setVoltage(volts);
   }
 
   public void setExtendingMotorVolts(double volts) {
+    volts = MathUtil.clamp(volts, -10, 10);
     extendingMotor.setVoltage(volts);
   }
 }

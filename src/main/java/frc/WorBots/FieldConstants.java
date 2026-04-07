@@ -38,7 +38,7 @@ public class FieldConstants {
 
 
   // Field Zones 
-  public static final double trenchMargin = Units.inchesToMeters(35);
+  public static final double trenchMargin = Units.inchesToMeters(22);
   public static final Translation2d[] blueZone = { new Translation2d(0,0),
     new Translation2d(Units.inchesToMeters(182.11), Units.inchesToMeters(317.69))};
 

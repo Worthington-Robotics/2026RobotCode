@@ -25,6 +25,6 @@ public class IntakeExtendNoRequirements extends Command {
 
   @Override
   public boolean isFinished() {
-    return intake.atGoal();
+    return true;
   }
 }

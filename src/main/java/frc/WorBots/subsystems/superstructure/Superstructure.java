@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
@@ -70,24 +71,35 @@ public class Superstructure extends SubsystemBase {
     //Publish values
     controlModePub.set(controlMode.toString());
     if (controlMode == SuperstructureControlMode.Disabled) {
-      currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
+      currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
       turret.setTurretMode(TurretControlMode.Disabled);
       shooter.setShooterMode(ControlMode.Disabled);
     } else if (controlMode == SuperstructureControlMode.AutomaticShot) {
+      Lights.getInstance().setManualShooting(false);
       //Calculate new params
-      if (!drive.inOurAllianceZone() && (!DriverStation.isAutonomous() || doAutoPassing)) {
-        currentShootingParams = ShotCalculator.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
-        isPassing = true;
+      if(isPassing){
+        if(drive.shouldStartScoring()){
+          isPassing = false;
+          currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        } else {
+          currentShootingParams = ShotCalculatorI.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        }
       } else {
-        currentShootingParams = ShotCalculator.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds());
-        isPassing = false;
+        if(drive.shouldStartPassing()){
+          isPassing = true;
+          currentShootingParams = ShotCalculatorI.getPassParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        } else {
+          currentShootingParams = ShotCalculatorI.getHubParams(drive.getPose(), drive.getFieldrelativeMeasuredSpeeds(), drive.getAcceleration());
+        }
       }
+      SmartDashboard.putBoolean("Is Passing", isPassing);
       //Apply params
       shotValid = currentShootingParams.isValid();
       shooter.setFlywheelSpeed(currentShootingParams.flywheelspeed());
       shooter.setHoodPose(currentShootingParams.hoodAngle());
       turret.setPosition(currentShootingParams, drive.getPose());
     } else if (controlMode == SuperstructureControlMode.ManualShot) {
+      Lights.getInstance().setManualShooting(true);
       //Apply params
       shotValid = currentShootingParams.isValid();
       shooter.setFlywheelSpeed(currentShootingParams.flywheelspeed());
@@ -228,5 +240,13 @@ public class Superstructure extends SubsystemBase {
 
   public boolean isPassing(){
     return isPassing;
+  }
+
+  public SubsystemLog getTurretPowerLog(){
+    return turret.getPowerLog();
+  }
+
+  public SubsystemLog getShooterPowerLog(){
+    return shooter.getPowerLog();
   }
 }

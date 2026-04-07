@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3,
-        "y": 6.0
+        "x": 2.6,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.277149398599052,
-        "y": 5.470688889791026
+        "x": 2.4381833472232426,
+        "y": 5.245659722974809
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 5.0
+        "x": 1.8,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 2.5103912374822106,
-        "y": 5.278827902715877
+        "x": 1.9491694621899456,
+        "y": 5.318578476668515
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,10 +31,23 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stop Firing",
+      "waypointRelativePos": 0.26828110161443247,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0.7583095916429227,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 6.096,
-    "maxAcceleration": 7.5,
+    "maxAcceleration": 6.75,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 3000.0,
     "nominalVoltage": 12.0,
@@ -42,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "DEBUG",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

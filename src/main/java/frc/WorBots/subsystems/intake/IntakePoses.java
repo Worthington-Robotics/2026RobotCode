@@ -1,7 +1,7 @@
 package frc.WorBots.subsystems.intake;
 
 public enum IntakePoses {
-  EXTENDED(0.06),
+  EXTENDED(0.12),
   RETRACTED(1.4),
   HALF(1.2); // Was .8
 

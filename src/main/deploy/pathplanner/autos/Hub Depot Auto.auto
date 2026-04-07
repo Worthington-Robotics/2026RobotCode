@@ -7,25 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Traverse Bottom Trench from Start"
+            "pathName": "Hub Start"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Intake Bottom Full Run"
+            "pathName": "Line up with Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral to Allaince Top"
+            "pathName": "Grab Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Trench to Depot"
+            "pathName": "Return from Depot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Annoy"
           }
         }
       ]

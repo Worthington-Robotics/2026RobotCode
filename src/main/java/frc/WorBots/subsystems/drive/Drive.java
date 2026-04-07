@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -25,6 +27,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.RobotContainer;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
@@ -40,6 +44,9 @@ public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
   private final GyroIOInputs gyroIOInputs = new GyroIOInputs();
 
+  //TODO remove
+  LinearFilter timeFilter = LinearFilter.movingAverage(10000);
+
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private DriveFilter filter = new DriveFilter(Constants.DriveConstants.DRIVE_MAX_VELOCITY,
       Constants.DriveConstants.DRIVE_MAX_ACCELERATION, Constants.DriveConstants.DRIVE_MAX_ROTATIONAL_VELOCITY,
@@ -49,7 +56,9 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds setpointSpeeds = new ChassisSpeeds();
 
   /* Measured speeds from odom, robot relative */
-  private ChassisSpeeds measuredSpeeds;
+  private ChassisSpeeds measuredSpeeds = new ChassisSpeeds();
+  private ChassisSpeeds acceleration = new ChassisSpeeds();
+  private ChassisSpeeds lastAcceleration = new ChassisSpeeds();
 
   private Rotation2d lastGyroYaw = new Rotation2d();
 
@@ -338,8 +347,8 @@ public class Drive extends SubsystemBase {
     poseEstimator.update();
     posePublisher.set(getPose());
 
-    final double endTime = Timer.getFPGATimestamp();
-    SmartDashboard.putNumber("Odom Time", endTime - startTime);
+    // final double endTime = Timer.getFPGATimestamp();
+    // SmartDashboard.putNumber("Odom Time", endTime - startTime);
   }
 
   /**
@@ -414,6 +423,22 @@ public class Drive extends SubsystemBase {
       return inRedZone();
     } else {
       return inBlueZone();
+    }
+  }
+
+  public boolean shouldStartPassing(){
+    if(AllianceFlipUtil.shouldFlip()){
+      return getPose().getX() < Units.inchesToMeters(469.11) - Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN;
+    } else {
+      return getPose().getX() > Units.inchesToMeters(182.11) + Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN; 
+    }
+  }
+
+  public boolean shouldStartScoring(){
+    if(AllianceFlipUtil.shouldFlip()){
+      return getPose().getX() > Units.inchesToMeters(469.11) + Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN;
+    } else {
+      return getPose().getX() < Units.inchesToMeters(182.11) - Constants.TurretShooterConstants.CHANGE_TARGET_MARGIN; 
     }
   }
 
@@ -493,7 +518,57 @@ public class Drive extends SubsystemBase {
   }
 
   public void resetYaw(){
-    gyroIO.resetHeading(new Rotation2d());
+    resetYaw(new Rotation2d());
   }
 
+  public void resetYaw(Rotation2d rotation){
+     gyroIO.resetHeading(rotation);
+    lastGyroYaw = rotation;
+    final Pose2d currentPose = poseEstimator.getLatestPose();
+    poseEstimator.resetPose(
+        new Pose2d(currentPose.getX(), currentPose.getY(), AllianceFlipUtil.apply(rotation)));
+    setDriveZeroOffset();
+  }
+
+  /**
+   * Changes the rotational zero drive controller uses for converting to field relative
+   * Relies on having a acurate pose.
+   */
+  public void setDriveZeroOffset(){
+    RobotContainer.driveController.resetDriveRotation(getRotation(), getYaw());
+  }
+
+  /**
+   * Returns the robot's field relative acceleration
+   */
+  public ChassisSpeeds getAcceleration(){
+    // acceleration = measuredSpeeds.minus(lastMeasuredSpeeds).times(Constants.RobotConstants.ROBOT_FREQUENCY);
+    // double x = accelerationFilterX.calculate(acceleration.vxMetersPerSecond);
+    // x = MathUtil.clamp(x, -7, 7);
+    // double y = accelerationFilterY.calculate(acceleration.vyMetersPerSecond);
+    // y = MathUtil.clamp(y, -7, 7);
+    // acceleration = new ChassisSpeeds(x, y, acceleration.omegaRadiansPerSecond);
+    acceleration = filter.getLastAcceleration();
+    acceleration = (acceleration.times(Constants.DriveConstants.ACCELERATION_FILTER_FACTOR)).plus(lastAcceleration.times(1.0-Constants.DriveConstants.ACCELERATION_FILTER_FACTOR));
+    SmartDashboard.putNumberArray("Acceleration", Logger.chassisSpeedsToArray(acceleration));
+    lastAcceleration = acceleration;
+    return acceleration;
+  }
+
+  public SubsystemLog getPowerLog(){
+    SubsystemLog flLog = modules[0].getModulePowerLog();
+    SubsystemLog frLog = modules[1].getModulePowerLog();
+    SubsystemLog blLog = modules[2].getModulePowerLog();
+    SubsystemLog brLog = modules[3].getModulePowerLog();
+    if(flLog == null){
+      return null;
+    }
+    return new SubsystemLog("Drive", 
+      new String[]{"Front Left Drive","Front Left Turn","Front Right Drive",
+        "Front Right Turn","Back Left Drive","Back Left Turn","Back Right Drive","Back Right Turn"}, 
+          new double[]{flLog.motorVolts()[0], flLog.motorVolts()[1], frLog.motorVolts()[0], frLog.motorVolts()[1], blLog.motorVolts()[0],
+              blLog.motorVolts()[1], brLog.motorVolts()[0], brLog.motorVolts()[1]}, 
+                new double[]{flLog.motorCurrents()[0], flLog.motorCurrents()[1], frLog.motorCurrents()[0], frLog.motorCurrents()[1], blLog.motorCurrents()[0],
+                  blLog.motorCurrents()[1], brLog.motorCurrents()[0], brLog.motorCurrents()[1]});
+  }
 }

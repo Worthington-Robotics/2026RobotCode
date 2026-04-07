@@ -158,21 +158,24 @@ public class PoseEstimator {
     }
 
     // Recalculate latest pose once
-    update();
+    // update();
   }
 
   /** Clears old data and calculates the latest pose. */
   public void update() {
     // Clear old data and update base pose
+    Matrix<N3, N3> allocMatrix = new Matrix<>(Nat.N3(), Nat.N3());
     while (updates.size() > 1 && updates.firstKey() < Timer.getFPGATimestamp() - HISTORY_LENGTH) {
       final Entry<Double, PoseUpdate> update = updates.pollFirstEntry();
-      basePose = update.getValue().apply(basePose, q);
+      allocMatrix.fill(0.0);
+      basePose = update.getValue().apply(basePose, q, allocMatrix);
     }
 
     // Update latest pose
     latestPose = basePose;
     for (Entry<Double, PoseUpdate> updateEntry : updates.entrySet()) {
-      latestPose = updateEntry.getValue().apply(latestPose, q);
+      allocMatrix.fill(0.0);
+      latestPose = updateEntry.getValue().apply(latestPose, q, allocMatrix);
     }
 
     // Safety check if the timestamps are wrong or we get too many updates
@@ -186,7 +189,7 @@ public class PoseEstimator {
    * vision updates.
    */
   private static record PoseUpdate(Twist2d twist, ArrayList<VisionUpdate> visionUpdates) {
-    public Pose2d apply(Pose2d lastPose, Matrix<N3, N1> q) {
+    public Pose2d apply(Pose2d lastPose, Matrix<N3, N1> q, Matrix<N3, N3> allocMatrix) {
       Pose2d pose = lastPose;
 
       // Don't do any math if the twist is small enough
@@ -200,7 +203,7 @@ public class PoseEstimator {
       for (VisionUpdate visionUpdate : visionUpdates) {
         // Calculate Kalman gains based on std devs
         // (https://github.com/wpilibsuite/allwpilib/blob/main/wpimath/src/main/java/edu/wpi/first/math/estimator/)
-        Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
+        Matrix<N3, N3> visionK = allocMatrix;
         var r = new double[3];
         for (int i = 0; i < 3; ++i) {
           r[i] = visionUpdate.stdDevs().get(i, 0) * visionUpdate.stdDevs().get(i, 0);

@@ -28,7 +28,6 @@ public class StatusPage {
 
   // System name constants
   public static final String AUTOS = "Autos";
-  public static final String AUTO_CHOSEN = "Auto Chosen";
   public static final String ROBOT_CODE = "Robot Code";
   public static final String DRIVE_CONTROLLER = "Drive Controller";
   public static final String DRIVE_SUBSYSTEM = "Drive Subsystem";
@@ -36,7 +35,6 @@ public class StatusPage {
   public static final String SPINDEXER_SUBSYSTEM = "Spindexer Subsystem";
   public static final String TURRET_SUBSYSTEM = "Turret Subsystem";
   public static final String SHOOTER_SUBSYSTEM = "Shooter Subsystem";
-  public static final String CLIMBER_SUBSYSTEM = "Climber Subsystem";
   public static final String LIGHTS_SUBSYSTEM = "Lights Subsystem";
   public static final String TAG_VISION_SUBSUBSYSTEM = "Tag Vision Subsubsystem";
   public static final String BLOB_VISION_SUBSUBSYSTEM = "Blob Detection Subsubsystem";
@@ -67,6 +65,7 @@ public class StatusPage {
   // Sort in order of priority, from highest to lowest
   /** All systems that the StatusPage reports */
   public static final String[] ALL_SYSTEMS = {
+    AUTOS,
     DRIVE_CONTROLLER,
     OPERATOR_CONTROLLER,
     INTAKE_CONNECTED,
@@ -217,7 +216,6 @@ public class StatusPage {
     Lights.getInstance().sysFault(StatusPage.sysFault());
     Lights.getInstance().addSpinStatus(StatusPage.getStatus(SPINDEXER_JAM));
     Lights.getInstance().addVisionStatus(StatusPage.getStatus(TAG_VISION_SUBSUBSYSTEM));
-    Lights.getInstance().setClimb(StatusPage.getStatus(CLIMBING));
     Lights.getInstance().addShotStatus(shotReady());
   }
 

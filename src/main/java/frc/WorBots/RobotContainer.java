@@ -14,6 +14,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +29,8 @@ import frc.WorBots.commands.HoodControlFudgeCommand;
 import frc.WorBots.commands.IntakeCommands;
 import frc.WorBots.commands.pathPlannerCommands.IntakeExtendNoRequirements;
 import frc.WorBots.commands.pathPlannerCommands.PathplannerIntakeCommands;
+import frc.WorBots.commands.pathPlannerCommands.StopShooting;
+import frc.WorBots.energy.PowerLogger;
 import frc.WorBots.commands.PitTest;
 import frc.WorBots.commands.StartAutoAim;
 import frc.WorBots.commands.ShooterCommands;
@@ -55,6 +59,7 @@ import frc.WorBots.subsystems.vision.apriltags.TagVisionIONew;
 import frc.WorBots.util.FireController;
 import frc.WorBots.util.control.DriveController;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.math.AllianceFlipUtil;
 
 public class RobotContainer {
   // Subsystems
@@ -67,6 +72,8 @@ public class RobotContainer {
   // Joysticks
   public final CommandXboxController driver = new CommandXboxController(0);
   public final CommandXboxController operator = new CommandXboxController(1);
+
+  public PowerLogger powerlogger = new PowerLogger(5, 17);
 
   // Drive Controller
   public static final DriveController driveController = new DriveController();
@@ -104,8 +111,10 @@ public class RobotContainer {
       superstructure = new Superstructure(new ShooterIOSim(), new TurretIOSim(), drive);
       intake = new Intake(new IntakeIOSim());
     }
-    vision = new TagVision(new TagVisionIONew("left_cam"), new TagVisionIONew("right_cam"));
-    vision.setDataInterfaces(drive::addVisionUpdate, () -> drive.getRotation(), () -> drive.getFieldRelativeSetpointSpeeds());
+    vision = new TagVision(new TagVisionIONew("left_cam"), new TagVisionIONew("right_cam"),
+        new TagVisionIONew("back_cam"));
+    vision.setDataInterfaces(drive::addVisionUpdate, () -> drive.getRotation(),
+        () -> drive.getFieldRelativeSetpointSpeeds());
 
     FireController fireController = new FireController(superstructure, drive, spin);
 
@@ -118,8 +127,8 @@ public class RobotContainer {
         () -> drive.getRobotRelativeSpeeds(), // Robot Relative Speed Supplier
         speeds -> driveController.drive(drive, speeds), // Output Command
         new PPHolonomicDriveController( // Holonomic Drive Controller Used by PathPlanner
-            new PIDConstants(2.4, 0.0, 0.15), // Translation PID Constants
-            new PIDConstants(3.2, 0.0, 0.0), // Rotational PID Constants
+            new PIDConstants(13, 0.0, 1.2), // Translation PID Constants
+            new PIDConstants(3.4, 0.0, 0.2), // Rotational PID Constants
             Constants.RobotConstants.ROBOT_PERIOD), // PID Period
         Constants.PathPlannerConstants.PATHPLANNER_CONFIG,
         () -> {
@@ -138,6 +147,12 @@ public class RobotContainer {
 
     registerAutos();
     configureBindings();
+    powerlogger.registerSubsystem("Drive", new String[] { "Front Left Drive", "Front Left Turn", "Front Right Drive",
+        "Front Right Turn", "Back Left Drive", "Back Left Turn", "Back Right Drive", "Back Right Turn" });
+    powerlogger.registerSubsystem("Intake", new String[] { "Intake Motor", "Extend Motor" });
+    powerlogger.registerSubsystem("Shooter", new String[] { "Flywheel Leader", "Flywheel Follower", "Hood Motor" });
+    powerlogger.registerSubsystem("Turret", new String[] { "Turret Motor" });
+    powerlogger.registerSubsystem("Spindexer", new String[] { "Spindexer Motor", "Kicker Motor" });
   }
 
   public void configureBindings() {
@@ -147,11 +162,13 @@ public class RobotContainer {
 
   public void configureDriverRealBindings() {
     // Configure DriveWithJoysticks
-    //B activates gyro lock
+    // B activates gyro lock
     drive.setDefaultCommand(
         new DriveWithJoysticks(
             drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> {return false;}, () -> driver.x().getAsBoolean()));
+            () -> {
+              return false;
+            }, () -> driver.x().getAsBoolean()));
     // A Key = Extend or retract intake
     // TODO: check if written correctly
     driver.rightBumper().debounce(0.02).onTrue(new IntakeCommands().togglePose(intake));
@@ -166,7 +183,6 @@ public class RobotContainer {
 
     driver.povUp().debounce(0.02).whileTrue(new ShooterCommands().superPass(superstructure, intake, drive, spin));
 
-  
   }
 
   /*
@@ -176,10 +192,12 @@ public class RobotContainer {
    */
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
-    operator.rightTrigger().debounce(0.02).whileTrue(new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
-    // operator.leftTrigger().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
-    operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8)); 
-    //Force feed
+    operator.rightTrigger().debounce(0.02).whileTrue(
+        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    // operator.leftTrigger().debounce(0.02).whileTrue(new
+    // ShooterCommands().forceFeedShooter(spin));
+    operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8));
+    // Force feed
     operator.leftBumper().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     // Climber command is going to be up Dpad
     // TODO: Add driver-assist manual disable
@@ -190,17 +208,25 @@ public class RobotContainer {
 
     operator.y().debounce(0.02).onTrue(new ShooterCommands().setHoodPose(superstructure, 0));
 
-    //Commands to do setpoint shots: set to d pad
-    operator.povUp().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT, () -> operator.x().getAsBoolean()));
-    operator.povDown().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.TOWER_SHOT, () -> operator.x().getAsBoolean()));
-    operator.povLeft().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.LEFT_CORNER_SHOT, () -> operator.x().getAsBoolean()));
-    operator.povRight().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT, () -> operator.x().getAsBoolean()));
-    //Commands for fudge factors: bound to dpad while x is held
-    operator.povUp().debounce(0.02).onTrue(new HoodControlFudgeCommand(superstructure, 0.005, () -> operator.x().getAsBoolean()));
-    operator.povDown().debounce(0.02).onTrue(new HoodControlFudgeCommand(superstructure, -0.005, () -> operator.x().getAsBoolean()));
-    operator.povLeft().debounce(0.02).onTrue(new ShotControlFudgeCommand(superstructure, -2.0, () -> operator.x().getAsBoolean()));
-    operator.povRight().debounce(0.02).onTrue(new ShotControlFudgeCommand(superstructure, 2.0, () -> operator.x().getAsBoolean()));
-    
+    // Commands to do setpoint shots: set to d pad
+    operator.povUp().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure,
+        Constants.TurretShooterConstants.HUB_SHOT, () -> operator.x().getAsBoolean()));
+    operator.povDown().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure,
+        Constants.TurretShooterConstants.TOWER_SHOT, () -> operator.x().getAsBoolean()));
+    operator.povLeft().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure,
+        Constants.TurretShooterConstants.LEFT_CORNER_SHOT, () -> operator.x().getAsBoolean()));
+    operator.povRight().debounce(0.02).onTrue(new ShooterCommands().manualShot(superstructure,
+        Constants.TurretShooterConstants.RIGHT_CORNER_SHOT, () -> operator.x().getAsBoolean()));
+    // Commands for fudge factors: bound to dpad while x is held
+    operator.povUp().debounce(0.02)
+        .onTrue(new HoodControlFudgeCommand(superstructure, 0.005, () -> operator.x().getAsBoolean()));
+    operator.povDown().debounce(0.02)
+        .onTrue(new HoodControlFudgeCommand(superstructure, -0.005, () -> operator.x().getAsBoolean()));
+    operator.povLeft().debounce(0.02)
+        .onTrue(new ShotControlFudgeCommand(superstructure, -2.0, () -> operator.x().getAsBoolean()));
+    operator.povRight().debounce(0.02)
+        .onTrue(new ShotControlFudgeCommand(superstructure, 2.0, () -> operator.x().getAsBoolean()));
+
   }
 
   public Command getAutonomousCommand() {
@@ -229,21 +255,32 @@ public class RobotContainer {
     selector = new AutoSelector("Auto Selector 2");
 
     NamedCommands.registerCommand("Focus Your Power", new StartAutoAim(superstructure));
-    NamedCommands.registerCommand("Sustained Fire", new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    NamedCommands.registerCommand("Sustained Fire", new ShooterCommands().forceFeedShooterAuto(spin));
+    NamedCommands.registerCommand("Wait Then Fire", Commands.waitUntil(() -> FireController.getInstance().readyToFire())
+        .andThen(new ShooterCommands().forceFeedShooterAuto(spin)));
     NamedCommands.registerCommand("Deploy Intake", new IntakeExtendNoRequirements(intake));
-    NamedCommands.registerCommand("Annoy", new IntakeCommands().agitate(intake));
-    NamedCommands.registerCommand("Mag Dump", new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
-    NamedCommands.registerCommand("Dunk", new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT, () -> {return false;}));
+    NamedCommands.registerCommand("Annoy", Commands.runOnce(() -> intake.agigateAuto()));
+    NamedCommands.registerCommand("Mag Dump",
+        new ShooterCommands().autoSetpointShot(superstructure, Constants.TurretShooterConstants.RIGHT_CORNER_SHOT));
+    NamedCommands.registerCommand("Dunk",
+        new ShooterCommands().manualShot(superstructure, Constants.TurretShooterConstants.HUB_SHOT, () -> {
+          return false;
+        }));
 
-    NamedCommands.registerCommand("Pit Test", new PitTest().fullPitTest(drive, superstructure, intake, spin, vision, Lights.getInstance()));
+    NamedCommands.registerCommand("Pit Test",
+        new PitTest().fullPitTest(drive, superstructure, intake, spin, vision, Lights.getInstance()));
 
-    new EventTrigger("Dracarys!").whileTrue(new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    new EventTrigger("Dracarys!").whileTrue(new ShooterCommands().forceFeedShooterAuto(spin));
     new EventTrigger("Mine Mine Mine").onTrue(new PathplannerIntakeCommands().startIntakeAuto(intake));
     new EventTrigger("Dude Chill").onTrue(new PathplannerIntakeCommands().stopIntakeAuto(intake));
+    new EventTrigger("Stop Firing").onTrue(Commands.runOnce(() -> {
+      spin.stopSpindexer();
+    }));
     new EventTrigger("Hit The Deck").whileTrue(new ShooterCommands().hoodDown(superstructure));
     new EventTrigger("Deploy Intake").onTrue(new IntakeCommands().extend(intake));
-    new EventTrigger("Retract Intake").onTrue(new IntakeCommands().retract(intake));
-    new EventTrigger("Sustained Fire").onTrue(new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+    new EventTrigger("Retract Intake").onTrue(new IntakeCommands().agitate(intake));
+    new EventTrigger("Sustained Fire").onTrue(
+        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Use the Force").onTrue(new StartAutoAim(superstructure));
 
     // Fetchs all of the autos from Path Planner
@@ -252,11 +289,6 @@ public class RobotContainer {
     // For each auto it checks if Its a Comp or Debug auto and modifies the list of
     // registered autos
     for (String auto : autos) {
-      if (Constants.IS_COMP) {
-        if (!auto.substring(0, 3).equals("COMP")) {
-          continue;
-        }
-      }
       if (!Constants.ENABLE_DEBUG_ROUTINES) {
         if (auto.substring(0, 5).equals("DEBUG")) {
           continue;
@@ -273,15 +305,24 @@ public class RobotContainer {
     spin.disable();
   }
 
-  public void teleopInitSubsystems(){
-    if (ranAuto){
+  public void teleopInitSubsystems() {
+    if (ranAuto) {
       intake.teleopInit();
       superstructure.enableAutoAiming();
-      
+      drive.setDriveZeroOffset();
     }
   }
 
-  public void ranAuto(){
+  public void ranAuto() {
     ranAuto = true;
+  }
+
+  public void updatePowerLogs() {
+    powerlogger.integrateLog(drive.getPowerLog());
+    powerlogger.integrateLog(intake.getPowerLog());
+    powerlogger.integrateLog(superstructure.getShooterPowerLog());
+    powerlogger.integrateLog(superstructure.getTurretPowerLog());
+    powerlogger.integrateLog(spin.getPowerLog());
+    powerlogger.publishLogs();
   }
 }

@@ -79,24 +79,35 @@ public class TagVision extends SubsystemBase {
       new Rotation3d(
           Units.degreesToRadians(0),
           Units.degreesToRadians(-30),
-          Units.degreesToRadians(-95)));
+          Units.degreesToRadians(-93)));
+
+  //Transform for the back-facing camera
+  private static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(
+    new Translation3d(
+      Units.inchesToMeters(-13.0),
+      Units.inchesToMeters(-10.75),
+      Units.inchesToMeters(7.0 + 3.0/8.0)),
+    new Rotation3d(
+      Units.degreesToRadians(0),
+      Units.degreesToRadians(-30),
+      Units.degreesToRadians(182)));
 
   /** The transforms for the cameras to robot center */
   private static final Transform3d[] CAMERA_TRANSFORMS = new Transform3d[] { LEFT_CAMERA_TRANSFORM,
-      RIGHT_CAMERA_TRANSFORM };
+      RIGHT_CAMERA_TRANSFORM, BACK_CAMERA_TRANSFORM };
 
   /** Latency between the camera and it being pushed to NT */
   private static final TunableDouble LATENCY = new TunableDouble("Vision", "Tuning", "AprilTag Latency", 0.0);
 
   /** Detection weights for each camera */
-  private static final double[] CAMERA_WEIGHTS = new double[] { 1.0, 0.9 };
+  private static final double[] CAMERA_WEIGHTS = new double[] { 1.0, 0.95, 1.0 };
 
   /**
    * How much influence XY data has on the robot pose. Smaller values increase
    * influence
    */
   // TODO: leave these where they are rn
-  private static final double XY_STD_DEV_COEFFICIENT = 1.0;
+  private static final double XY_STD_DEV_COEFFICIENT = 0.8;
 
   /**
    * How much influence theta data has on the robot pose. Smaller values increase
@@ -138,11 +149,11 @@ public class TagVision extends SubsystemBase {
       1.0, // AprilTag 9
       1.0, // AprilTag 10
       1.0, // AprilTag 11
-      0.75, // AprilTag 12
+      1.0, // AprilTag 12
       1.0, // AprilTag 13
       1.0, // AprilTag 14
-      1.0, // AprilTag 15
-      1.0, // AprilTag 16
+      0.0, // AprilTag 15
+      0.0, // AprilTag 16
   };
 
   /** Factor for speed compensation */
@@ -168,6 +179,8 @@ public class TagVision extends SubsystemBase {
   private final BooleanPublisher isPoseValidPublisher = visionTable.getBooleanTopic("Is Pose Valid").publish();
   private final StructPublisher<Pose3d> invalidPosePublisher = visionTable.getStructTopic("Invalid Pose", Pose3d.struct)
       .publish();
+  private final StructArrayPublisher<Pose3d> cameraTransformsPublisher = visionTable.getStructArrayTopic("Camera Transforms", Pose3d.struct)
+      .publish();
   private final IntegerPublisher detectionCountPublisher = visionTable.getIntegerTopic("Detection Count").publish();
 
   public TagVision(TagVisionIO... io) {
@@ -177,6 +190,12 @@ public class TagVision extends SubsystemBase {
       inputs[i] = new TagVisionIOInputs();
     }
     StatusPage.reportStatus(StatusPage.TAG_VISION_SUBSUBSYSTEM, true);
+    Pose3d[] poses = new Pose3d[CAMERA_TRANSFORMS.length];
+    for (int i = 0; i < CAMERA_TRANSFORMS.length; i++) {
+      var pose = new Pose3d().plus(CAMERA_TRANSFORMS[i]);
+      poses[i] = pose;
+    }
+    cameraTransformsPublisher.set(poses);
   }
 
   public void periodic() {
@@ -501,7 +520,7 @@ public class TagVision extends SubsystemBase {
   }
 
   private double getTagScore(int id) {
-    if (id > 0 && id <= TAG_WEIGHTS.length / 2) {
+    if (id > 0 && id <= TAG_WEIGHTS.length * 2) {
       final int index = (id - 1) % TAG_WEIGHTS.length;
       return TAG_WEIGHTS[index];
     } else {

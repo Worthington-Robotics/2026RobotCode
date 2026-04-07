@@ -27,4 +27,5 @@ public interface GyroIO {
 
   /** Resets the gyroscope to a heading (yaw) */
   public default void resetHeading(Rotation2d heading) {}
+
 }

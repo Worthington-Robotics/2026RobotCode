@@ -13,7 +13,7 @@ import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 public class Constants {
   //TODO figure out if we have all our GRs inverted
   //General Constants
-  public static final boolean IS_COMP = false;
+  public static final boolean IS_COMP = true;
   public static final boolean ENABLE_DEBUG_ROUTINES = false;
   public static final boolean getSim(){
     return Robot.isSimulation();
@@ -27,8 +27,10 @@ public class Constants {
     public static final double ROBOT_MASS = Units.lbsToKilograms(115.8);
     public static final double ROBOT_MOI = 4.7089; //Kg * m^2
     // Robot period in seconds
-    public static final double ROBOT_PERIOD = 0.01;
-    public static final double ROBOT_FREQUENCY = 1.0 / ROBOT_PERIOD;
+    public static final double ROBOT_FREQUENCY = 50.0;
+    public static final double ROBOT_PERIOD = 1.0 / ROBOT_FREQUENCY;
+
+    public static final double BROWNOUT_THRESHHOLD = 5.5;
   }
   
   /**Drive Constants*/
@@ -36,7 +38,7 @@ public class Constants {
     public static final double DRIVE_MULTIPLIER = 1.0;
     public static final double DRIVE_SLOW_MULTIPLIER = DRIVE_MULTIPLIER * 0.4;
     public static final double DRIVE_CURRENT_LIMIT = 40;
-    public static final double TURN_CURRENT_LIMIT = 40;
+    public static final double TURN_CURRENT_LIMIT = 20;
     public static final double DRIVE_GEAR_RATIO = 6.02;
     public static final double TURN_GEAR_RATIO = 287.0 / 11.0;
     public static final Translation2d[] DRIVE_MODULE_OFFSETS = new Translation2d[] {
@@ -58,24 +60,51 @@ public class Constants {
     */
     public static final double ANTI_JITTER_THRESHOLD = 0.005;
 
-    public static final double GYRO_LOCK_KP = 1.0;
+    public static final double GYRO_LOCK_KP = 1.5;
+
+    public static final double ACCELERATION_FILTER_FACTOR = 0.25; //Should be between 0 and 1
   }
 
   /**Spindexer Constants*/
   public class SpindexerConstants{
     public static final double SPINDEXER_VOLTAGE = 9;
+
+    public static final double SPINDEXER_VELOCITY = 70.0;
+    public static final double KICKER_VELOCITY = 230.0;
     //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
-    public static final double SPINDEXER_GEAR_RATIO = 1;
+    public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;
+    public static final double KICKER_GEAR_RATIO = 1/ 3.0; 
+
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
-    public static final double SPINDEXER_KS = 1;
-    public static final double SPINDEXER_KV = 1;
-    public static final double SPINDEXER_STALL_CURRENT = 40;
+    public static final double SPINDEXER_STALL_CURRENT = 30;
     public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
-    public static final double SPINDEXER_CURRENT_LIMIT = 40;
-    public static final double KICKER_CURRENT_LIMIT = 40;
+    public static final double SPINDEXER_CURRENT_LIMIT = 70; //TODO make sure this is high enough
+    public static final double KICKER_CURRENT_LIMIT = 80;
     //PID Tolerance
-    public static final double SPINDEXER_VEL_TOLERANCE = Units.degreesToRadians(30);
+
+    public static final double SPINDEXER_KP = 0.0;
+    public static final double SPINDEXER_KI = 0.0;
+    public static final double SPINDEXER_KD = 0.0;
+    public static final double SPINDEXER_MAX_ACCEL = 20.0 * SPINDEXER_VELOCITY;
+    public static final double SPINDEXER_MAX_VEL = SPINDEXER_VELOCITY * 1.1;
+
+    public static final double SPINDEXER_VEL_TOLERANCE = 5;
+    public static final double KICKER_VEL_TOLERANCE = 5;
+
+    public static final double KICKER_KP = 0.0;
+    public static final double KICKER_KI = 0.0;
+    public static final double KICKER_KD = 0.0;
+    public static final double KICKER_MAX_VEL = KICKER_VELOCITY * 1.1;
+    public static final double KICKER_MAX_ACCEL = 20.0 * KICKER_VELOCITY;
+
+    public static final double SPIN_KS = 0.19;
+    public static final double SPIN_KV = 0.1075;
+    public static final double KICKER_KS = 0.175;
+    public static final double KICKER_KV = 0.0565 * 1.175;
+
+    public static final double KICKER_UNJAM_VOLTAGE = 5.0;
+    public static final double SPIN_UNJAM_VOLTAGE = 5.0;
   }
 
   /**Turret and Shooter Constants*/
@@ -95,8 +124,8 @@ public class Constants {
     
     //Current Limits
     public final static double TURRET_CURRENT_LIMIT = 40;
-    public final static double FLYWHEEL_CURRENT_LIMIT = 200;
-    public final static double HOOD_CURRENT_LIMIT = 40;
+    public final static double FLYWHEEL_CURRENT_LIMIT = 85; //TODO make sure this is high enough
+    public final static double HOOD_CURRENT_LIMIT = 20;
 
     //Turret Saftey Limits
     public static final double TURRET_MIN_ANGLE = -Units.degreesToRadians(190.0);
@@ -105,14 +134,14 @@ public class Constants {
     public static final double TURRET_MAX_VOLTAGE = 7.0;
 
     //PID tolerances
-    public final static double TURRET_POSE_TOLERANCE = Units.degreesToRadians(0.5);
+    public final static double TURRET_POSE_TOLERANCE = Units.degreesToRadians(0.35);
     public final static double TURRET_VEL_TOLERANCE = Units.degreesToRadians(5);
     public final static double HOOD_POS_TOLERANCE = Units.degreesToRadians(0.1);
-    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(20); //TODO should be 0
+    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(0); //TODO should be 0
 
     //Ready to shoot tolerances
     //TODO set real numbers
-    public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(2);
+    public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(20); //TODO make a smaller value while accounting for turret lagging behind
     public final static double HOOD_READY_TOLERANCE = Units.degreesToRadians(2);
     public final static double FLYWHEEL_READY_VEL_TOLERANCE = 20;
 
@@ -124,10 +153,17 @@ public class Constants {
     public final static double HOOD_STATIC_FEEDFORWARD_VOLTAGE = .22;
 
     // Shot calculator constant
-    public final static double SHOT_CALC_PARA_VEL_GAIN_TOWARDS = -0.7;
-    public final static double SHOT_CALC_PARA_VEL_GAIN_AWAY = -0.9;
+    public final static double SHOT_CALC_PARA_VEL_GAIN_TOWARDS = -1.07;
+    public final static double SHOT_CALC_PARA_VEL_GAIN_AWAY = -2.0; //-1.5 worked decent at 1m/s
     public final static double SHOT_CALC_PERP_VEL_A_GAIN = 1.1;
     public final static double SHOT_CALC_PERP_VEL_B_GAIN = 2.0;
+
+    public final static double SHOT_CALC_PERP_VEL_RANGE_GAIN = 1.0;
+
+    public final static double ACCELERATION_FACTOR = 0; //How many seconds of acceleration to apply to velocity in shot calculation. Should probably be about the time we expect systems to take to respond
+      //0.15
+    public final static double CHANGE_TARGET_MARGIN = 0.5;
+
 
     //Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 146,0);
@@ -144,20 +180,23 @@ public class Constants {
 
   /**Intake Constants*/
   public class IntakeConstants{
-    public static final double INTAKE_VOLTAGE = 5;
+    public static final double INTAKE_VOLTAGE = 8;
     //These values need to be modified
     public static final double INTAKE_MAX_TEMP = 80.0;
     public static final double TIME_OF_FLIGHT_THRES = 0.255;
-    public static final double INTAKE_PIVOT_GR = 6.33;
+    public static final double INTAKE_PIVOT_GR = 6.33 * 3;
     public static final double MOMENT_OF_INERTIA = 1;
     public static final double INTAKE_INTAKE_GR = 1;
     
-    public static final double INTAKE_EXTENDING_MAX_VEL = 3.5;
-    public static final double INTAKE_EXTENDING_MAX_ACEL = 3.5;
+    public static final double INTAKE_EXTENDING_MAX_VEL = 7.5;
+    public static final double INTAKE_EXTENDING_MAX_ACEL = 10.5;
+
+    public static final double INTAKE_EXTENDING_MAX_VEL_UP = 2.75;
+    public static final double INTAKE_EXTENDING_MAX_ACEL_UP = 4.25;
 
     //Current limits
-    public static final double INTAKE_CURRENT_LIMIT = 120;
-    public static final double EXTENDER_CURRENT_LIMIT = 200;
+    public static final double INTAKE_CURRENT_LIMIT = 95; //TODO make sure this is high enough
+    public static final double EXTENDER_CURRENT_LIMIT = 100;
  
     //Position constants for intake logic
     public static final double EXTENDER_MIN_LIMIT = 0.027;
@@ -171,21 +210,20 @@ public class Constants {
     //PID / Feedforward Values
     public static final double INTAKE_EXTEND_TOLERANCE = 0.15;
     public static final double INTAKE_EXTEND_EXTEND_POSE_TOLERANCE = 0.4;
-    public static final double INTAKE_EXTENDING_KP = 3.0; //3
-    public static final double INTAKE_EXTENDING_KI = 1.0; //1
+    public static final double INTAKE_EXTENDING_KP = 12; //3
+    public static final double INTAKE_EXTENDING_KI = 0.0; //1
     public static final double INTAKE_EXTENDING_KD = 0.00;
-    public static final double EXTENDER_KS = 0.1;
-    public static final double EXTENDER_KG = 3.0; 
-    public static final double EXTENDER_KV = 0.5;
-    
-    //New intake controls constants
-    public static final double EXTEND_MULT_DOWNWARD = 1.6; //Controls downward force when extending
-    public static final double EXTEND_MULT_UPWARD = 1.53; //Controls upward force when extending
-    public static final double RETRACT_MULT = 7.0; // Controls upward force when retracting
+    public static final double EXTENDER_KS = 0.5;
+    public static final double EXTENDER_KG = 0.5; 
+    public static final double EXTENDER_KV = 0.0;
 
     public static final double INTAKE_PULSE_INTAKING_SEC = 3.0;
     public static final double INTAKE_PULSE_SPIT_SEC = 0.3;
     public static final double INTAKE_JAMMED_THRESHHOLD = 0.25;
+
+    public static final double INTAKE_SECONDS_TO_AUTO_AGITATE = 3.7;
+
+    public static final double INTAKE_SPIN_UP_SECONDS = 0.1;
   }
 
   public class ClimberConstants{

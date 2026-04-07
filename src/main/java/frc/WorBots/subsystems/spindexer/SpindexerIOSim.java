@@ -34,7 +34,7 @@ public class SpindexerIOSim implements SpindexerIO {
   }
 
   @Override
-  public void setVoltage(double volts){
+  public void setSpinVoltage(double volts){
     this.voltage = volts;
   }
 

@@ -50,13 +50,14 @@ public class ShotCalculator {
     // flight (sec)
     double[][] scoringData = {
       { Units.inchesToMeters(55), 0, 146, 1},
-      { 1.528, 0.1542, 133.65, 1},
-      { 2.067517874264592, 0.226, 134, 1},
-      { 2.981151807004248, 0.265, 149, 1},
-      { 3.8951452800012, 0.375, 164, 1},
-      { 4.809293308638241, 0.384, 187.3, 1},
-      { 5.05423, 0.383, 200.25, 1.1},
-      { 5.3, 0.381, 202.25, 1.1},
+      { 1.341, 0.0, 167.65, 1}, //new
+      { 2.046, 0.0534, 167.95, 1.1},
+      { 2.378, 0.079, 171, 1.2}, //New
+      { 2.972, 0.114028, 179, 1.2}, //New
+      { 3.974, 0.206401, 188.14, 1.2}, //New
+      { 4.23, 0.198, 200, 1.3}, //new
+      { 5.074, 0.23784, 221.2, 1.4}, //New
+      { 5.475, 0.233, 232, 1.4}, //New
       };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (Rads/sec), time of
@@ -89,14 +90,13 @@ public class ShotCalculator {
    * 
    * @param pose          The current field relative robot position
    * @param robotVelocity The current field relative robot velocity
-   * @param doOverRide    Whether to override the controls to prevent the robot
-   *                      form illegally shooting
+   * @param robotAcceleration The robot's field relative acceleration
    * @return The parameters required to make a shot into the hub with the current
    *         robot position and velocity
    */
-  public static ShootingParams getHubParams(Pose2d pose, ChassisSpeeds robotVelocity) {
+  public static ShootingParams getHubParams(Pose2d pose, ChassisSpeeds robotVelocity, ChassisSpeeds robotAcceleration) {
     Translation2d target = AllianceFlipUtil.apply(FieldConstants.hubPosition);
-    return getParams(pose, robotVelocity, target, true, true);
+    return getParams(pose, robotVelocity, robotAcceleration, target, true, true);
   }
 
   /***
@@ -104,8 +104,9 @@ public class ShotCalculator {
    * 
    * @param Pose          The robot's position
    * @param robotVelocity The robot's velocity
+   * @param robotAcceleration The robot's field relative acceleration
    */
-  public static ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity) {
+  public static ShootingParams getPassParams(Pose2d pose, ChassisSpeeds robotVelocity,  ChassisSpeeds robotAcceleration) {
     boolean isValid = true;
     Translation2d turretPose = pose.getTranslation(); // TODO add translating from robot to turret
     Translation2d targetPose;
@@ -123,7 +124,7 @@ public class ShotCalculator {
     if (GeomUtil.doesLinePassThroughArea(shotPath, AllianceFlipUtil.apply(FieldConstants.passExclusionZone))) { // TODO make sure alliance flip for arrays is working correctly
       isValid = false;
     }
-    return getParams(pose, robotVelocity, targetPose, false, isValid);
+    return getParams(pose, robotVelocity, robotAcceleration, targetPose, false, isValid);
   }
 
   /***
@@ -131,10 +132,11 @@ public class ShotCalculator {
    * 
    * @param robotPose        The position of the robot
    * @param robotVelocity    The robot's velocity
+   * @param robotAcceleration The robot's field relative acceleration
    * @param target           The target of the shot
    * @param isValid          If the shot is a valid shot
    */
-  private static ShootingParams getParams(Pose2d robotPose, ChassisSpeeds robotVelocity, Translation2d target, boolean isHub, boolean isValid) {
+  private static ShootingParams getParams(Pose2d robotPose, ChassisSpeeds robotVelocity, ChassisSpeeds robotAcceleration, Translation2d target, boolean isHub, boolean isValid) {
     // Calculate the distance from the turret to the target
     Pose2d turretPosition = robotPose.transformBy(Constants.TurretShooterConstants.ROBOT_TO_TURRET);
     turretPosition.rotateAround(robotPose.getTranslation(), robotPose.getRotation());
@@ -155,6 +157,8 @@ public class ShotCalculator {
             * (Constants.TurretShooterConstants.ROBOT_TO_TURRET.getX() * cos
                 - Constants.TurretShooterConstants.ROBOT_TO_TURRET.getY() * sin);
     Translation2d robotVelocityVector = new Translation2d(turretVelocityX, turretVelocityY);
+    robotVelocityVector = robotVelocityVector.plus(new Translation2d(robotAcceleration.vxMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR, 
+      robotAcceleration.vyMetersPerSecond * Constants.TurretShooterConstants.ACCELERATION_FACTOR));
     Translation2d aimVector = new Translation2d(dx, dy);
     double dist_to_target = aimVector.getNorm();
 
@@ -171,6 +175,7 @@ public class ShotCalculator {
     Rotation2d turretAngle = new Rotation2d(Math.atan2(dy, dx)).rotateBy(new Rotation2d(angle_adj));
     double range_adj = (para_vel > 0 ? Constants.TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN_TOWARDS : Constants.TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN_AWAY) * (para_vel);
     dist_to_target += range_adj;//* TurretShooterConstants.SHOT_CALC_PARA_VEL_GAIN);
+    dist_to_target += Math.abs(perp_vel) * Constants.TurretShooterConstants.SHOT_CALC_PERP_VEL_RANGE_GAIN; //Factor in perp velocity into range
     dist_to_target = Math.max(1.528, dist_to_target); // Do not allow interpolation within the hub space, it doesn't make sense
     SmartDashboard.putNumber("ShotCalc/Range_ADJ", range_adj);
     SmartDashboard.putNumber("ShotCalc/Angle_ADJ", angle_adj);

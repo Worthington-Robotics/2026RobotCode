@@ -3,6 +3,7 @@ package frc.WorBots.util;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.lights.Lights.LightEffects;
@@ -31,7 +32,7 @@ public class FireController {
   }
 
   public boolean shouldAgitate(){
-    return !superstructure.isPassing() && Math.abs(superstructure.getDesiredTurretPose()) > Units.degreesToRadians(90) && spindexer.getVoltage() > 0.0;
+    return !superstructure.isPassing() && spindexer.getSpinGoalVelocity() > 0.0;
   }
 
   /**
@@ -90,8 +91,6 @@ public class FireController {
     } else {
       Lights.getInstance().setTarget(LightsTarget.Pass);
     }
-
-    //System.out.println(drive.inRedZone());
 
     Lights.getInstance().runEffect(LightEffects.invalidShotFlash);
     return output;

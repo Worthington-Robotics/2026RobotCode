@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4,
-        "y": 7.4
+        "x": 1.8,
+        "y": 5.9
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.4804315636658805,
-        "y": 7.4
+        "x": 2.6735695822291414,
+        "y": 5.920022752886669
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.0,
-        "y": 7.4
+        "x": 0.4,
+        "y": 5.9
       },
       "prevControl": {
-        "x": 4.942791341687583,
-        "y": 7.4
+        "x": -0.2255376458491286,
+        "y": 5.881097976917693
+      },
+      "nextControl": {
+        "x": 2.43133412102644,
+        "y": 5.96138131685328
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.2,
+        "y": 5.9
+      },
+      "prevControl": {
+        "x": 1.8582374738073013,
+        "y": 5.920046649563314
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,24 +47,17 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Hit The Deck",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.7754036087369388,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.096,
-    "maxAcceleration": 7.5,
+    "maxAcceleration": 6.75,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 3000.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
+    "velocity": 0,
     "rotation": 180.0
   },
   "reversed": false,

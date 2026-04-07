@@ -48,9 +48,15 @@ public class ShooterCommands {
    */
   public Command forceFeedShooter(Spindexer spin) {
     return spin.runEnd(() -> {
-      spin.runSpindexerVoltage(Constants.SpindexerConstants.SPINDEXER_VOLTAGE);
+      spin.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY, Constants.SpindexerConstants.KICKER_VELOCITY);
     }, () -> {
       spin.stopSpindexer();
+    });
+  }
+
+  public Command forceFeedShooterAuto(Spindexer spin) {
+    return Commands.runOnce(() -> {
+      spin.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY, Constants.SpindexerConstants.KICKER_VELOCITY);
     });
   }
 
@@ -90,37 +96,36 @@ public class ShooterCommands {
    */
   public Command manualShot(Superstructure superstructure, ShootingParams params, Supplier<Boolean> doRunSupplier) {
     return Commands.runOnce(() -> {
-      if(!doRunSupplier.get()){
+      if (!doRunSupplier.get()) {
         superstructure.runShot(params);
       }
     });
   }
 
-  public Command enableAutoPassing(Superstructure superstructure){
+  public Command enableAutoPassing(Superstructure superstructure) {
     return Commands.runOnce(() -> {
       superstructure.setAutoPassing(true);
     });
   }
 
-  public Command disableAutoPassing(Superstructure superstructure){
+  public Command disableAutoPassing(Superstructure superstructure) {
     return Commands.runOnce(() -> {
       superstructure.setAutoPassing(false);
     });
   }
 
-  public Command hoodDown(Superstructure superstructure){
-    return Commands.startEnd(()-> superstructure.setHoodDown(true), () -> superstructure.setHoodDown(false));
+  public Command hoodDown(Superstructure superstructure) {
+    return Commands.startEnd(() -> superstructure.setHoodDown(true), () -> superstructure.setHoodDown(false));
   }
 
-  public Command autoSetpointShot(Superstructure superstructure, ShootingParams params){
+  public Command autoSetpointShot(Superstructure superstructure, ShootingParams params) {
     return Commands.runOnce(() -> superstructure.runShot(params));
   }
 
-  public Command superPass(Superstructure superstructure, Intake intake, Drive drive, Spindexer spin){
+  public Command superPass(Superstructure superstructure, Intake intake, Drive drive, Spindexer spin) {
     return Commands.parallel(
-      new IntakeCommands().spit(intake),
-      new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE),
-      new SuperPassLights()
-    );
+        new IntakeCommands().spit(intake),
+        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE),
+        new SuperPassLights());
   }
 }

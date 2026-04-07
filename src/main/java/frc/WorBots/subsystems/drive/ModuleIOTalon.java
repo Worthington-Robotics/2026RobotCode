@@ -11,6 +11,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.HardwareUtils.TalonSignals;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
@@ -140,6 +141,7 @@ public class ModuleIOTalon implements ModuleIO {
     driveFeedback.update();
     turnFeedback.update();
 
+    //TODO removed drive motor signal logging
     driveSignals.update(inputs.drive, driveMotor);
     turnSignals.update(inputs.turn, turnMotor);
     driveVelocitySignal.refresh();
@@ -212,5 +214,11 @@ public class ModuleIOTalon implements ModuleIO {
 
   public void setTurnVoltage(double volts) {
     turnSignals.setVoltage(turnMotor, volts, 11.0);
+  }
+
+  @Override
+  public SubsystemLog getMotorReports() {
+    return new SubsystemLog(null, null,new double[]{inputs.drive.appliedPowerVolts, inputs.turn.appliedPowerVolts}
+      , new double[]{inputs.drive.currentDrawAmps, inputs.turn.currentDrawAmps});
   }
 }

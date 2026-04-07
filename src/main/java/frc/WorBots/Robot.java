@@ -4,17 +4,21 @@
 
 package frc.WorBots;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.WorBots.subsystems.lights.Lights;
+import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.MatchTime;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.cache.Cache.TimeCache;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.math.GeneralMath;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -38,6 +42,7 @@ public class Robot extends TimedRobot {
 
     OdometryThread.getInstance();
     Lights.getInstance();
+    RobotController.setBrownoutVoltage(Constants.RobotConstants.BROWNOUT_THRESHHOLD);
   }
 
   public void realRobotPeriodic() {
@@ -51,6 +56,7 @@ public class Robot extends TimedRobot {
     Lights.getInstance().periodic();
     TimeCache.getInstance().update();
     StatusPage.periodic();
+    m_robotContainer.updatePowerLogs();
   }
 
   @Override
@@ -58,6 +64,7 @@ public class Robot extends TimedRobot {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
     super.robotInit();
+    CameraServer.startAutomaticCapture();
   }
 
   @Override
@@ -127,4 +134,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testExit() {
   }
+
+  @Override
+  public void robotPeriodic(){}
 }

@@ -9,7 +9,7 @@
     "DEBUG"
   ],
   "defaultMaxVel": 6.096,
-  "defaultMaxAccel": 7.5,
+  "defaultMaxAccel": 6.75,
   "defaultMaxAngVel": 720.0,
   "defaultMaxAngAccel": 3000.0,
   "defaultNominalVoltage": 12.0,

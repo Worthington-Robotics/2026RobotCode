@@ -26,6 +26,6 @@ public class IntakeRetractNoRequirements extends Command {
 
   @Override
   public boolean isFinished() {
-    return intake.atGoal();
+    return true;
   }
 }

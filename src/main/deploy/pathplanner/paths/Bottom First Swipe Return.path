@@ -3,73 +3,78 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4,
-        "y": 7.4
+        "x": 6.0,
+        "y": 0.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2105301851246013,
-        "y": 7.4
+        "x": 5.7630738020530305,
+        "y": 0.5202129288268227
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.8117228915662649,
-        "y": 5.9
+        "x": 4.582482168330956,
+        "y": 0.6
       },
       "prevControl": {
-        "x": 2.9263493975903616,
-        "y": 5.991060240963854
+        "x": 4.918706874398187,
+        "y": 0.5986112439477788
       },
       "nextControl": {
-        "x": 1.3133831342066644,
-        "y": 5.859287763083168
+        "x": 2.9355031829837985,
+        "y": 0.606802748258852
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6,
-        "y": 5.9
+        "x": 2.9004564907275316,
+        "y": 0.6
       },
       "prevControl": {
-        "x": 0.324950291511438,
-        "y": 5.9
+        "x": 3.3775387112580484,
+        "y": 0.5431019055383806
       },
       "nextControl": {
-        "x": 1.5259958837614964,
-        "y": 5.9
+        "x": 2.6438025287627047,
+        "y": 0.6306092340971853
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.8117228915662649,
-        "y": 5.9
+        "x": 2.45,
+        "y": 0.75
       },
       "prevControl": {
-        "x": 1.0644126878112798,
-        "y": 5.9
+        "x": 2.753423679882406,
+        "y": 0.6268144733967056
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 1.466546762589914,
+      "maxWaypointRelativePos": 0.0,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 12.192,
-        "maxAngularVelocity": 60.0,
+        "maxVelocity": 1.4,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 720.0,
         "maxAngularAcceleration": 3000.0,
         "nominalVoltage": 12.0,
         "unlimited": false
@@ -79,27 +84,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Mine Mine Mine",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Dracarys!",
-      "waypointRelativePos": 0.5212230215827339,
-      "endWaypointRelativePos": 1.2075539568345226,
-      "command": null
-    },
-    {
-      "name": "Sustained Fire",
-      "waypointRelativePos": 3.0,
-      "endWaypointRelativePos": null,
+      "name": "Hit The Deck",
+      "waypointRelativePos": 0.445868945868946,
+      "endWaypointRelativePos": 1.4145299145299008,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 6.096,
-    "maxAcceleration": 7.5,
+    "maxAcceleration": 6.75,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 3000.0,
     "nominalVoltage": 12.0,
@@ -107,13 +100,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -25.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 1.0,
-    "rotation": 180.0
+    "velocity": 0.0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

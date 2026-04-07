@@ -14,12 +14,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.debug.TunablePIDController;
+import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeneralMath;
 import java.util.Optional;
 
@@ -27,13 +29,13 @@ import java.util.Optional;
 public class DriveController {
   // Constants
   /** The percentage of the max drive speed that the robot will drive at */
-  public static final double DRIVE_SPEED_MULTIPLIER = 0.55;
+  public static final double DRIVE_SPEED_MULTIPLIER = 0.61;
 
   /** The max rotational speed in radians per update that the robot will drive at */
   public static final double ROTATIONAL_SPEED = 3.55; //Used to be 3.75, turned down on driver request
 
   /** The amount of input deadband to apply */
-  public static final double DEADBAND = 0.2;
+  public static final double DEADBAND = 0.15;
 
   /** The minimum speed output that will make the drive stop */
   public static final double MINIMUM_SPEED = 1e-3;
@@ -48,11 +50,14 @@ public class DriveController {
   public static final TunableDouble BRAKE_DELAY =
       new TunableDouble("Tuning", "Drive", "Brake Delay", 0.3);
 
+  /** Drive orientation offset for correcting for non zero starts */
+  public static Rotation2d rotationOffset = new Rotation2d();
+
   /**
    * How much to multiply the rotational velocity by before adding it to the steady-state rotation.
    * This is done to predict where the driver will end up turning before they get there
    */
-  public static final double TURN_PREDICTION_FACTOR = 40.0;
+  public static final double TURN_PREDICTION_FACTOR = 20.0;
 
   private static final LinearFilter driveFilter = LinearFilter.movingAverage(5);
   private static final LinearFilter xFilter = LinearFilter.movingAverage(10);
@@ -61,7 +66,7 @@ public class DriveController {
   private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(24);
 
   private final TunablePIDController turnController =
-      new TunablePIDController("Drive/Gains", "Drive Heading", 5.2, 0.0, 0.0);
+      new TunablePIDController("Drive/Gains", "Drive Heading", 5.0, 0.0, 0.0);
 
   public Optional<Double> temporarySpeedMultiplier = Optional.empty();
 
@@ -220,10 +225,11 @@ public class DriveController {
         speeds.omegaRadiansPerSecond +=
             turnController.pid.calculate(robotRotation.getRadians(), lastYaw.get().getRadians());
       }
+      lastYaw = Optional.of(robotRotation);
     }
 
     // Convert to field relative based on the alliance
-    final var driveRotation = robotRotation;
+    final var driveRotation = new Rotation2d(MathUtil.angleModulus(robotRotation.getRadians() + rotationOffset.getRadians()));
     speeds =
         ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds.vxMetersPerSecond,
@@ -236,5 +242,20 @@ public class DriveController {
   public double driveSingleAxis(double axis, double maxSpeed) {
     final double maximumSpeed = maxSpeedFilter.calculate(maxSpeed * DRIVE_SPEED_MULTIPLIER);
     return driveFilter.calculate(axis) * maximumSpeed;
+  }
+
+  /**
+   * Changes the offset applied to the drives 0 (forward orrientation)
+   * @param fieldAngle the field relative rotation of the robot
+   */
+  public void resetDriveRotation(Rotation2d fieldAngle, Rotation2d gyroAngle){
+    Rotation2d goal;
+    if(AllianceFlipUtil.shouldFlip()){
+      goal = new Rotation2d(Units.degreesToRadians(180));
+    } else {
+      goal = new Rotation2d();
+    }
+    
+    rotationOffset = new Rotation2d(MathUtil.angleModulus(goal.getRadians() - gyroAngle.getRadians() + fieldAngle.getRadians()));
   }
 }

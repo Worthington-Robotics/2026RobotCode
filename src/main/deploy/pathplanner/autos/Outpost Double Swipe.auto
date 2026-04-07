@@ -11,40 +11,89 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Focus Your Power"
+                  "name": "Deploy Intake"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Deploy Intake"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.1
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Bottom Trench from Start"
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of Bottom First Swipe"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bottom First Swipe Return"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Then Fire"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Annoy"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Deploy Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Traverse Top Trench from Start"
+            "pathName": "Start Bottom Second Swipe"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Intake Top Half Run"
+            "pathName": "Bottom Second Swipe"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Neutral to Allaince Top"
+            "name": "Wait Then Fire"
           }
         },
         {
@@ -56,37 +105,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Sustained Fire"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Alliance Top to Neutral Double Swipe"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Double Swipe Intake Top Half Run"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Neutral to Allaince Top"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Sustained Fire"
+            "name": "Annoy"
           }
         }
       ]

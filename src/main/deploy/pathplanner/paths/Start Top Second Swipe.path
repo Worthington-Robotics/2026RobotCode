@@ -3,40 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5,
-        "y": 6.0
+        "x": 2.45,
+        "y": 7.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5,
-        "y": 5.0
+        "x": 2.7500881738100174,
+        "y": 7.42860441029297
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 2.0
+        "x": 2.9,
+        "y": 7.45
       },
       "prevControl": {
-        "x": 2.5,
-        "y": 3.0
+        "x": 2.1796839264537713,
+        "y": 7.050666042702915
+      },
+      "nextControl": {
+        "x": 3.3703695221869214,
+        "y": 7.710766807218536
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 7.45
+      },
+      "prevControl": {
+        "x": 5.485252805323652,
+        "y": 7.423699147064044
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8633696563285719,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 1.3152896486229786,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 12.192,
+        "maxVelocity": 6.096,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 720.0,
         "maxAngularAcceleration": 3000.0,
         "nominalVoltage": 12.0,
@@ -47,9 +68,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Sustained Fire",
+      "name": "Stop Firing",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Hit The Deck",
+      "waypointRelativePos": 1.3532763532763332,
+      "endWaypointRelativePos": 1.7521367521367521,
       "command": null
     }
   ],
@@ -62,14 +89,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -90.0
+    "velocity": 1.0,
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "DEBUG",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 25.0
   },
   "useDefaultConstraints": true
 }

@@ -18,6 +18,7 @@ import edu.wpi.first.hal.PowerDistributionFaults;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -123,9 +124,11 @@ public class HardwareUtils {
   /** Base status signals for a TalonFX */
   public static class TalonSignals {
     private final OptimalStatusSignal<Voltage> voltsSignal;
+    private final OptimalStatusSignal<Current> currentSignal;
 
     public TalonSignals(TalonFX motor) {
       voltsSignal = new OptimalStatusSignal<>(motor.getSupplyVoltage(), Constants.RobotConstants.ROBOT_FREQUENCY);
+      currentSignal = new OptimalStatusSignal<>(motor.getSupplyCurrent(), Constants.RobotConstants.ROBOT_FREQUENCY);
 
       // For .get() calls we need the duty cycle
       motor.getDutyCycle().setUpdateFrequency(Constants.RobotConstants.ROBOT_FREQUENCY);
@@ -138,6 +141,7 @@ public class HardwareUtils {
       final double volts = voltsSignal.getValue().in(edu.wpi.first.units.Units.Volts);
       inputs.appliedPowerVolts = volts * motor.get();
       inputs.supplyVoltage = volts;
+      inputs.currentDrawAmps = currentSignal.getValue().in(edu.wpi.first.units.Units.Amps);
       inputs.isConnected = voltsSignal.isOK && inputs.temperatureCelsius < MAX_MOTOR_TEMP;
     }
 
@@ -248,6 +252,8 @@ public class HardwareUtils {
     CurrentLimitsConfigs limitsConfig = new CurrentLimitsConfigs();
     limitsConfig.StatorCurrentLimit = limit;
     limitsConfig.StatorCurrentLimitEnable = true;
+    limitsConfig.SupplyCurrentLimit = limit;
+    limitsConfig.SupplyCurrentLimitEnable = true;
     motor.getConfigurator().apply(limitsConfig);
   }
 

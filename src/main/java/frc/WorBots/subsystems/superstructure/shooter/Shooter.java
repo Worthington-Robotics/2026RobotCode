@@ -2,6 +2,7 @@ package frc.WorBots.subsystems.superstructure.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -9,6 +10,7 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.Constants.TurretShooterConstants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIO.ShooterIOInputs;
@@ -28,6 +30,7 @@ public class Shooter {
 
   private final SimpleMotorFeedforward leaderFeedForwardController;
   private double setpointVelocity;
+  private double trueFlywheelSetpoint;
   private double setpointPosition;
   
   private double flySetpointVolts;
@@ -51,6 +54,8 @@ public class Shooter {
   }
 
   private ControlMode controlMode = ControlMode.Disabled;
+
+  private LinearFilter flywheelVelocityFilter = LinearFilter.movingAverage(5);
 
   // Publishers
   private final NetworkTable shooter = NetworkTableInstance.getDefault().getTable("Shooter");
@@ -86,9 +91,9 @@ public class Shooter {
 
     // Set PID gains if ! in Sim
     if (!Constants.getSim()) {
-      leaderPIDController.setGains(0.04, 0, 0);
+      leaderPIDController.setGains(0.043, 0, 0);
       leaderPIDController.setConstraints(0, 0);
-      hoodPIDController.setGains(3, 0.0, 0);
+      hoodPIDController.setGains(5.8, 0.0, 0);
     }
     // When in Sim
     else {
@@ -109,6 +114,7 @@ public class Shooter {
 
     inputs.hood.publish();
     inputs.leader.publish();
+    inputs.follower.publish();
     controlModePub.set(controlMode.toString());
     hoodPosePub.set(inputs.actualHoodPosition);
     hoodPoseDesiredPub.set(setpointPosition);
@@ -136,6 +142,7 @@ public class Shooter {
       io.setHoodVolts(0);
       io.setLeaderVolts(0);
     } else if (controlMode == ControlMode.Setpoint) {
+      setpointVelocity = flywheelVelocityFilter.calculate(trueFlywheelSetpoint);
       leaderPIDController.pid.setGoal(setpointVelocity);
       double leaderPID = leaderPIDController.pid.calculate(inputs.actualLeaderVelocityRadPerSec);
       double leaderVolts = leaderFeedForwardController.calculateWithVelocities(inputs.actualLeaderVelocityRadPerSec,
@@ -149,7 +156,8 @@ public class Shooter {
       }
 
       io.setHoodVolts(hoodFeedback);
-      io.setLeaderVolts(leaderVolts);
+      // io.setLeaderVolts(leaderVolts);
+      io.setFlywheelVelocity(setpointVelocity);
       
       flywheelRequestedPub.set(leaderVolts);
       hoodRequestedPub.set(hoodFeedback);
@@ -228,6 +236,7 @@ public class Shooter {
   public void setFlywheelSpeed(double speed) {
     controlMode = ControlMode.Setpoint;
     setpointVelocity = speed + leaderFudgeFactor;
+    trueFlywheelSetpoint = setpointVelocity;
   }
 
   /***
@@ -342,5 +351,11 @@ public class Shooter {
    */
   public boolean getPassing() {
     return passing;
+  }
+
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Shooter", new String[]{"Flywheel Leader","Flywheel Follower","Hood Motor"},
+       new double[]{inputs.leader.appliedPowerVolts, inputs.follower.appliedPowerVolts, inputs.hood.appliedPowerVolts}, 
+        new double[]{inputs.leader.currentDrawAmps, inputs.follower.currentDrawAmps, inputs.hood.currentDrawAmps});
   }
 }

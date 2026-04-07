@@ -1,25 +1,39 @@
 package frc.WorBots.subsystems.spindexer;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.debug.TunableDouble;
+import frc.WorBots.util.debug.TunablePIDController;
+import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 
 public class Spindexer extends SubsystemBase{
   SpindexerIO io;
   SpindexerIOInputs inputs = new SpindexerIOInputs();
-  private double goalVelocity;
+  private double spinGoalVelocity;
+  private double kickerGoalVelocity;
   private double goalVoltage;
   private boolean override = false;
 
+  private TunablePIDController spinPid = new TunablePIDController("Spindexer", "Spin PID", Constants.SpindexerConstants.SPINDEXER_KP, Constants.SpindexerConstants.SPINDEXER_KI, Constants.SpindexerConstants.SPINDEXER_KD);
+  private TunablePIDController kickerPid = new TunablePIDController("Spindexer", "Kicker PID", Constants.SpindexerConstants.KICKER_KP, Constants.SpindexerConstants.KICKER_KI, Constants.SpindexerConstants.KICKER_KD);
+  private SimpleMotorFeedforward kickerFeedforward = new SimpleMotorFeedforward(Constants.SpindexerConstants.KICKER_KS, Constants.SpindexerConstants.KICKER_KV);
+  private SimpleMotorFeedforward spinFeedforward = new SimpleMotorFeedforward(Constants.SpindexerConstants.SPIN_KS, Constants.SpindexerConstants.SPIN_KV);
+
   private enum ControlMode{
     Disabled,
-    Voltage
+    Voltage,
+    Velocity
   }
 
   private ControlMode controlMode = ControlMode.Disabled;
@@ -32,17 +46,24 @@ public class Spindexer extends SubsystemBase{
   private final BooleanPublisher jammedPublisher = spinTable.getBooleanTopic("Jammed").publish();
   private final BooleanPublisher overridePublisher = spinTable.getBooleanTopic("Overrided").publish();
   private final BooleanPublisher connectionPublisher = spinTable.getBooleanTopic("Connected").publish();
-  private final DoublePublisher velocityPublisher = spinTable.getDoubleTopic("Rotational Velocity").publish();
-  private final DoublePublisher goalVelocityPublisher = spinTable.getDoubleTopic("Goal Rotational Velocity").publish();
+  private final DoublePublisher velocityPublisher = spinTable.getDoubleTopic("Spindexer Rotational Velocity").publish();
+  private final DoublePublisher kickerVelocityPublisher = spinTable.getDoubleTopic("Kicker Rotational Velocity").publish();
+  private final DoublePublisher spinGoalVelocityPublisher = spinTable.getDoubleTopic("Spindexer Goal Rotational Velocity").publish();
+  private final DoublePublisher kickerGoalVelocityPublisher = spinTable.getDoubleTopic("Kicker Goal Rotational Velocity").publish();
   private final DoublePublisher voltagePublisher = spinTable.getDoubleTopic("Voltage").publish();
   private final DoublePublisher currentPublisher = spinTable.getDoubleTopic("Current").publish();
   private final DoublePublisher temperaturePublisher = spinTable.getDoubleTopic("Temperature").publish();
 
   public Spindexer(SpindexerIO spindexerIo){
     io = spindexerIo;
+    spinPid.pid.setTolerance(Constants.SpindexerConstants.SPINDEXER_VEL_TOLERANCE);
+    kickerPid.pid.setTolerance(Constants.SpindexerConstants.KICKER_VEL_TOLERANCE);
   }
     
   public void periodic(){
+    spinPid.update();
+    kickerPid.update();
+
     io.updateInputs(inputs);
     StatusPage.reportStatus(StatusPage.SPINDEXER_SUBSYSTEM, inputs.talon.isConnected && inputs.follower.isConnected);
     StatusPage.reportStatus(StatusPage.SPINDEXER_JAM, isJammed());
@@ -51,19 +72,40 @@ public class Spindexer extends SubsystemBase{
     }
     //TODO add something to try to resolve jamming
     if(controlMode == ControlMode.Disabled){
-      goalVelocity = 0;
+      spinGoalVelocity = 0;
+      kickerGoalVelocity = 0;
       goalVoltage = 0;
       io.stop();
+    } else  if (controlMode == ControlMode.Voltage){
+      io.setSpinVoltage(goalVoltage);
+      io.setKickerVoltage(goalVoltage);
     } else {
-      io.setVoltage(goalVoltage);
+      if(isJammed()){
+        io.setSpinVoltage(-Constants.SpindexerConstants.SPIN_UNJAM_VOLTAGE);
+        io.setKickerVoltage(-Constants.SpindexerConstants.KICKER_UNJAM_VOLTAGE);
+      } else {
+        double kickerFeedback = MathUtil.clamp(kickerPid.pid.calculate(inputs.kickerVelocity, kickerGoalVelocity),0,12);
+        double spinFeedback = 0;
+        if(inputs.kickerVelocity > (0.9 * Constants.SpindexerConstants.KICKER_VELOCITY)){
+          spinFeedback = spinPid.pid.calculate(inputs.spinVelocity, spinGoalVelocity);
+        }
+        if(spinGoalVelocity == 0){
+          io.setSpinVoltage(0);
+        }else {
+          io.setSpinVoltage(spinFeedback + spinFeedforward.calculate(spinGoalVelocity));
+        }
+        io.setKickerVoltage(kickerFeedback + kickerFeedforward.calculate(kickerGoalVelocity));
+      }
     }
 
     activePublisher.set(inputs.active);
     jammedPublisher.set(inputs.jammed);
     overridePublisher.set(override);
-    velocityPublisher.set(inputs.talon.velocityRadsPerSec);
-    goalVelocityPublisher.set(goalVelocity);
-    voltagePublisher.set(inputs.talon.supplyVoltage);
+    velocityPublisher.set(inputs.spinVelocity);
+    kickerVelocityPublisher.set(inputs.kickerVelocity);
+    spinGoalVelocityPublisher.set(spinGoalVelocity);
+    kickerGoalVelocityPublisher.set(kickerGoalVelocity);
+    voltagePublisher.set(inputs.talon.appliedPowerVolts);
     currentPublisher.set(inputs.talon.currentDrawAmps);
     temperaturePublisher.set(inputs.talon.temperatureCelsius);
     connectionPublisher.set(inputs.talon.isConnected);
@@ -80,7 +122,9 @@ public class Spindexer extends SubsystemBase{
 
   public void stopSpindexer(){
     io.stop();
-    runSpindexerVoltage(0);;
+    controlMode = ControlMode.Disabled;
+    spinGoalVelocity = 0;
+    kickerGoalVelocity = 0;
   }
 
   public void toggleOverrideJam(){
@@ -108,7 +152,19 @@ public class Spindexer extends SubsystemBase{
     return goalVoltage;
   }
 
-  public void setContolMode(ControlMode controlmode){
-    this.controlMode = controlmode;
+  public double getSpinGoalVelocity(){
+    return spinGoalVelocity;
+  }
+
+  public void setVelocity(double spinVelocity, double kickerVelocity){
+    controlMode = ControlMode.Velocity;
+    spinGoalVelocity = spinVelocity;
+    kickerGoalVelocity = kickerVelocity;
+  }
+
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Spindexer", new String[]{"Spindexer Motor", "Kicker Motor"}, 
+      new double[]{inputs.talon.appliedPowerVolts, inputs.follower.appliedPowerVolts}, 
+        new double[]{inputs.talon.currentDrawAmps, inputs.follower.currentDrawAmps});
   }
 }

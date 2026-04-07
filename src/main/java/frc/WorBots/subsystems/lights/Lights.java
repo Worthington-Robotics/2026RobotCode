@@ -54,7 +54,7 @@ public class Lights extends SubsystemBase {
     /**Current Target the Turret is aiming at */
     private LightsTarget currentTarget = LightsTarget.None;
 
-    private boolean climbing = false;
+    private boolean manualShooting = false;
 
     private boolean superStar = false;
 
@@ -77,7 +77,7 @@ public class Lights extends SubsystemBase {
 
     public static enum LightModes{
         TurretDisplay,
-        Climbing,
+        ManualShot,
         SpinJam,
         SysFault,
         VisionLost,
@@ -125,8 +125,8 @@ public class Lights extends SubsystemBase {
             currentMode = LightModes.SpinJam;
           }
 
-          if(climbing){
-            currentMode = LightModes.Climbing;
+          if(manualShooting){
+            currentMode = LightModes.ManualShot;
           }
 
         }
@@ -170,7 +170,7 @@ public class Lights extends SubsystemBase {
             }
 
             break;
-          case Climbing:
+          case ManualShot:
             //Displays blue light when climb is active to remind the drivers to chill
             Color deepBlue = new Color(0, 0, 255);
             solidColor = deepBlue;
@@ -280,8 +280,8 @@ public class Lights extends SubsystemBase {
    * Tells the lights if the robot is climbing
    * @param status if the robot is climbing
    */
-  public void setClimb(boolean status){
-    this.climbing = status;
+  public void setManualShooting(boolean status){
+    this.manualShooting = status;
   }
 
   /**

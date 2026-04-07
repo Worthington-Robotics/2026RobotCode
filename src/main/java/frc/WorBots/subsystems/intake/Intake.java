@@ -1,6 +1,7 @@
 package frc.WorBots.subsystems.intake;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
@@ -11,8 +12,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.util.FireController;
+import frc.WorBots.util.control.DerivativeFilter;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.Constants;
+import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.intake.IntakeIO.IntakeIOInputs;
 
 public class Intake extends SubsystemBase {
@@ -41,16 +44,21 @@ public class Intake extends SubsystemBase {
       Constants.IntakeConstants.INTAKE_EXTENDING_KD,
       new Constraints(Constants.IntakeConstants.INTAKE_EXTENDING_MAX_VEL,
           Constants.IntakeConstants.INTAKE_EXTENDING_MAX_ACEL));
-  // private ArmFeedforward feedforwardController = new ArmFeedforward(Constants.IntakeConstants.EXTENDER_KS,
-  //     Constants.IntakeConstants.EXTENDER_KG,
-  //     Constants.IntakeConstants.EXTENDER_KV);
+  private ArmFeedforward extendFeedforwardController = new ArmFeedforward(Constants.IntakeConstants.EXTENDER_KS,
+      Constants.IntakeConstants.EXTENDER_KG,
+      Constants.IntakeConstants.EXTENDER_KV);
 
   // The setpoint voltages for both the intaking and extending motors
   private double setPointVoltageIntake = 0.0;
 
+  //TODO see how this filter seems
+  private DerivativeFilter intakeFilter = new DerivativeFilter(Constants.IntakeConstants.INTAKE_VOLTAGE / (Constants.IntakeConstants.INTAKE_SPIN_UP_SECONDS));
+
   private double setPointVoltageExtending = 0.0;
 
   private double setPointPositionExtending = 0.0;
+
+  private double agitatePoseMod = 0.0;
 
   private int pulseCount = 0;
 
@@ -109,19 +117,23 @@ public class Intake extends SubsystemBase {
     } else if (intakeMotorControlMode == IntakeMotorControlMode.Voltage){
       double finalSetpointIntake = 0;
       // Don't try to intake when we are too high, grinds gears
-      if (inputs.extendPosition <= IntakePoses.HALF.get()){
+      // if (inputs.extendPosition <= IntakePoses.HALF.get()){
+      if(setPointVoltageIntake < 0.0){
         finalSetpointIntake = setPointVoltageIntake;
+      } else {
+        finalSetpointIntake = intakeFilter.calculate(setPointVoltageIntake);
       }
-      if(isJammed()){
-        pulseCount = (pulseCount+1)%7;
-        if(pulseCount>5){
-          unJamming = false;
-          finalSetpointIntake = -Math.abs(finalSetpointIntake);
-        } else {
-          unJamming = true;
-          finalSetpointIntake = -Math.abs(finalSetpointIntake);
-        }
-      }
+      // }
+      // if(isJammed()){
+      //   pulseCount = (pulseCount+1)%7;
+      //   if(pulseCount>5){
+      //     unJamming = false;
+      //     finalSetpointIntake = -Math.abs(finalSetpointIntake);
+      //   } else {
+      //     unJamming = true;
+      //     finalSetpointIntake = -Math.abs(finalSetpointIntake);
+      //   }
+      // }
       io.setIntakeMotorVolts(finalSetpointIntake);
       setpointIntakePub.set(finalSetpointIntake);
     } else {
@@ -153,37 +165,32 @@ public class Intake extends SubsystemBase {
         setpointExtendingPub.set(setPointVoltageExtending);
     }else {
       //Position control mode
-      if(controlMode == ControlMode.Agitate && (agitateInAuto || !DriverStation.isAutonomous())){
+      final double goal;
+      if(controlMode == ControlMode.Agitate){
         //Agitate control mode running on top of position control mode
-        if(FireController.getInstance().shouldAgitate() && setPointVoltageIntake == 0){
-          agitatedLast = true;
-          if(setPointPositionExtending == IntakePoses.EXTENDED.pose && atGoal()){
-            setPointPositionExtending = IntakePoses.HALF.pose;
-          } else if(setPointPositionExtending == IntakePoses.HALF.pose && atGoal()) {
-            setPointPositionExtending = IntakePoses.EXTENDED.pose;
-          }
-          io.setIntakeMotorVolts(7);
-        } else if (agitatedLast){
-          setPointPositionExtending = IntakePoses.EXTENDED.pose;
-          agitatedLast = false;
-        }
-      }
-        final double goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
+        agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/(Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY);
+        io.setIntakeMotorVolts(7);
+        goal = MathUtil.clamp(setPointPositionExtending+agitatePoseMod, Constants.IntakeConstants.EXTENDER_MIN_LIMIT, 
+          IntakePoses.HALF.pose + .1);
+      } else {
+        goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
             Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
+      }
         final double feedback = extendController.calculate(inputs.extendPosition, goal);
-        double volts;
-        if(goal == IntakePoses.RETRACTED.pose){
-          volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
-        } else if(goal == IntakePoses.HALF.pose){
-          volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
-        } else if(goal == IntakePoses.EXTENDED.pose){
-          volts = (Math.cos(inputs.extendPosition) * Constants.IntakeConstants.EXTEND_MULT_UPWARD) + (-Math.sin(inputs.extendPosition)*Constants.IntakeConstants.EXTEND_MULT_DOWNWARD);
-          if(Math.abs(setPointPositionExtending - inputs.extendPosition) < Constants.IntakeConstants.INTAKE_EXTEND_EXTEND_POSE_TOLERANCE){
-            volts = 0;
-          }
-        } else {
-          volts = 0;
-        }
+        final double feedforward = extendFeedforwardController.calculate(extendController.getSetpoint().position, extendController.getSetpoint().velocity);
+        double volts = feedforward + feedback;
+        // if(goal == IntakePoses.RETRACTED.pose){
+        //   volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
+        // } else if(goal == IntakePoses.HALF.pose){
+        //   volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
+        // } else if(goal == IntakePoses.EXTENDED.pose){
+        //   volts = (Math.cos(inputs.extendPosition) * Constants.IntakeConstants.EXTEND_MULT_UPWARD) + (-Math.sin(inputs.extendPosition)*Constants.IntakeConstants.EXTEND_MULT_DOWNWARD);
+        //   if(Math.abs(setPointPositionExtending - inputs.extendPosition) < Constants.IntakeConstants.INTAKE_EXTEND_EXTEND_POSE_TOLERANCE){
+        //     volts = 0;
+        //   }
+        // } else {
+        //   volts = 0;
+        // }
         if (extendController.atGoal() && goal != IntakePoses.HALF.pose){
           volts = 0;
         }
@@ -225,7 +232,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void extend() {
-    controlMode = ControlMode.Agitate;
+    controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.EXTENDED.get();
     extendController.reset(inputs.extendPosition);
   }
@@ -240,6 +247,15 @@ public class Intake extends SubsystemBase {
     controlMode = ControlMode.Position;
     setPointPositionExtending = IntakePoses.HALF.get();
     extendController.reset(inputs.extendPosition);
+  }
+
+  public void agigateAuto(){
+    controlMode = ControlMode.Agitate;
+    agitatePoseMod = 0.0;
+  }
+
+  public void stopAgitateAuto(){
+    controlMode = ControlMode.Position;
   }
 
   public boolean isExtended() {
@@ -266,4 +282,9 @@ public class Intake extends SubsystemBase {
     this.agitateInAuto = agitateInAuto;
   }
 
+  public SubsystemLog getPowerLog(){
+    return new SubsystemLog("Intake", new String[]{"Intake Motor","Extend Motor"}, 
+      new double[]{inputs.intakeMotor.appliedPowerVolts, inputs.extendingMotor.appliedPowerVolts}, 
+        new double[]{inputs.intakeMotor.currentDrawAmps, inputs.extendingMotor.currentDrawAmps});
+  }
 }
