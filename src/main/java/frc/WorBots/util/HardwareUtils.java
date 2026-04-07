@@ -341,7 +341,7 @@ public class HardwareUtils {
   public static void setMotorVoltageLimits(TalonFX motor, double maxVoltage){
     var voltConfigs = new VoltageConfigs();
     voltConfigs.PeakForwardVoltage = maxVoltage;
-    voltConfigs.PeakReverseVoltage = maxVoltage;
+    voltConfigs.PeakReverseVoltage = -maxVoltage;
     motor.getConfigurator().apply(voltConfigs);
   }
 }
