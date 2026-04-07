@@ -159,6 +159,11 @@ public class Superstructure extends SubsystemBase {
     shooter.setHoodPose(pose);
   }
 
+  public void setTurretPose(double pose) {
+    controlMode = SuperstructureControlMode.Debug;
+    turret.setPosition(pose);
+  }
+
   public void setFlyWheelVolts(double volts) {
     shooter.setFlywheelVolts(volts);
   }
