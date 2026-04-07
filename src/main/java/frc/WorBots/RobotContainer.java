@@ -112,7 +112,7 @@ public class RobotContainer {
     vision.setDataInterfaces(drive::addVisionUpdate, () -> drive.getRotation(),
         () -> drive.getFieldRelativeSetpointSpeeds());
 
-    FireController fireController = new FireController(superstructure, drive, spin);
+    new FireController(superstructure, drive, spin);
 
     AutoBuilder.configure(
         () -> drive.getPose(), // Get Pose Command
