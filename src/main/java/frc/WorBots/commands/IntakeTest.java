@@ -3,7 +3,6 @@ package frc.WorBots.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.WorBots.subsystems.intake.Intake;
 import frc.WorBots.util.debug.TunableDouble;
 
@@ -34,10 +33,6 @@ public class IntakeTest {
 
   public Command intakeWithVolt(Intake intake, double volts){
     return intake.runOnce( () -> {intake.setVoltsIntake(volts);});
-  }
-
-  public Command setAutoAgigateInAuto(Intake intake, boolean value){
-    return Commands.runOnce(() -> intake.setAgigateInAuto(value));
   }
   
 }

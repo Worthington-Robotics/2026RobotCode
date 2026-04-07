@@ -12,7 +12,6 @@ import frc.WorBots.util.HardwareUtils.OptimalStatusSignal;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.Constants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.CanIDs;
 
 public class IntakeIOTalon implements IntakeIO {
@@ -34,8 +33,6 @@ public class IntakeIOTalon implements IntakeIO {
     extendingMotor = new TalonFX(CanIDs.SuperStructure.EXTENDING_MOTOR_ID, CanIDs.SuperStructure.CAN_BUS);
     extendingMotor.setPosition(0);
     intakeMotor.setPosition(0);
-
-    // TODO Actually find out whether or not to invert the two motors
 
     /*
      * Setting the neutral modes and inversion states of both the
@@ -76,8 +73,6 @@ public class IntakeIOTalon implements IntakeIO {
     inputs.extendingCurrent = extendingCurrentDrawSignal.getValue().in(edu.wpi.first.units.Units.Amps);
 
   }
-
-  // TODO Set actual max voltage
 
   public void setIntakeMotorVolts(double volts) {
     volts = MathUtil.clamp(volts, -10, 10);

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,7 +21,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
@@ -43,9 +41,6 @@ public class Drive extends SubsystemBase {
   private final Module[] modules = new Module[4];
   private final GyroIO gyroIO;
   private final GyroIOInputs gyroIOInputs = new GyroIOInputs();
-
-  //TODO remove
-  LinearFilter timeFilter = LinearFilter.movingAverage(10000);
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private DriveFilter filter = new DriveFilter(Constants.DriveConstants.DRIVE_MAX_VELOCITY,
@@ -154,8 +149,6 @@ public class Drive extends SubsystemBase {
       filter.reset();
     } else {
       if (isStopped()) {
-        // TODO when polishing maybe change this so that the robot doesn't hard stop
-        // avery time
         setpointStates = setStop();
         forceModules = true;
       } else {
@@ -271,7 +264,6 @@ public class Drive extends SubsystemBase {
    * Passes new drive information to the Odometry threat and pose estimator
    */
   public void updateOdometry() {
-    final double startTime = Timer.getFPGATimestamp();
     SwerveModuleState[] measuredStates = new SwerveModuleState[4];
 
     for (int i = 0; i < 4; i++) {

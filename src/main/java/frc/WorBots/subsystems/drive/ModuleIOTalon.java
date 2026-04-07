@@ -141,7 +141,6 @@ public class ModuleIOTalon implements ModuleIO {
     driveFeedback.update();
     turnFeedback.update();
 
-    //TODO removed drive motor signal logging
     driveSignals.update(inputs.drive, driveMotor);
     turnSignals.update(inputs.turn, turnMotor);
     driveVelocitySignal.refresh();

@@ -59,7 +59,6 @@ public class IntakeCommands {
     });
   }
 
-  // TODO make this also send it back down
   /**
    * Moves the intake to a half extended position
    * 

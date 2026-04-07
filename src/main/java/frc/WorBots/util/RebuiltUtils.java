@@ -31,7 +31,7 @@ public class RebuiltUtils {
       return 0;
     }
     if (!DriverStation.isTeleopEnabled()) {
-      return 99; // TODO log this condition being triggered
+      return 99; 
     }
 
     double matchTime = MatchTime.getInstance().getTimeRemaining();
@@ -43,12 +43,11 @@ public class RebuiltUtils {
     if (gameData.isEmpty()) {
       return 0; // Currently set to assume that it is on if no data is recieved, this can be
                 // changed if this becomes a problem
-      // TODO log if this condition is triggered
     }
 
     // Checking for bad game data
     if (!(gameData.charAt(0) == 'R' || gameData.charAt(0) == 'B')) {
-      return 0; // TODO log if this condition is triggered
+      return 0;
     }
 
     if ((alliance.get() == Alliance.Red && gameData.charAt(0) == 'R')
@@ -79,8 +78,6 @@ public class RebuiltUtils {
     }
     return 999; // This should never trigger
   }
-
-  // TODO figure out why this is returning 999
 
   /**
    * @return The time until the next hub switch

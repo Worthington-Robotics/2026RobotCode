@@ -14,8 +14,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,7 +27,6 @@ import frc.WorBots.commands.HoodControlFudgeCommand;
 import frc.WorBots.commands.IntakeCommands;
 import frc.WorBots.commands.pathPlannerCommands.IntakeExtendNoRequirements;
 import frc.WorBots.commands.pathPlannerCommands.PathplannerIntakeCommands;
-import frc.WorBots.commands.pathPlannerCommands.StopShooting;
 import frc.WorBots.energy.PowerLogger;
 import frc.WorBots.commands.PitTest;
 import frc.WorBots.commands.StartAutoAim;
@@ -59,7 +56,6 @@ import frc.WorBots.subsystems.vision.apriltags.TagVisionIONew;
 import frc.WorBots.util.FireController;
 import frc.WorBots.util.control.DriveController;
 import frc.WorBots.util.debug.StatusPage;
-import frc.WorBots.util.math.AllianceFlipUtil;
 
 public class RobotContainer {
   // Subsystems
@@ -118,9 +114,6 @@ public class RobotContainer {
 
     FireController fireController = new FireController(superstructure, drive, spin);
 
-    // TODO make the subsystems target on their own, this means this constructor
-    // needs
-
     AutoBuilder.configure(
         () -> drive.getPose(), // Get Pose Command
         pose -> drive.resetPose(pose), // Reset Pose Command
@@ -169,20 +162,18 @@ public class RobotContainer {
             () -> {
               return false;
             }, () -> driver.x().getAsBoolean()));
-    // A Key = Extend or retract intake
-    // TODO: check if written correctly
+    // Toggle intake up and down
     driver.rightBumper().debounce(0.02).onTrue(new IntakeCommands().togglePose(intake));
-    // TODO: RT for spin intake, see if that is written correctly
+    //Intake
     driver.rightTrigger().debounce(0.02).whileTrue(new IntakeCommands().intake(intake));
-    // TODO: hood down
+    //Hood down
     driver.a().debounce(0.02).onTrue(new ShooterCommands().setHoodPose(superstructure, 0));
-    // TODO: intake spit
+    //Intake spit
     driver.leftBumper().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
-    // Reset Heading with y button
+    //Reset the robot's heading
     driver.y().debounce(0.02).onTrue(new DriveCommands().resetHeading(drive));
-
+    //Superpass
     driver.povUp().debounce(0.02).whileTrue(new ShooterCommands().superPass(superstructure, intake, drive, spin));
-
   }
 
   /*
@@ -199,8 +190,6 @@ public class RobotContainer {
     operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8));
     // Force feed
     operator.leftBumper().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
-    // Climber command is going to be up Dpad
-    // TODO: Add driver-assist manual disable
     // Spit intake Command
     operator.b().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
 

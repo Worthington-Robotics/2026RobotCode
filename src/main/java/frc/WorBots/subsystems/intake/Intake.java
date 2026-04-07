@@ -11,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.WorBots.util.FireController;
 import frc.WorBots.util.control.DerivativeFilter;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.Constants;
@@ -22,7 +21,6 @@ public class Intake extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOInputs inputs = new IntakeIOInputs();
 
-  // TODO add a velocity PID to the intake run motor
   private enum ControlMode {
     Disabled,
     Voltage,
@@ -51,7 +49,6 @@ public class Intake extends SubsystemBase {
   // The setpoint voltages for both the intaking and extending motors
   private double setPointVoltageIntake = 0.0;
 
-  //TODO see how this filter seems
   private DerivativeFilter intakeFilter = new DerivativeFilter(Constants.IntakeConstants.INTAKE_VOLTAGE / (Constants.IntakeConstants.INTAKE_SPIN_UP_SECONDS));
 
   private double setPointVoltageExtending = 0.0;
@@ -63,8 +60,6 @@ public class Intake extends SubsystemBase {
   private int pulseCount = 0;
 
   private boolean unJamming = false;
-  private boolean agitateInAuto = false;
-  private boolean agitatedLast = false;
 
   // Current draw and setpoint publishers.
   private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -84,8 +79,6 @@ public class Intake extends SubsystemBase {
     extendController.setTolerance(Constants.IntakeConstants.EXTENDER_POS_TOLERANCE);
     extendController.setTolerance(Constants.IntakeConstants.INTAKE_EXTEND_TOLERANCE);
   }
-
-  // TODO add softstops
 
   /***
    * Updates every period, reports Status, checks if the motors are too hot,
@@ -276,10 +269,6 @@ public class Intake extends SubsystemBase {
   }
   public boolean isJammed(){
     return ((Math.abs(inputs.intakeMotor.velocityRadsPerSec) < Constants.IntakeConstants.INTAKE_JAMMED_THRESHHOLD && setPointVoltageIntake > 0) && inputs.intakeCurrent > 100)|| unJamming;
-  }
-
-  public void setAgigateInAuto(boolean agitateInAuto){
-    this.agitateInAuto = agitateInAuto;
   }
 
   public SubsystemLog getPowerLog(){

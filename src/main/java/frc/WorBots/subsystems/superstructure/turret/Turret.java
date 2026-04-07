@@ -3,11 +3,9 @@ package frc.WorBots.subsystems.superstructure.turret;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -44,8 +42,6 @@ public class Turret {
 
   private TurretIOInputs inputs = new TurretIOInputs();
   private TurretControlMode controlMode = TurretControlMode.Disabled;
-
-  private Constraints turretConstraints = new Constraints((4 * Math.PI), (6 * Math.PI));
 
   public enum TurretControlMode {
     Disabled,
