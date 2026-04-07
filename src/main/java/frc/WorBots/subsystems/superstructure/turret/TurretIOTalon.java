@@ -24,7 +24,7 @@ import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.Constants;
 
 public class TurretIOTalon implements TurretIO {
-  // electronics
+  // Initialize motors
   private TalonFX turretMotor;
   private CANcoder turretAbsEncoder;
   private TurretIOInputs inputs;
@@ -40,13 +40,13 @@ public class TurretIOTalon implements TurretIO {
   private double fusEncoderOffset;
   private boolean shouldSetEncoderOffset = true;
 
-  final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints((20 * Math.PI), (20 * Math.PI)));
+  final TrapezoidProfile profile = new TrapezoidProfile(
+      new TrapezoidProfile.Constraints((20 * Math.PI), (20 * Math.PI)));
   TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
   private final double kv = 0.2;
 
   public TurretIOTalon() {
-
     inputs = new TurretIOInputs();
     turretMotor = new TalonFX(CanIDs.SuperStructure.TURRET_ID, CanIDs.SuperStructure.CAN_BUS);
 
@@ -69,30 +69,21 @@ public class TurretIOTalon implements TurretIO {
     turretMotor.setNeutralMode(NeutralModeValue.Brake);
     turretMotor.setPosition(0);
 
-     var slot0Configs = new Slot0Configs();
-     slot0Configs.kS = 0.29;
-     slot0Configs.kV = 0.0; //3.5
-     slot0Configs.kP = 9.5;
-     slot0Configs.kI = 0.0;
-     slot0Configs.kD = 0.1; //0.2;
-     turretMotor.getConfigurator().apply(slot0Configs);
+    HardwareUtils.setMotorPidSlot0(turretMotor, 9.5, 0.0, 0.1, 0.29, 0.0, 0.0);
 
-     updateInputs(inputs);
-     //Set rotation limits
-     var limitConfigs = new SoftwareLimitSwitchConfigs();
-     limitConfigs.ForwardSoftLimitThreshold = fusedToRelMotor(Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
-     limitConfigs.ReverseSoftLimitThreshold = fusedToRelMotor(Constants.TurretShooterConstants.TURRET_MIN_ANGLE);
+    updateInputs(inputs);
+    // Set rotation limits
+    var limitConfigs = new SoftwareLimitSwitchConfigs();
+    limitConfigs.ForwardSoftLimitThreshold = fusedToRelMotor(Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
+    limitConfigs.ReverseSoftLimitThreshold = fusedToRelMotor(Constants.TurretShooterConstants.TURRET_MIN_ANGLE);
 
-     limitConfigs.ForwardSoftLimitEnable = true;
-     limitConfigs.ReverseSoftLimitEnable = true;
+    limitConfigs.ForwardSoftLimitEnable = true;
+    limitConfigs.ReverseSoftLimitEnable = true;
 
-     turretMotor.getConfigurator().apply(limitConfigs);
+    turretMotor.getConfigurator().apply(limitConfigs);
 
-    //Set voltage limits
-    var voltConfigs = new VoltageConfigs();
-    voltConfigs.PeakForwardVoltage = Constants.TurretShooterConstants.TURRET_MAX_VOLTAGE;
-    voltConfigs.PeakReverseVoltage = Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE;
-    turretMotor.getConfigurator().apply(voltConfigs);
+    // Set voltage limits
+    HardwareUtils.setMotorVoltageLimits(turretMotor, Constants.TurretShooterConstants.TURRET_MAX_VOLTAGE);
   }
 
   public void setVoltage(double volts) {
@@ -100,21 +91,18 @@ public class TurretIOTalon implements TurretIO {
   }
 
   @Override
-  public void setPosition(TrapezoidProfile.State goalState){
-    setpoint = goalState;//profile.calculate(Constants.RobotConstants.ROBOT_PERIOD, setpoint, goalState);
+  public void setPosition(TrapezoidProfile.State goalState) {
+    setpoint = goalState;
     PositionVoltage request = new PositionVoltage(0).withSlot(0).withFeedForward(setpoint.velocity * kv);
     request.Position = fusedToRelMotor(setpoint.position);
     request.Velocity = fusedToRelMotor(setpoint.velocity);
     turretMotor.setControl(request);
   }
 
-  // TODO figure out how we're implementing this
-  // public void resetZero(TurretIOInputs inputs, double position) {
-  // fusEncoderOffset += position - turretInputs.turretFusedAngle;
-  // }
-
   public void resetOffset() {
-    fusEncoderOffset = (new Rotation2d(turretAbsEncoderSignal.getValue()).getRadians() / Constants.TurretShooterConstants.TURRET_ABS_GEAR_RATIO) - Constants.TurretShooterConstants.TURRET_ABS_ENCODER_TRUE_ZERO;
+    fusEncoderOffset = (new Rotation2d(turretAbsEncoderSignal.getValue()).getRadians()
+        / Constants.TurretShooterConstants.TURRET_ABS_GEAR_RATIO)
+        - Constants.TurretShooterConstants.TURRET_ABS_ENCODER_TRUE_ZERO;
   }
 
   public void updateInputs(TurretIOInputs inputs) {
@@ -123,7 +111,6 @@ public class TurretIOTalon implements TurretIO {
     turretMotorPositionSignal.refresh();
     motorCurrentSignal.refresh();
     turretVelocitySignal.refresh();
-    
 
     final double relReading = turretMotorPositionSignal.getValue().in(edu.wpi.first.units.Units.Radians);
     inputs.turretRelAngle = relReading;
@@ -135,9 +122,9 @@ public class TurretIOTalon implements TurretIO {
                   reading.in(edu.wpi.first.units.Units.Radians));
             });
 
-    // TODO take a look at this
     if (absReading.isPresent()) {
-      inputs.turretAbsAngle = (absReading.get() / Constants.TurretShooterConstants.TURRET_ABS_GEAR_RATIO) - Constants.TurretShooterConstants.TURRET_ABS_ENCODER_TRUE_ZERO;
+      inputs.turretAbsAngle = (absReading.get() / Constants.TurretShooterConstants.TURRET_ABS_GEAR_RATIO)
+          - Constants.TurretShooterConstants.TURRET_ABS_ENCODER_TRUE_ZERO;
     }
 
     if (shouldSetEncoderOffset) {
@@ -148,9 +135,6 @@ public class TurretIOTalon implements TurretIO {
     }
 
     inputs.turretFusedAngle = (relReading / Constants.TurretShooterConstants.TURRET_GEAR_RATIO) + fusEncoderOffset;
-    // if(turretAbsEncoder.isConnected()){
-    //   inputs.turretFusedAngle = inputs.turretAbsAngle;
-    // }
     inputs.absEncoderConnected = turretAbsEncoder.isConnected();
     inputs.turretVelocity = turretVelocitySignal.getValueAsDouble() * 2 * Math.PI;
     motorSignal.update(inputs.turret, turretMotor);
@@ -161,9 +145,10 @@ public class TurretIOTalon implements TurretIO {
   }
 
   /**
-   * Converts a fused angle in radians to an angle in rotations that can be given to the turret motor
+   * Converts a fused angle in radians to an angle in rotations that can be given
+   * to the turret motor
    */
-  public double fusedToRelMotor(double angle){
+  public double fusedToRelMotor(double angle) {
     return Units.radiansToRotations((angle - fusEncoderOffset) * Constants.TurretShooterConstants.TURRET_GEAR_RATIO);
   }
 }
