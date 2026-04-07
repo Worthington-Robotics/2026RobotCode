@@ -1,9 +1,7 @@
 package frc.WorBots.util;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.lights.Lights.LightEffects;
@@ -14,7 +12,6 @@ import frc.WorBots.util.debug.StatusPage;
 
 public class FireController {
   private Superstructure superstructure;
-  private RebuiltUtils utils;
   private static FireController instance;
   private Drive drive;
   private Spindexer spindexer;
@@ -86,7 +83,6 @@ public class FireController {
 
     if (DriverStation.getAlliance().isPresent() && ((DriverStation.getAlliance().get() == Alliance.Red && drive.inRedZone())
         || (DriverStation.getAlliance().get() == Alliance.Blue && drive.inBlueZone()))) {
-      output = output;// && timeAcceptable();
       Lights.getInstance().setTarget(LightsTarget.Hub);
     } else {
       Lights.getInstance().setTarget(LightsTarget.Pass);

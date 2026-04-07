@@ -7,15 +7,12 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
-import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.debug.TunablePIDController;
-import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 
 public class Spindexer extends SubsystemBase{
   SpindexerIO io;
@@ -70,7 +67,6 @@ public class Spindexer extends SubsystemBase{
     if(DriverStation.isDisabled() || inputs.talon.temperatureCelsius > Constants.SpindexerConstants.SPINDEXER_MAX_TEMP){
       controlMode = ControlMode.Disabled;
     }
-    //TODO add something to try to resolve jamming
     if(controlMode == ControlMode.Disabled){
       spinGoalVelocity = 0;
       kickerGoalVelocity = 0;

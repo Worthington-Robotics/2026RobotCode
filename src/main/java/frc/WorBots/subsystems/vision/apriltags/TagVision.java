@@ -65,7 +65,6 @@ public class TagVision extends SubsystemBase {
           Units.inchesToMeters(12.75),
           Units.inchesToMeters(13.5)),
       new Rotation3d(
-          // TODO angle up is 30 degrees
           Units.degreesToRadians(0),
           Units.degreesToRadians(-30),
           Units.degreesToRadians(90)));
@@ -106,7 +105,6 @@ public class TagVision extends SubsystemBase {
    * How much influence XY data has on the robot pose. Smaller values increase
    * influence
    */
-  // TODO: leave these where they are rn
   private static final double XY_STD_DEV_COEFFICIENT = 0.8;
 
   /**
@@ -135,7 +133,6 @@ public class TagVision extends SubsystemBase {
    * weights for one side
    * (half the tags)
    */
-  // TODO: update/change these--meaning, maybe tune them?
   // The higher the value, the greater the trust in them.
   private static final double[] TAG_WEIGHTS = new double[] {
       0.75, // AprilTag 1
@@ -220,8 +217,6 @@ public class TagVision extends SubsystemBase {
       }
     }
     isConnectedPublisher.set(isConnected);
-    // TODO: put this back in after lights are done:
-    // Lights.getInstance().setNoVisionIndicator(!isConnected);
 
     // Loop over instances
     List<Pose2d> allRobotPoses = new ArrayList<>();

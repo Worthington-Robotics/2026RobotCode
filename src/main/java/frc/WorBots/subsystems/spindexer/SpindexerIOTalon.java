@@ -1,8 +1,6 @@
 package frc.WorBots.subsystems.spindexer;
 
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
@@ -15,7 +13,6 @@ import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 
 public class SpindexerIOTalon implements SpindexerIO{
 
-  //TODO name canbus
   private TalonFX talon = new TalonFX(CanIDs.SuperStructure.SPINDEXER_ID, CanIDs.SuperStructure.CAN_BUS);
   private TalonFX kicker = new TalonFX(CanIDs.SuperStructure.KICKER_ID, CanIDs.SuperStructure.CAN_BUS);
 
@@ -76,7 +73,6 @@ public class SpindexerIOTalon implements SpindexerIO{
       return false;
   }
 
-  //TODO implement
   private boolean isJammed(){
     return talon.getTorqueCurrent().getValueAsDouble() > Constants.SpindexerConstants.SPINDEXER_STALL_CURRENT && 
       talon.getVelocity().getValueAsDouble() < Constants.SpindexerConstants.SPINDEXER_STALL_SPEED;

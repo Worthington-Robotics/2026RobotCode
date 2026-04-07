@@ -51,7 +51,6 @@ public class SpindexerIOSim implements SpindexerIO {
       return false;
   }
 
-  //TODO implement someway to manually trigger this
   private boolean isJammed(){
     return false;
   }

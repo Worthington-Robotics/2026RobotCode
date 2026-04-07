@@ -11,7 +11,6 @@ import edu.wpi.first.math.util.Units;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 
 public class Constants {
-  //TODO figure out if we have all our GRs inverted
   //General Constants
   public static final boolean IS_COMP = true;
   public static final boolean ENABLE_DEBUG_ROUTINES = false;
@@ -71,7 +70,6 @@ public class Constants {
 
     public static final double SPINDEXER_VELOCITY = 70.0;
     public static final double KICKER_VELOCITY = 230.0;
-    //TODO find all these values
     public static final double SPINDEXER_MAX_TEMP = 80.0; //Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;
     public static final double KICKER_GEAR_RATIO = 1/ 3.0; 
@@ -79,7 +77,7 @@ public class Constants {
     public static final double SPINDEXER_JKgMETERSSQUARED = 1;
     public static final double SPINDEXER_STALL_CURRENT = 30;
     public static final double SPINDEXER_STALL_SPEED = Units.degreesToRadians(5);
-    public static final double SPINDEXER_CURRENT_LIMIT = 70; //TODO make sure this is high enough
+    public static final double SPINDEXER_CURRENT_LIMIT = 70;
     public static final double KICKER_CURRENT_LIMIT = 80;
     //PID Tolerance
 
@@ -110,7 +108,6 @@ public class Constants {
   /**Turret and Shooter Constants*/
     public class TurretShooterConstants{
     public static final Transform2d ROBOT_TO_TURRET = new Transform2d(Units.inchesToMeters(-3.922), Units.inchesToMeters(-3.350), new Rotation2d());
-    //TODO add real values
     public static final double SHOOTER_ERROR_THRES = 0.0;
     public static final double SHOOTER_MAX_VOLTS = 0.0;
     public static final double Hood_GEAR_RATIO = 79.6;
@@ -118,13 +115,13 @@ public class Constants {
     public static final double TURRET_GEAR_RATIO = 27;
     public static final double TURRET_ABS_GEAR_RATIO = 1 / 0.9702;
     public static final double TURRET_MOI = 494.65;
-    public static final double TURRET_LOCK_POSITION = 0.0; //TODO add real value
-    public final static double PREFIRE_LIMIT = 1.3; //TODO add documentation
+    public static final double TURRET_LOCK_POSITION = 0.0;
+    public final static double PREFIRE_LIMIT = 1.3;
     public final static double TURRET_ABS_ENCODER_TRUE_ZERO = -0.67;
     
     //Current Limits
     public final static double TURRET_CURRENT_LIMIT = 40;
-    public final static double FLYWHEEL_CURRENT_LIMIT = 85; //TODO make sure this is high enough
+    public final static double FLYWHEEL_CURRENT_LIMIT = 85;
     public final static double HOOD_CURRENT_LIMIT = 20;
 
     //Turret Saftey Limits
@@ -137,11 +134,10 @@ public class Constants {
     public final static double TURRET_POSE_TOLERANCE = Units.degreesToRadians(0.35);
     public final static double TURRET_VEL_TOLERANCE = Units.degreesToRadians(5);
     public final static double HOOD_POS_TOLERANCE = Units.degreesToRadians(0.1);
-    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(0); //TODO should be 0
+    public final static double FLYWHEEL_VEL_TOLERANCE = Units.degreesToRadians(0);
 
     //Ready to shoot tolerances
-    //TODO set real numbers
-    public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(20); //TODO make a smaller value while accounting for turret lagging behind
+    public final static double TURRET_READY_TOLERANCE = Units.degreesToRadians(20);
     public final static double HOOD_READY_TOLERANCE = Units.degreesToRadians(2);
     public final static double FLYWHEEL_READY_VEL_TOLERANCE = 20;
 
@@ -195,7 +191,7 @@ public class Constants {
     public static final double INTAKE_EXTENDING_MAX_ACEL_UP = 4.25;
 
     //Current limits
-    public static final double INTAKE_CURRENT_LIMIT = 95; //TODO make sure this is high enough
+    public static final double INTAKE_CURRENT_LIMIT = 95;
     public static final double EXTENDER_CURRENT_LIMIT = 100;
  
     //Position constants for intake logic
@@ -229,7 +225,6 @@ public class Constants {
   public class ClimberConstants{
     public static final double MAX_ROTATIONAL_VELOCITY = 1;
     public static final double MAX_ROTATIONAL_ACCELERATION = 2;
-    //TODO invert the motor
     public static final double READY_CLIMBER_POSITION = Units.rotationsToRadians(470);
     public static final double CLIMB_POSITION = Units.rotationsToRadians(931.019);
     public static final double CLIMBER_CURRENT_LIMIT = 40;

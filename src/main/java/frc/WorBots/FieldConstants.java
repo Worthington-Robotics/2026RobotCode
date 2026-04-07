@@ -4,8 +4,6 @@ import static edu.wpi.first.apriltag.AprilTagFields.k2026RebuiltWelded;
 import edu.wpi.first.apriltag.*;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import java.io.IOException;
 
 public class FieldConstants {
