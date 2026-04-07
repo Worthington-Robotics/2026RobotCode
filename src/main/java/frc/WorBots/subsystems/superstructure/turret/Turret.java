@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -21,12 +20,12 @@ import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.superstructure.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.debug.StatusPage;
-import frc.WorBots.util.debug.TunableDouble;
-import frc.WorBots.util.math.GeneralMath;
 
+/**
+ * A class to represent the robot's turret
+ */
 public class Turret {
-  // TODO figure out how to implement the right time to wrap around
-
+  // Create publishers for logging
   private final NetworkTable turret = NetworkTableInstance.getDefault().getTable("Turret");
   private final BooleanPublisher absConnectedPub = turret.getBooleanTopic("AbsConnected").publish();
   private final DoublePublisher absAnglePub = turret.getDoubleTopic("AbsAngle").publish();
@@ -40,18 +39,13 @@ public class Turret {
   private final BooleanPublisher lockedPub = turret.getBooleanTopic("Locked").publish();
   private final BooleanPublisher readyPub = turret.getBooleanTopic("Ready").publish();
   private final DoublePublisher errorPub = turret.getDoubleTopic("Error").publish();
-  private final DoublePublisher requestedVoltagePub = turret.getDoubleTopic("Requested Voltage").publish();
 
   public final TurretIO io;
 
   private TurretIOInputs inputs = new TurretIOInputs();
   private TurretControlMode controlMode = TurretControlMode.Disabled;
 
-  private Constraints turretConstraints = new Constraints((4 * Math.PI), (6 * Math.PI)); //TODO lower these values and retune
-  /// 5.25, .01, .1  //3,0,.1 // 3.7,.7,.16
-  private ProfiledPIDController turretFeedBack = new ProfiledPIDController(0, 0.0, 0.0, turretConstraints);
-  private SimpleMotorFeedforward turretFeedforward = new SimpleMotorFeedforward(0.26, .935, 0.02);
-  
+  private Constraints turretConstraints = new Constraints((4 * Math.PI), (6 * Math.PI));
 
   public enum TurretControlMode {
     Disabled,
@@ -63,51 +57,32 @@ public class Turret {
   private double debugVoltage = 0;
   private double goalPosition = 0;
   private double goalVelocity = 0;
-  private double lastVelocitySetpoint = 0.0;
 
+  /**
+   * A class to represent the robot's turret
+   * 
+   * @param io The TurretIO to use
+   */
   public Turret(TurretIO io) {
     this.io = io;
-    // turretFeedBack.setTolerance(Constants.TurretShooterConstants.TURRET_POSE_TOLERANCE,
-    // Constants.TurretShooterConstants.TURRET_VEL_TOLERANCE);
-
-    turretFeedBack.setTolerance(Constants.TurretShooterConstants.TURRET_POSE_TOLERANCE);
-
     io.resetOffset();
   }
 
+  /**
+   * Disables the turret
+   */
   public void disable() {
     controlMode = TurretControlMode.Disabled;
   }
 
   public void periodic() {
+    // Update inputs and report status
     io.updateInputs(inputs);
     StatusPage.reportStatus(StatusPage.TURRET_SUBSYSTEM, inputs.turret.isConnected);
+
+    // Command motors
     if (controlMode == TurretControlMode.Disabled) {
       io.setVoltage(0);
-    } else {
-      if (turretLocked) {
-        goalPosition = Constants.TurretShooterConstants.TURRET_LOCK_POSITION;
-        controlMode = TurretControlMode.Position;
-      }
-      if (controlMode == TurretControlMode.Voltage) {
-        debugVoltage = MathUtil.clamp(debugVoltage, Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE,
-            Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
-        io.setVoltage(debugVoltage);
-      }
-      if (controlMode == TurretControlMode.Position) {
-        // turretFeedBack.setGoal(new TrapezoidProfile.State(goalPosition, goalVelocity));
-        // double feedback = turretFeedBack.calculate(inputs.turretFusedAngle);
-        // double feedforward = turretFeedforward.calculateWithVelocities(lastVelocitySetpoint, turretFeedBack.getSetpoint().velocity);
-        // lastVelocitySetpoint = turretFeedBack.getSetpoint().velocity;
-
-        // // if (!turretFeedBack.atSetpoint()) {
-        // //   final double KS = (inputs.turretFusedAngle < goalPosition) ? 0.33 : -0.33;
-        // //   feedback += KS;
-        // // }
-
-        // double volts = feedback + feedforward; // + feedforward;
-        // SmartDashboard.putNumber("Turret Velocity", turretFeedBack.getSetpoint().velocity);
-
         // volts = MathUtil.clamp(volts, Constants.TurretShooterConstants.TURRET_MIN_VOLTAGE,
         //     Constants.TurretShooterConstants.TURRET_MAX_VOLTAGE);
 
@@ -176,7 +151,10 @@ public class Turret {
     return Math.abs(goalPosition - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_TOLERANCE;
   }
 
-  public boolean readyToPass(){
+  /**
+   * Returns if the turret is close enough to it's goal to pass
+   */
+  public boolean readyToPass() {
     return Math.abs(goalPosition - getPosition()) < Constants.TurretShooterConstants.TURRET_READY_PASS_TOLERANCE;
   }
 
@@ -189,9 +167,6 @@ public class Turret {
   public double optimizeSetpoint(double positionRads) {
     positionRads = MathUtil.angleModulus(positionRads);
     clampSetpoint(positionRads);
-    if (controlMode != controlMode.Position) {
-      // turretFeedBack.reset(inputs.turretFusedAngle);
-    }
     // Bounding logic starts here
     ArrayList<Double> dThetas = new ArrayList<>();
     // Calculates the adjustment for each of the three paths we can take
@@ -233,17 +208,11 @@ public class Turret {
     return output;
   }
 
-  public void setPosition(double positionRads) {
-    controlMode = TurretControlMode.Position;
-    // goalPosition = optimizeSetpoint(positionRads);
-    positionRads = MathUtil.angleModulus(positionRads);
-    positionRads = MathUtil.clamp(positionRads, Constants.TurretShooterConstants.TURRET_MIN_ANGLE,
-        Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
-    positionRads = optimizeSetpoint(positionRads);
-    goalPosition = positionRads;
-    goalVelocity = 0;
-  }
-
+  /**
+   * Runs the turret at a specified voltage
+   * 
+   * @param volts The voltage to run the turret at
+   */
   public void setVoltage(double volts) {
     debugVoltage = volts;
     if (controlMode != TurretControlMode.Voltage) {
@@ -251,132 +220,57 @@ public class Turret {
     }
   }
 
- public void setTurretMode(TurretControlMode mode)
- {
-   controlMode = mode;
- }
-
-  /**
-   * Sets the position of the turret.
-   * 
-   * @param position The position to set the turret to
-   */
-  public void setPosition(Rotation2d position) {
-    setPosition(position.getRadians());
+  public void setTurretMode(TurretControlMode mode) {
+    controlMode = mode;
   }
 
   /**
-   * Sets the position of the turret
+   * Sets the field relative position of the turret
    * 
    * @param params    The shooting params to get turret angle from
    * @param robotPose The position of the robot
    */
   public void setPosition(ShootingParams params, Pose2d robotPose) {
     double angle = params.turretAngle().getRadians() - MathUtil.angleModulus(robotPose.getRotation().getRadians());
-    angle = MathUtil.angleModulus(angle);
-    angle = MathUtil.clamp(angle, Constants.TurretShooterConstants.TURRET_MIN_ANGLE, Constants.TurretShooterConstants.TURRET_MAX_ANGLE);
     setPositionAndVelocity(new Rotation2d(angle), params.turretSpeed());
   }
 
   /**
-   * Sets the goal position and velocity of the turret
+   * Sets the robot relative position of the turret
+   * 
+   * @param position The goal position
+   */
+  public void setPosition(double position) {
+    setPositionAndVelocity(new Rotation2d(position), 0);
+  }
+
+  /**
+   * Sets the robot relative goal position and velocity of the turret
    * 
    * @param position   The goal position
    * @param velocity   The goal velocity
    * @param robotAngle The current angle of the robot
-   * @implNote Field relative by default
    */
   public void setPositionAndVelocity(Rotation2d position, double velocity) {
-    SmartDashboard.putNumber("TurretOptimize/Pre Optimize Position", position.getRadians());
+    double positionDouble = MathUtil.angleModulus(position.getRadians());
+    positionDouble = clampSetpoint(positionDouble);
+    SmartDashboard.putNumber("TurretOptimize/Pre Optimize Position", positionDouble);
     controlMode = TurretControlMode.Position;
-    double setPosition = MathUtil.angleModulus(position.getRadians());
-    goalPosition = optimizeSetpoint(setPosition);
+    goalPosition = optimizeSetpoint(positionDouble);
     goalVelocity = velocity;
-  }
-
-  /**
-   * Sets the position of the turret
-   * 
-   * @param params     The shooting params to get the turret angle from
-   * @param robotAngle The angle of the robot
-   */
-  public void setPosition(ShootingParams params, Rotation2d robotAngle) {
-    setFieldRelativePosition(params.turretAngle(), robotAngle);
-  }
-
-  /**
-   * Sets the position of the turret.
-   * 
-   * @param position   The field relative angle to set the turret to
-   * @param robotAngle The robot's angle
-   */
-  public void setFieldRelativePosition(Rotation2d position, Rotation2d robotAngle) {
-    setPosition(position.getRadians() - MathUtil.angleModulus(robotAngle.getRadians()));
-  }
-
-  /**
-   * Sets the position of the turret
-   * 
-   * @param position  The field relative angle to set the turret to
-   * @param robotPose The robot's position
-   */
-  public void setFieldRelativePosition(Rotation2d position, Pose2d robotPose) {
-    setPosition(position.getRadians() - MathUtil.angleModulus(robotPose.getRotation().getRadians()));
-  }
-
-  /**
-   * Sets the position of the turret, minimizing the distance the turret is from 0
-   * 
-   * @param position The position to set the turret to
-   */
-  public void setPositionMinDistFromZero(double position) {
-    goalPosition = position;
-  }
-
-  /**
-   * Sets the position of the turret, minimizing the distance the turret is from 0
-   * 
-   * @param position The position to set the turret to
-   */
-  public void setPositionMinDistFromZero(Rotation2d position) {
-    goalPosition = position.getRadians();
-  }
-
-  /**
-   * Sets the position of the turret, minimizing the distance the turret is from 0
-   * 
-   * @param position   The position to set the turret to
-   * @param robotAngle The angle of the robot
-   */
-  public void setPositionMinDistFromZeroFieldRel(Rotation2d position, Rotation2d robotAngle) {
-    goalPosition = MathUtil.angleModulus(position.getRadians() - robotAngle.getRadians());
-  }
-
-  /**
-   * Sets the position of the turret, minimizing the distance the turret is from 0
-   * 
-   * @param position  The position to set the turret to
-   * @param robotPose The position of the robot
-   */
-  public void setPositionMinDistFromZeroFieldRel(Rotation2d position, Pose2d robotPose) {
-    goalPosition = MathUtil.angleModulus(position.getRadians() - robotPose.getRotation().getRadians());
-  }
-
-  public void lockTurret() {
-    turretLocked = true;
-  }
-
-  public void unlockTurret() {
-    turretLocked = false;
   }
 
   public double getDesiredAngle() {
     return goalPosition;
   }
 
-  public SubsystemLog getPowerLog(){
-    return new SubsystemLog("Turret", new String[]{"Turret Motor"}, 
-      new double[]{inputs.turret.appliedPowerVolts}, 
-       new double[]{inputs.turret.currentDrawAmps});
+  /**
+   * Returns the power log containing current and voltage usage for all motors in
+   * the turret subsystem
+   */
+  public SubsystemLog getPowerLog() {
+    return new SubsystemLog("Turret", new String[] { "Turret Motor" },
+        new double[] { inputs.turret.appliedPowerVolts },
+        new double[] { inputs.turret.currentDrawAmps });
   }
 }
