@@ -11,6 +11,8 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 //import com.playingwithfusion.TimeOfFlight;
@@ -309,5 +311,37 @@ public class HardwareUtils {
 
   public static double getBatteryVoltage() {
     return batteryVoltageFilter.lastValue();
+  }
+
+  /**
+   * Sets the motor's internal slot0 pid config
+   * @param motor The motor to configure
+   * @param kP The kP to set
+   * @param kI The kI to set
+   * @param kD The kD to set
+   * @param kS The kS to set
+   * @param kV The kV to set
+   * @param kA The kA to set
+   */
+  public static void setMotorPidSlot0(TalonFX motor, double kP, double kI, double kD, double kS, double kV, double kA){
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kP = kP;
+    slot0Configs.kI = kI;
+    slot0Configs.kD = kD;
+    slot0Configs.kV = kV;
+    slot0Configs.kA = kA;
+    motor.getConfigurator().apply(slot0Configs);
+  }
+
+  /**
+   * Sets a motor's internal voltage limit
+   * @param motor The motor to configure
+   * @param maxVoltage The max voltage the motor can apply
+   */
+  public static void setMotorVoltageLimits(TalonFX motor, double maxVoltage){
+    var voltConfigs = new VoltageConfigs();
+    voltConfigs.PeakForwardVoltage = maxVoltage;
+    voltConfigs.PeakReverseVoltage = maxVoltage;
+    motor.getConfigurator().apply(voltConfigs);
   }
 }
