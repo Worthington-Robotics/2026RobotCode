@@ -23,8 +23,6 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  private boolean useDebugBindings = false;
-
   public Robot() {
     m_robotContainer = new RobotContainer();
     // Set robot period
@@ -44,24 +42,21 @@ public class Robot extends TimedRobot {
   }
 
   public void realRobotPeriodic() {
-    boolean temp = SmartDashboard.getBoolean("DebugBindingsEnabed", false);
-    if (temp != useDebugBindings) {
-      if (temp) {
-      } else {
-      }
-    }
     CommandScheduler.getInstance().run();
     Lights.getInstance().periodic();
     TimeCache.getInstance().update();
     StatusPage.periodic();
+    //Update power logging
     m_robotContainer.updatePowerLogs();
   }
 
   @Override
   public void robotInit(){
+    //Start logging
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
     super.robotInit();
+    //Enable automatic capture of usb cameras
     CameraServer.startAutomaticCapture();
   }
 
