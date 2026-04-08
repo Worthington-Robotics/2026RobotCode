@@ -4,14 +4,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.spindexer.Spindexer;
-import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.util.FireController;
 
 /** A command to shot if the fire control system believes we can shoot */
 public class ConditionalFireCommand extends Command {
   public Spindexer spin;
   public Drive drive;
-  private Superstructure superstructure;
   double voltage;
 
   /**
@@ -22,11 +20,10 @@ public class ConditionalFireCommand extends Command {
    * @param spin    The spindexer to run to feed to shooter
    * @param voltage The voltage to run the spindexer at
    */
-  public ConditionalFireCommand(Drive drive, Spindexer spin, Superstructure superstructure, double voltage) {
+  public ConditionalFireCommand(Drive drive, Spindexer spin,double voltage) {
     this.spin = spin;
     this.drive = drive;
     this.voltage = voltage;
-    this.superstructure = superstructure;
   }
 
   @Override

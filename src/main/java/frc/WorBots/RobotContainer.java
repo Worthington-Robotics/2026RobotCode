@@ -182,7 +182,7 @@ public class RobotContainer {
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
     operator.rightTrigger().debounce(0.02).whileTrue(
-        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+        new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     // operator.leftTrigger().debounce(0.02).whileTrue(new
     // ShooterCommands().forceFeedShooter(spin));
     operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8));
@@ -267,7 +267,7 @@ public class RobotContainer {
     new EventTrigger("Deploy Intake").onTrue(new IntakeCommands().extend(intake));
     new EventTrigger("Retract Intake").onTrue(new IntakeCommands().agitate(intake));
     new EventTrigger("Sustained Fire").onTrue(
-        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+        new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Use the Force").onTrue(new StartAutoAim(superstructure));
 
     // Fetchs all of the autos from Path Planner
