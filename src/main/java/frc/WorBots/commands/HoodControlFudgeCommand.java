@@ -29,7 +29,7 @@ public class HoodControlFudgeCommand extends Command {
 
   @Override
   public void execute() {
-    if(doRunSupplier.get()){
+    if (doRunSupplier.get()) {
       superstructure.shooter.modHoodFudgeFactor(fudgeFactor);
     }
   }

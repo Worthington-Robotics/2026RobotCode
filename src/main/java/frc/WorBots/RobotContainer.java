@@ -158,10 +158,8 @@ public class RobotContainer {
     // B activates gyro lock
     drive.setDefaultCommand(
         new DriveWithJoysticks(
-            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> {
-              return false;
-            }, () -> driver.x().getAsBoolean()));
+            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), 
+            () -> driver.x().getAsBoolean()));
     // Toggle intake up and down
     driver.rightBumper().debounce(0.02).onTrue(new IntakeCommands().togglePose(intake));
     //Intake

@@ -85,11 +85,22 @@ public class IntakeCommands {
     });
   }
 
-  public Command pulse(Intake intake){
+  /**
+   * Pulses the intake. Currently not implemented.
+   * 
+   * @param intake The intake to pulse
+   */
+  public Command pulse(Intake intake) {
     return Commands.runOnce(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE));
   }
 
-  public Command pulseTeleop(Intake intake){
-    return intake.startEnd(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE), () -> intake.setVoltsIntake(0));
+  /**
+   * Pulses the intake. Currently not implemented.
+   * 
+   * @param intake The intake to pulse
+   */
+  public Command pulseTeleop(Intake intake) {
+    return intake.startEnd(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE),
+        () -> intake.setVoltsIntake(0));
   }
 }

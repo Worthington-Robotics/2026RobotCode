@@ -18,7 +18,6 @@ public class DriveWithJoysticks extends Command {
   private final Supplier<Double> leftXSupplier;
   private final Supplier<Double> leftYSupplier;
   private final Supplier<Double> rightXSupplier;
-  private final Supplier<Boolean> slowSupplier;
   private final Supplier<Boolean> lockGyroSupplier;
   private boolean gyroLockActive = false;
   private double gyroLockSetpoint;
@@ -27,22 +26,19 @@ public class DriveWithJoysticks extends Command {
   /**
    * The main teleop drive command. Controls the robot with joystick input
    * 
-   * @param drive          The drive to control
-   * @param leftXSupplier  Supplier providing the left joystick x value
-   * @param leftYSupplier  Supplier providing the left joystick y value
-   * @param rightXSupplier Supplier providing the right joystick x value
-   * @param slowSupplier   A supplier that will slow down the robot when true.
-   *                       Intended to be used with a button.
+   * @param drive            The drive to control
+   * @param leftXSupplier    Supplier providing the left joystick x value
+   * @param leftYSupplier    Supplier providing the left joystick y value
+   * @param rightXSupplier   Supplier providing the right joystick x value
    * @param lockGyroSupplier When true the robot will lock to its current heading
    */
   public DriveWithJoysticks(Drive drive, Supplier<Double> leftXSupplier, Supplier<Double> leftYSupplier,
-      Supplier<Double> rightXSupplier, Supplier<Boolean> slowSupplier, Supplier<Boolean> lockGyroSupplier) {
+      Supplier<Double> rightXSupplier, Supplier<Boolean> lockGyroSupplier) {
     addRequirements(drive);
     this.drive = drive;
     this.leftXSupplier = leftXSupplier;
     this.leftYSupplier = leftYSupplier;
     this.rightXSupplier = rightXSupplier;
-    this.slowSupplier = slowSupplier;
     this.lockGyroSupplier = lockGyroSupplier;
     gyroLockPid = new PIDController(Constants.DriveConstants.GYRO_LOCK_KP, 0, 0);
     gyroLockPid.enableContinuousInput(-Math.PI, Math.PI);
@@ -58,29 +54,22 @@ public class DriveWithJoysticks extends Command {
     double leftX = leftXSupplier.get();
     double leftY = leftYSupplier.get();
     double rightX = rightXSupplier.get();
-    if(lockGyroSupplier.get()){
-      if(!gyroLockActive){
+    if (lockGyroSupplier.get()) {
+      if (!gyroLockActive) {
         gyroLockActive = true;
-        
-        if(Math.abs(MathUtil.angleModulus(drive.getYaw().getRadians())) < Units.degreesToRadians(90)){
+
+        if (Math.abs(MathUtil.angleModulus(drive.getYaw().getRadians())) < Units.degreesToRadians(90)) {
           gyroLockSetpoint = 0;
         } else {
           gyroLockSetpoint = Math.PI;
         }
       }
-      rightX = MathUtil.clamp(gyroLockPid.calculate(MathUtil.angleModulus(drive.getYaw().getRadians()), gyroLockSetpoint), -1, 1);
-    } else{
+      rightX = MathUtil
+          .clamp(gyroLockPid.calculate(MathUtil.angleModulus(drive.getYaw().getRadians()), gyroLockSetpoint), -1, 1);
+    } else {
       gyroLockActive = false;
     }
-
-    // Will slow the robot is slow supplier is true or we are in our alliance zone
-    // if (slowSupplier.get() || (AllianceFlipUtil.shouldFlip() && drive.inRedZone())
-    //     || (!AllianceFlipUtil.shouldFlip() && drive.inBlueZone())) {
-    //   RobotContainer.driveController.temporarySpeedMultiplier = Optional
-    //       .of(Constants.DriveConstants.DRIVE_SLOW_MULTIPLIER);
-    // } else {
-      RobotContainer.driveController.temporarySpeedMultiplier = Optional.empty();
-    // }
+    RobotContainer.driveController.temporarySpeedMultiplier = Optional.empty();
 
     double maxSpeed = drive.getDriveMaxSpeed();
     final ChassisSpeeds speeds = RobotContainer.driveController.getSpeeds(-leftY, leftX, rightX, drive.getYaw(),

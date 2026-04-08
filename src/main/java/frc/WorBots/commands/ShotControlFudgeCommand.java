@@ -15,8 +15,9 @@ public class ShotControlFudgeCommand extends Command {
   /**
    * A command that runs once and adjusts the flywheel fudge factor.
    * 
-   * @param shooter     The shooter for which to adjest the flywheel fudge factor.
-   * @param fudgeFactor The amount to adjust the flywheel fudge factor by.
+   * @param shooter       The shooter for which to adjest the flywheel fudge
+   *                      factor.
+   * @param fudgeFactor   The amount to adjust the flywheel fudge factor by.
    * @param doRunSupplier If true the command will run
    */
   public ShotControlFudgeCommand(Superstructure shooter, double fudgeFactor, Supplier<Boolean> doRunSupplier) {
@@ -28,7 +29,7 @@ public class ShotControlFudgeCommand extends Command {
 
   @Override
   public void execute() {
-    if(doRunSupplier.get()){
+    if (doRunSupplier.get()) {
       shooter.shooter.modFlywheelFudgeFactor(fudgeFactor);
     }
   }

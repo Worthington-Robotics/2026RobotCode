@@ -23,7 +23,7 @@ public class RunSpindexer extends Command {
 
   @Override
   public void initialize() {
-    if(voltage<0){
+    if (voltage < 0) {
       spin.runSpindexerVoltage(voltage);
     } else {
       spin.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY, Constants.SpindexerConstants.KICKER_VELOCITY);
