@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOInputs inputs = new IntakeIOInputs();
 
-  private enum ControlMode {
+  private enum ExtendControlMode {
     Disabled,
     Voltage,
     Position,
@@ -30,11 +30,10 @@ public class Intake extends SubsystemBase {
 
   private enum IntakeMotorControlMode {
     Disabled,
-    Voltage,
-    Pulse
+    Voltage
   }
 
-  private ControlMode controlMode = ControlMode.Disabled;
+  private ExtendControlMode extendControlMode = ExtendControlMode.Disabled;
   private IntakeMotorControlMode intakeMotorControlMode = IntakeMotorControlMode.Disabled;
 
   private ProfiledPIDController extendController = new ProfiledPIDController(
@@ -49,17 +48,13 @@ public class Intake extends SubsystemBase {
   // The setpoint voltages for both the intaking and extending motors
   private double setPointVoltageIntake = 0.0;
 
-  private DerivativeFilter intakeFilter = new DerivativeFilter(Constants.IntakeConstants.INTAKE_VOLTAGE / (Constants.IntakeConstants.INTAKE_SPIN_UP_SECONDS));
+  private DerivativeFilter intakeFilter = new DerivativeFilter(
+      Constants.IntakeConstants.INTAKE_VOLTAGE / (Constants.IntakeConstants.INTAKE_SPIN_UP_SECONDS));
 
   private double setPointVoltageExtending = 0.0;
-
   private double setPointPositionExtending = 0.0;
 
   private double agitatePoseMod = 0.0;
-
-  private int pulseCount = 0;
-
-  private boolean unJamming = false;
 
   // Current draw and setpoint publishers.
   private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -90,11 +85,12 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     inputs.intakeMotor.publish();
+    inputs.extendingMotor.publish();
 
     // If the heat exceeds the max, turn it off.
     if (inputs.intakeMotor.temperatureCelsius > Constants.IntakeConstants.INTAKE_MAX_TEMP || DriverStation.isDisabled()
         || inputs.extendingMotor.temperatureCelsius > Constants.IntakeConstants.INTAKE_MAX_TEMP) {
-      controlMode = ControlMode.Disabled;
+      extendControlMode = ExtendControlMode.Disabled;
     }
 
     StatusPage.reportStatus(
@@ -102,94 +98,58 @@ public class Intake extends SubsystemBase {
         inputs.extendingMotor.isConnected && inputs.intakeMotor.isConnected
             && inputs.intakeMotor.temperatureCelsius <= Constants.IntakeConstants.INTAKE_MAX_TEMP);
 
-    SmartDashboard.putString("Intake Control Mode", controlMode.toString());
-    //Control intaking motor
-    if(intakeMotorControlMode == IntakeMotorControlMode.Disabled){
+    SmartDashboard.putString("Intake Control Mode", extendControlMode.toString());
+
+    // Control intaking motor
+    if (intakeMotorControlMode == IntakeMotorControlMode.Disabled) {
       setPointVoltageIntake = 0;
       io.setIntakeMotorVolts(0);
-    } else if (intakeMotorControlMode == IntakeMotorControlMode.Voltage){
+    } else {
       double finalSetpointIntake = 0;
-      // Don't try to intake when we are too high, grinds gears
-      // if (inputs.extendPosition <= IntakePoses.HALF.get()){
-      if(setPointVoltageIntake < 0.0){
+      // If the intake is trying to intake, filter it to reduce power draw
+      if (setPointVoltageIntake < 0.0) {
         finalSetpointIntake = setPointVoltageIntake;
       } else {
         finalSetpointIntake = intakeFilter.calculate(setPointVoltageIntake);
       }
-      // }
-      // if(isJammed()){
-      //   pulseCount = (pulseCount+1)%7;
-      //   if(pulseCount>5){
-      //     unJamming = false;
-      //     finalSetpointIntake = -Math.abs(finalSetpointIntake);
-      //   } else {
-      //     unJamming = true;
-      //     finalSetpointIntake = -Math.abs(finalSetpointIntake);
-      //   }
-      // }
+      // Command the motors
       io.setIntakeMotorVolts(finalSetpointIntake);
       setpointIntakePub.set(finalSetpointIntake);
-    } else {
-      //Pulse control mode
-      double finalSetpointIntake = 0;
-      // Don't try to intake when we are too high, grinds gears
-      if (inputs.extendPosition <= IntakePoses.HALF.get()){
-        finalSetpointIntake = setPointVoltageIntake;
-      }
-      // Don't try to intake when we are too high, grinds gears
-      if (inputs.extendPosition <= IntakePoses.HALF.get()){
-        pulseCount = (pulseCount+1)%(int) (100 * (Constants.IntakeConstants.INTAKE_PULSE_INTAKING_SEC + Constants.IntakeConstants.INTAKE_PULSE_SPIT_SEC));
-        if(pulseCount < (int)(100 * Constants.IntakeConstants.INTAKE_PULSE_INTAKING_SEC)){
-          io.setIntakeMotorVolts(finalSetpointIntake);
-        } else {
-          io.setExtendingMotorVolts(-finalSetpointIntake);
-        }
-      }
     }
 
-    //Control extension
-    if (controlMode == ControlMode.Disabled) {
+    // Control the extending motor
+    if (extendControlMode == ExtendControlMode.Disabled) {
       setPointVoltageExtending = 0;
       io.setExtendingMotorVolts(0);
-    } else if (controlMode == ControlMode.Voltage){
-      // Setting the voltages of the motors
-        io.setExtendingMotorVolts(setPointVoltageExtending);
-        // Publishing the setpoint voltage for extending and intaking motors.
-        setpointExtendingPub.set(setPointVoltageExtending);
-    }else {
-      //Position control mode
+    } else if (extendControlMode == ExtendControlMode.Voltage) {
+      // Set motor voltage
+      io.setExtendingMotorVolts(setPointVoltageExtending);
+      setpointExtendingPub.set(setPointVoltageExtending);
+    } else {
+      // Position control mode
       final double goal;
-      if(controlMode == ControlMode.Agitate){
-        //Agitate control mode running on top of position control mode
-        agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)/(Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY);
+      // If in agigate control mode do agitate logic
+      if (extendControlMode == ExtendControlMode.Agitate) {
+        // Slowly raise the intake
+        agitatePoseMod += (IntakePoses.RETRACTED.pose - IntakePoses.EXTENDED.pose)
+            / (Constants.IntakeConstants.INTAKE_SECONDS_TO_AUTO_AGITATE * Constants.RobotConstants.ROBOT_FREQUENCY);
         io.setIntakeMotorVolts(7);
-        goal = MathUtil.clamp(setPointPositionExtending+agitatePoseMod, Constants.IntakeConstants.EXTENDER_MIN_LIMIT, 
-          IntakePoses.HALF.pose + .1);
+        goal = MathUtil.clamp(setPointPositionExtending + agitatePoseMod, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
+            IntakePoses.HALF.pose + .1);
       } else {
         goal = MathUtil.clamp(setPointPositionExtending, Constants.IntakeConstants.EXTENDER_MIN_LIMIT,
             Constants.IntakeConstants.EXTENDER_MAX_LIMIT);
       }
-        final double feedback = extendController.calculate(inputs.extendPosition, goal);
-        final double feedforward = extendFeedforwardController.calculate(extendController.getSetpoint().position, extendController.getSetpoint().velocity);
-        double volts = feedforward + feedback;
-        // if(goal == IntakePoses.RETRACTED.pose){
-        //   volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
-        // } else if(goal == IntakePoses.HALF.pose){
-        //   volts = Math.cos(inputs.extendPosition)  * Constants.IntakeConstants.RETRACT_MULT + feedback;
-        // } else if(goal == IntakePoses.EXTENDED.pose){
-        //   volts = (Math.cos(inputs.extendPosition) * Constants.IntakeConstants.EXTEND_MULT_UPWARD) + (-Math.sin(inputs.extendPosition)*Constants.IntakeConstants.EXTEND_MULT_DOWNWARD);
-        //   if(Math.abs(setPointPositionExtending - inputs.extendPosition) < Constants.IntakeConstants.INTAKE_EXTEND_EXTEND_POSE_TOLERANCE){
-        //     volts = 0;
-        //   }
-        // } else {
-        //   volts = 0;
-        // }
-        if (extendController.atGoal() && goal != IntakePoses.HALF.pose){
-          volts = 0;
-        }
-        voltsPublisher.set(volts);
-        io.setExtendingMotorVolts(MathUtil.clamp(volts, -8, 8));
+      final double feedback = extendController.calculate(inputs.extendPosition, goal);
+      final double feedforward = extendFeedforwardController.calculate(extendController.getSetpoint().position,
+          extendController.getSetpoint().velocity);
+      double volts = feedforward + feedback;
+      if (extendController.atGoal() && goal != IntakePoses.HALF.pose) {
+        volts = 0;
       }
+      voltsPublisher.set(volts);
+      io.setExtendingMotorVolts(MathUtil.clamp(volts, -8, 8));
+    }
     // Publishing the current draw for extending and intaking motors.
     extendPositionPub.set(inputs.extendPosition);
     currentDrawIntakePub.set(inputs.intakeCurrent);
@@ -198,82 +158,117 @@ public class Intake extends SubsystemBase {
     extendGoalPub.set(setPointPositionExtending);
   }
 
-  // Getters and Setters
-
+  /**
+   * Returns the voltage setpoint for the intake motor
+   */
   public double getSetPointVoltageIntake() {
     return setPointVoltageIntake;
   }
 
+  /**
+   * Returns the voltage setpoint for the extend motor
+   */
   public double getSetPointVoltageExtending() {
     return setPointVoltageExtending;
   }
 
+  /**
+   * Sets the intak motor to run at a voltage
+   * 
+   * @param voltage The voltage to run the intake motor at
+   */
   public void setVoltsIntake(double voltage) {
     intakeMotorControlMode = IntakeMotorControlMode.Voltage;
     setPointVoltageIntake = voltage;
   }
 
-  
-  public void pulse(double voltage){
-    intakeMotorControlMode = IntakeMotorControlMode.Pulse;
-    setPointVoltageIntake = voltage;
-  }
-
+  /**
+   * Sets the extend motor to run at a voltage
+   * 
+   * @param voltage The voltage to run the extend motor at
+   */
   public void setVoltsExtending(double voltage) {
-    controlMode = ControlMode.Voltage;
+    extendControlMode = ExtendControlMode.Voltage;
     setPointVoltageExtending = voltage;
   }
 
+  /**
+   * Moves the intake to the extended position
+   */
   public void extend() {
-    controlMode = ControlMode.Position;
+    extendControlMode = ExtendControlMode.Position;
     setPointPositionExtending = IntakePoses.EXTENDED.get();
     extendController.reset(inputs.extendPosition);
   }
 
+  /**
+   * Moves the intake to the retracted position
+   */
   public void retract() {
-    controlMode = ControlMode.Position;
+    extendControlMode = ExtendControlMode.Position;
     setPointPositionExtending = IntakePoses.RETRACTED.get();
     extendController.reset(inputs.extendPosition);
   }
 
-  public void agitate(){
-    controlMode = ControlMode.Position;
+  /**
+   * Raises the intake to the agitate position
+   */
+  public void agitate() {
+    extendControlMode = ExtendControlMode.Position;
     setPointPositionExtending = IntakePoses.HALF.get();
     extendController.reset(inputs.extendPosition);
   }
 
-  public void agigateAuto(){
-    controlMode = ControlMode.Agitate;
+  /**
+   * Slowly raise the intake to agitate balls; designed for use during autonomous
+   */
+  public void agigateAuto() {
+    extendControlMode = ExtendControlMode.Agitate;
     agitatePoseMod = 0.0;
   }
 
-  public void stopAgitateAuto(){
-    controlMode = ControlMode.Position;
+  /**
+   * Stops slowly raising the intake for agigate in auto
+   */
+  public void stopAgitateAuto() {
+    extendControlMode = ExtendControlMode.Position;
   }
 
+  /**
+   * Returns if the intake is set to be in its extended position
+   */
   public boolean isExtended() {
     return setPointPositionExtending == IntakePoses.EXTENDED.get();
   }
 
+  /**
+   * Returns if the extend motor is at its goal
+   */
   public boolean atGoal() {
     return extendController.atGoal();
   }
 
-  public void disable(){
-    controlMode = ControlMode.Disabled;
+  /**
+   * Disables the subsystem
+   */
+  public void disable() {
+    extendControlMode = ExtendControlMode.Disabled;
     intakeMotorControlMode = IntakeMotorControlMode.Disabled;
   }
 
-  public void teleopInit(){
+  /**
+   * Code to run at the start of teleop; extends the intake
+   */
+  public void teleopInit() {
     extend();
   }
-  public boolean isJammed(){
-    return ((Math.abs(inputs.intakeMotor.velocityRadsPerSec) < Constants.IntakeConstants.INTAKE_JAMMED_THRESHHOLD && setPointVoltageIntake > 0) && inputs.intakeCurrent > 100)|| unJamming;
-  }
 
-  public SubsystemLog getPowerLog(){
-    return new SubsystemLog("Intake", new String[]{"Intake Motor","Extend Motor"}, 
-      new double[]{inputs.intakeMotor.appliedPowerVolts, inputs.extendingMotor.appliedPowerVolts}, 
-        new double[]{inputs.intakeMotor.currentDrawAmps, inputs.extendingMotor.currentDrawAmps});
+  /**
+   * Returns the subsystem's power log to update the power logger
+   */
+  public SubsystemLog getPowerLog() {
+    return new SubsystemLog("Intake", new String[] { "Intake Motor", "Extend Motor" },
+        new double[] { inputs.intakeMotor.appliedPowerVolts, inputs.extendingMotor.appliedPowerVolts },
+        new double[] { inputs.intakeMotor.currentDrawAmps, inputs.extendingMotor.currentDrawAmps });
   }
 }
