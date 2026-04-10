@@ -30,6 +30,7 @@ public class Constants {
     public static final double ROBOT_FREQUENCY = 50.0;
     public static final double ROBOT_PERIOD = 1.0 / ROBOT_FREQUENCY;
 
+    /** The voltage threshhold the voltage the rio recieves must drop bellow to trigger a brownout */
     public static final double BROWNOUT_THRESHHOLD = 5.5;
   }
 
