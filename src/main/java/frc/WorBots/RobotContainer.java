@@ -54,7 +54,10 @@ import frc.WorBots.subsystems.superstructure.turret.TurretIOTalon;
 import frc.WorBots.subsystems.vision.apriltags.TagVision;
 import frc.WorBots.subsystems.vision.apriltags.TagVisionIONew;
 import frc.WorBots.util.FireController;
+import frc.WorBots.util.MatchTime;
+import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.control.DriveController;
+import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.StatusPage;
 
 public class RobotContainer {
@@ -311,5 +314,10 @@ public class RobotContainer {
     powerlogger.integrateLog(superstructure.getTurretPowerLog());
     powerlogger.integrateLog(spin.getPowerLog());
     powerlogger.publishLogs();
+  }
+
+  public void logTime(){
+    NTLogger.putNumber("Dashboard", "Match Time", MatchTime.getInstance().getTimeRemaining());
+    NTLogger.putNumber("Dashboard", "Time Until Switch", RebuiltUtils.timeToAcivationSwitch());
   }
 }

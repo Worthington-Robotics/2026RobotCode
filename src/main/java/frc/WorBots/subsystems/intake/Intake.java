@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.util.control.DerivativeFilter;
+import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.Constants;
 import frc.WorBots.energy.PowerLogger.SubsystemLog;
@@ -98,7 +99,7 @@ public class Intake extends SubsystemBase {
         inputs.extendingMotor.isConnected && inputs.intakeMotor.isConnected
             && inputs.intakeMotor.temperatureCelsius <= Constants.IntakeConstants.INTAKE_MAX_TEMP);
 
-    SmartDashboard.putString("Intake Control Mode", extendControlMode.toString());
+    NTLogger.putString("Intake", "Intake Control Mode", extendControlMode.toString());
 
     // Control intaking motor
     if (intakeMotorControlMode == IntakeMotorControlMode.Disabled) {

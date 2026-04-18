@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.WorBots.subsystems.lights.Lights;
@@ -26,7 +25,6 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     // Set robot period
-    SmartDashboard.putBoolean("DebugBindingsEnabed", false);
     this.addPeriodic(this::realRobotPeriodic, Constants.RobotConstants.ROBOT_PERIOD);
 
     // Silences Joystick warning in SIM
@@ -48,6 +46,7 @@ public class Robot extends TimedRobot {
     StatusPage.periodic();
     //Update power logging
     m_robotContainer.updatePowerLogs();
+    m_robotContainer.logTime();
   }
 
   @Override

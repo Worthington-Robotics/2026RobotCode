@@ -82,7 +82,7 @@ public class RebuiltUtils {
   /**
    * @return The time until the next hub switch
    */
-  public double timeToAcivationSwitch() {
+  public static double timeToAcivationSwitch() {
     double matchTime = MatchTime.getInstance().getTimeRemaining();
     if (DriverStation.isTeleop()) {
       if (matchTime > 130) {
@@ -99,14 +99,16 @@ public class RebuiltUtils {
 
       } else if (matchTime > 30) {
         return matchTime - 30;
-      } else {
+      } else if (matchTime < 30){
+        return 0;
+      }else {
         // This really shouldn't trigger
         return 999;
       }
     } else if(DriverStation.isAutonomous()) {
       return matchTime;
     } else {
-      return 999;
+      return 2505;
     }
   }
 }

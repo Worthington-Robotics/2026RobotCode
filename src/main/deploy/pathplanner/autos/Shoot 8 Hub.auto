@@ -13,6 +13,18 @@
         {
           "type": "named",
           "data": {
+            "name": "Deploy Intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.01
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Dunk"
           }
         },
@@ -26,6 +38,18 @@
           "type": "named",
           "data": {
             "name": "Sustained Fire"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 10.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Firing"
           }
         }
       ]
