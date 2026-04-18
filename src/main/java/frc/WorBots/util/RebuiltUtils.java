@@ -83,6 +83,9 @@ public class RebuiltUtils {
    * @return The time until the next hub switch
    */
   public static double timeToAcivationSwitch() {
+    if(DriverStation.isDisabled()){
+      return 2505;
+    }
     double matchTime = MatchTime.getInstance().getTimeRemaining();
     if (DriverStation.isTeleop()) {
       if (matchTime > 130) {
