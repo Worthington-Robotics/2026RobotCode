@@ -59,11 +59,12 @@ public class DriveController {
    */
   public static final double TURN_PREDICTION_FACTOR = 20.0;
 
-  private static final LinearFilter driveFilter = LinearFilter.movingAverage(5);
-  private static final LinearFilter xFilter = LinearFilter.movingAverage(10);
-  private static final LinearFilter yFilter = LinearFilter.movingAverage(10);
-  private static final LinearFilter turnFilter = LinearFilter.movingAverage(6);
-  private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(24);
+  //TODO make these scale with frequency
+  private static final LinearFilter driveFilter = LinearFilter.movingAverage(1);
+  private static final LinearFilter xFilter = LinearFilter.movingAverage(2);
+  private static final LinearFilter yFilter = LinearFilter.movingAverage(2);
+  private static final LinearFilter turnFilter = LinearFilter.movingAverage(1);
+  private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(5);
 
   private final TunablePIDController turnController =
       new TunablePIDController("Drive/Gains", "Drive Heading", 5.0, 0.0, 0.0);
