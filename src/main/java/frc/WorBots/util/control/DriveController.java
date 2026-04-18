@@ -60,10 +60,10 @@ public class DriveController {
   public static final double TURN_PREDICTION_FACTOR = 20.0;
 
   //TODO make these scale with frequency
-  private static final LinearFilter driveFilter = LinearFilter.movingAverage(1);
+  private static final LinearFilter driveFilter = LinearFilter.movingAverage(2);
   private static final LinearFilter xFilter = LinearFilter.movingAverage(2);
   private static final LinearFilter yFilter = LinearFilter.movingAverage(2);
-  private static final LinearFilter turnFilter = LinearFilter.movingAverage(1);
+  private static final LinearFilter turnFilter = LinearFilter.movingAverage(2);
   private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(5);
 
   private final TunablePIDController turnController =
@@ -226,7 +226,6 @@ public class DriveController {
         speeds.omegaRadiansPerSecond +=
             turnController.pid.calculate(robotRotation.getRadians(), lastYaw.get().getRadians());
       }
-      lastYaw = Optional.of(robotRotation);
     }
 
     // Convert to field relative based on the alliance
