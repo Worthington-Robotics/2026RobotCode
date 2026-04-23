@@ -298,7 +298,7 @@ public class RobotContainer {
   public void teleopInitSubsystems() {
     if (ranAuto) {
       intake.teleopInit();
-      superstructure.enableAutoAiming();
+      superstructure.runShot(Constants.TurretShooterConstants.TOWER_SHOT);;
       drive.setDriveZeroOffset();
     }
   }

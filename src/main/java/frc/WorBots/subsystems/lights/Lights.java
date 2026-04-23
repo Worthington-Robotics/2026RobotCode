@@ -143,6 +143,7 @@ public class Lights extends SubsystemBase {
           activeMode = modeOverride.get();
         }
 
+        activeMode = LightModes.Disabled;
         switch (activeMode) {
           case TurretDisplay:
             //Display turret status, yellow for aiming, green for hub lock, purple for passing

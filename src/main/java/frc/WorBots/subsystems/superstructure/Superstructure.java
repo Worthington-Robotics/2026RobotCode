@@ -110,7 +110,7 @@ public class Superstructure extends SubsystemBase {
       turret.setVoltage(turretVolts);
     }
     if(hoodDown){
-      shooter.setHoodPose(0);
+      //shooter.setHoodPose(0);
     }
     shooter.periodic();
     turret.periodic();
