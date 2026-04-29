@@ -1,0 +1,388 @@
+{
+  "version": 1,
+  "dashboardId": "teleop",
+  "dashboards": {
+    "auto": {
+      "id": "auto",
+      "widgets": []
+    },
+    "teleop": {
+      "id": "teleop",
+      "viewport": {
+        "scale": 0.7856725166675858,
+        "x": 377.1228080004411,
+        "y": 320.55438680037497
+      },
+      "widgets": [
+        {
+          "id": "523673c0-df4f-4267-8dca-4b8151305c23",
+          "type": "field2d",
+          "layout": {
+            "left": 18,
+            "top": -16,
+            "width": 40,
+            "height": 20
+          },
+          "constraints": {
+            "height": {
+              "min": 11
+            },
+            "width": {
+              "min": 6
+            }
+          },
+          "slot": "nt:/Drive/Pose",
+          "lookback": 5,
+          "props": {
+            "style": "default",
+            "orientation": "180",
+            "bumperSizeInch": 35
+          }
+        },
+        {
+          "id": "7e62ff4e-67c0-4f40-a2fb-56232208de59",
+          "type": "fms",
+          "layout": {
+            "left": 48,
+            "top": 5,
+            "width": 10,
+            "height": 9
+          },
+          "constraints": {
+            "height": {
+              "min": 7
+            },
+            "width": {
+              "min": 9
+            }
+          },
+          "slot": "nt:/FMSInfo/*",
+          "props": {}
+        },
+        {
+          "id": "7f5557cc-347e-465b-b27a-b0f98e3fe1cc",
+          "type": "camera",
+          "layout": {
+            "left": -20,
+            "top": -16,
+            "width": 37,
+            "height": 16
+          },
+          "constraints": {
+            "height": {
+              "min": 9
+            },
+            "width": {
+              "min": 12
+            }
+          },
+          "lookback": 5,
+          "props": {
+            "address": "",
+            "port": 1181
+          }
+        },
+        {
+          "id": "62ea4b2a-b03d-419c-aad6-86ce863a8806",
+          "type": "value",
+          "layout": {
+            "left": 18,
+            "top": 5,
+            "width": 29,
+            "height": 4
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 4
+            }
+          },
+          "slot": "nt:/SmartDashboard/SysFaultCause",
+          "props": {
+            "title": "System Fault Cause",
+            "valueFormat": {
+              "maximumFractionDigits": 2
+            },
+            "alignment": "start",
+            "size": "lg",
+            "mono": false
+          }
+        },
+        {
+          "id": "6200eb7f-2e28-46b9-8173-7e2ebba7ba2e",
+          "type": "color",
+          "layout": {
+            "height": 8,
+            "left": -15,
+            "top": 1,
+            "width": 16
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 4
+            }
+          },
+          "slot": "nt:Vision/Has Active Detect",
+          "props": {
+            "title": "Vision Updating Pose",
+            "boolean": {
+              "true": "#00c951",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "73283ab8-4de3-4af4-9521-abec3738578e",
+          "type": "color",
+          "layout": {
+            "height": 4,
+            "left": -20,
+            "top": 10,
+            "width": 26
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 4
+            }
+          },
+          "slot": "nt:Vision/Camera Status/Cam2",
+          "props": {
+            "boolean": {
+              "true": "#000000",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "c294b90d-74c4-4be6-8eef-26321fb236ad",
+          "type": "color",
+          "layout": {
+            "height": 8,
+            "left": 2,
+            "top": 1,
+            "width": 4
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 4
+            }
+          },
+          "slot": "nt:Vision/Camera Status/Cam1",
+          "props": {
+            "boolean": {
+              "true": "#000000",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "0645382e-b096-47ff-bf12-d4e9e88082de",
+          "type": "color",
+          "layout": {
+            "height": 6,
+            "left": 25,
+            "top": 53,
+            "width": 6
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 4
+            }
+          },
+          "props": {
+            "boolean": {
+              "true": "#00c951",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "2cc3dafd-1474-417b-b447-91d74346e41a",
+          "type": "color",
+          "layout": {
+            "left": -20,
+            "top": 1,
+            "width": 4,
+            "height": 8
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 4
+            }
+          },
+          "slot": "nt:Vision/Camera Status/Cam0",
+          "props": {
+            "boolean": {
+              "true": "#000000",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "2ab1b3ff-afd5-4021-9077-610962556ae9",
+          "type": "match.time",
+          "layout": {
+            "left": 7,
+            "top": 1,
+            "width": 10,
+            "height": 6
+          },
+          "constraints": {
+            "height": {
+              "min": 6
+            },
+            "width": {
+              "min": 9
+            }
+          },
+          "slot": "nt:Dashboard/Match Time",
+          "props": {
+            "title": "Match Time",
+            "gameDataVisible": true,
+            "attention": 5,
+            "cautionAt": 30,
+            "dangerAt": 10
+          }
+        },
+        {
+          "id": "7fe07dc3-aebd-42e6-8055-c1875cf424b6",
+          "type": "match.time",
+          "layout": {
+            "left": 7,
+            "top": 8,
+            "width": 10,
+            "height": 6
+          },
+          "constraints": {
+            "height": {
+              "min": 6
+            },
+            "width": {
+              "min": 9
+            }
+          },
+          "slot": "nt:Dashboard/Time Until Switch",
+          "props": {
+            "title": "Hub Time",
+            "gameDataVisible": true,
+            "attention": 5,
+            "cautionAt": 30,
+            "dangerAt": 10
+          }
+        },
+        {
+          "id": "8da79866-8baf-4ca3-9778-b13a83594fe4",
+          "type": "chooser",
+          "layout": {
+            "height": 5,
+            "left": 9,
+            "top": 31,
+            "width": 10
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 6
+            }
+          },
+          "props": {
+            "interactive": true
+          }
+        },
+        {
+          "id": "5a5a5813-8154-4f8a-ab2e-6b52e94a6477",
+          "type": "chooser",
+          "layout": {
+            "height": 5,
+            "left": 0,
+            "top": 55,
+            "width": 10
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 6
+            }
+          },
+          "props": {
+            "interactive": true
+          }
+        },
+        {
+          "id": "ac3df94b-2b49-4de2-bb6b-f4944134295c",
+          "type": "chooser",
+          "layout": {
+            "height": 5,
+            "left": 2,
+            "top": 66,
+            "width": 10
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 6
+            }
+          },
+          "props": {
+            "interactive": true
+          }
+        },
+        {
+          "id": "06d0aea1-58d5-4fed-95fa-7a63e60db99a",
+          "type": "chooser",
+          "layout": {
+            "left": 18,
+            "top": 10,
+            "width": 29,
+            "height": 4
+          },
+          "constraints": {
+            "height": {
+              "min": 4
+            },
+            "width": {
+              "min": 6
+            }
+          },
+          "props": {
+            "title": "Auto Selector",
+            "interactive": true
+          }
+        }
+      ]
+    },
+    "custom": [
+      {
+        "id": "97fd5b75-1098-4d20-b56f-bcf079453af3",
+        "widgets": []
+      },
+      {
+        "id": "f37fa24c-a6bb-4374-b2d9-db31bde33110",
+        "widgets": []
+      }
+    ]
+  }
+}
