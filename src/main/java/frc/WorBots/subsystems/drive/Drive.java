@@ -563,4 +563,14 @@ public class Drive extends SubsystemBase {
                 new double[]{flLog.motorCurrents()[0], flLog.motorCurrents()[1], frLog.motorCurrents()[0], frLog.motorCurrents()[1], blLog.motorCurrents()[0],
                   blLog.motorCurrents()[1], brLog.motorCurrents()[0], brLog.motorCurrents()[1]});
   }
+
+  public void lowerMaxAcceleration(){
+    if((Constants.DriveConstants.DO_SHOOTING_ACCEL_LIMIT_IN_AUTO || !DriverStation.isAutonomous()) && inOurAllianceZone()){
+      filter.setLimits(Constants.DriveConstants.DRIVE_MAX_VELOCITY, Constants.DriveConstants.DRIVE_MAX_ACCELERATION_SHOOTING, Constants.DriveConstants.DRIVE_MAX_ROTATION_VELOCITY_SHOOTING, Constants.DriveConstants.DRIVE_MAX_ROTATION_ACCELERATION);
+    }
+  }
+  
+  public void resetMaxAcceleration(){
+    filter.setLimits(Constants.DriveConstants.DRIVE_MAX_VELOCITY, Constants.DriveConstants.DRIVE_MAX_ACCELERATION, Constants.DriveConstants.DRIVE_MAX_ROTATIONAL_VELOCITY, Constants.DriveConstants.DRIVE_MAX_ROTATION_ACCELERATION);
+  }
 }

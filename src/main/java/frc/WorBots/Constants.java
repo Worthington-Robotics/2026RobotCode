@@ -55,6 +55,11 @@ public class Constants {
     public static final double DRIVE_MAX_ROTATIONAL_VELOCITY = Units.degreesToRadians(720); // rads/sec
     public static final double DRIVE_MAX_ROTATION_ACCELERATION = Units.degreesToRadians(3000); // rad/sec^2
 
+    public static final double DRIVE_MAX_ACCELERATION_SHOOTING = DRIVE_MAX_ACCELERATION * 0.4;
+    public static final double DRIVE_MAX_ROTATION_ACCELERATION_SHOOTING = 0.5;
+    public static final double DRIVE_MAX_ROTATION_VELOCITY_SHOOTING = DRIVE_MAX_ROTATIONAL_VELOCITY * 0.4;
+    public static final boolean DO_SHOOTING_ACCEL_LIMIT_IN_AUTO = false;
+
     /**
      * The minimum speed percentage of the maximum that can be set before angle
      * changes are ignored
@@ -71,7 +76,7 @@ public class Constants {
     public static final double SPINDEXER_VOLTAGE = 9;
 
     public static final double SPINDEXER_VELOCITY = 70.0;
-    public static final double KICKER_VELOCITY = 230.0;
+    public static final double KICKER_VELOCITY = 275.0;
 
     public static final double SPINDEXER_MAX_TEMP = 80.0; // Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;

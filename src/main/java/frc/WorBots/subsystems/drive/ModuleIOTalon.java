@@ -1,6 +1,7 @@
 package frc.WorBots.subsystems.drive;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -16,6 +17,7 @@ import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.HardwareUtils.TalonSignals;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.util.OdometryThread;
+import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
@@ -135,6 +137,8 @@ public class ModuleIOTalon implements ModuleIO {
     driveMotor.optimizeBusUtilization();
     turnMotor.optimizeBusUtilization();
     absoluteEncoder.optimizeBusUtilization();
+
+    HardwareUtils.setMotorPidSlot0(driveMotor, 0.25, 0, 0, 0, 0, 0);
   }
 
   public void updateInputs() {
@@ -194,10 +198,15 @@ public class ModuleIOTalon implements ModuleIO {
   }
 
   public void setDriveSpeed(double speedMetersPerSecond) {
-    final double driveVolts =
-        driveFeedforward.calculate(speedMetersPerSecond)
-            + driveFeedback.pid.calculate(inputs.driveVelocityMetersPerSec, speedMetersPerSecond);
-    setDriveVoltage(driveVolts);
+    final double feedforward = driveFeedforward.calculate(speedMetersPerSecond);
+    // final double driveVolts =
+    //     driveFeedforward.calculate(speedMetersPerSecond)
+    //         + driveFeedback.pid.calculate(inputs.driveVelocityMetersPerSec, speedMetersPerSecond);
+    // setDriveVoltage(driveVolts);
+    final VelocityVoltage request  = new VelocityVoltage(0).withSlot(0);
+    NTLogger.putNumber("Debug", "Commanded rps", speedMetersPerSecond/(2 * Math.PI * wheelRadius));
+    driveMotor.setControl(request.withVelocity(Constants.DriveConstants.DRIVE_GEAR_RATIO * speedMetersPerSecond/(2 * Math.PI * wheelRadius)).withFeedForward(feedforward));
+    // driveMotor.setVoltage(feedforward);
   }
 
   public void setAngle(double angleRadians) {

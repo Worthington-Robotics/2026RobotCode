@@ -28,6 +28,7 @@ public class ConditionalFireCommand extends Command {
 
   @Override
   public void initialize() {
+    drive.lowerMaxAcceleration();
   }
 
   @Override
@@ -42,6 +43,7 @@ public class ConditionalFireCommand extends Command {
   @Override
   public void end(boolean interupted) {
     spin.stopSpindexer();
+    drive.resetMaxAcceleration();
   }
 
   @Override

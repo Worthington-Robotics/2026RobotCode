@@ -9,6 +9,7 @@ package frc.WorBots.util.control;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.math.GeneralMath;
 import frc.WorBots.util.math.GeomUtil;
 
@@ -97,8 +98,11 @@ public class DriveFilter {
     yFilter.setMaxDerivative(maxAcceleration);
     thetaFilter.setMaxDerivative(maxRotationalAcceleration);
 
+    NTLogger.putNumber("Debug", "Max Accel", maxAcceleration);
     // Limit acceleration
+    NTLogger.putNumber("Debug", "vx", speeds.vxMetersPerSecond);
     speeds.vxMetersPerSecond = xFilter.calculate(speeds.vxMetersPerSecond);
+    NTLogger.putNumber("Debug", "vxAcell", speeds.vxMetersPerSecond);
     speeds.vyMetersPerSecond = yFilter.calculate(speeds.vyMetersPerSecond);
     speeds.omegaRadiansPerSecond = thetaFilter.calculate(speeds.omegaRadiansPerSecond);
 
