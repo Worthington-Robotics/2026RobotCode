@@ -75,8 +75,8 @@ public class Constants {
   public class SpindexerConstants {
     public static final double SPINDEXER_VOLTAGE = 9;
 
-    public static final double SPINDEXER_VELOCITY = 70.0;
-    public static final double KICKER_VELOCITY = 275.0;
+    public static final double SPINDEXER_VELOCITY = 150.0;
+    public static final double KICKER_VELOCITY = SPINDEXER_VELOCITY * 4.2;
 
     public static final double SPINDEXER_MAX_TEMP = 80.0; // Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;
@@ -166,7 +166,7 @@ public class Constants {
 
     // Manual shots
     public final static ShootingParams HUB_SHOT = new ShootingParams(true, new Rotation2d(), 0, 146, 0);
-    public final static ShootingParams TOWER_SHOT = new ShootingParams(true, new Rotation2d(), 0.26, 150, 0);
+    public final static ShootingParams TOWER_SHOT = new ShootingParams(true, new Rotation2d(), 0.116, 180, 0);
     public final static ShootingParams LEFT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(-0.8026 + 0.00872665),
         0.383, 199.5, 0);
     public final static ShootingParams RIGHT_CORNER_SHOT = new ShootingParams(true, new Rotation2d(0.8026 - 0.00872665),

@@ -113,7 +113,8 @@ public class StatusPage {
     SPINDEXER_SUBSYSTEM,
     TURRET_SUBSYSTEM,
     SHOOTER_SUBSYSTEM,
-    NOT_ESTOPPED
+    NOT_ESTOPPED,
+    GYROSCOPE
   };
 
   private StatusPage() {
