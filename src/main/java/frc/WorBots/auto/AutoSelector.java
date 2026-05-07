@@ -28,7 +28,7 @@ public class AutoSelector extends SubsystemBase {
   public static final int MAX_QUESTIONS = 4;
 
   /** Whether to use the LabVIEW dashboard instead of multiple question choosers */
-  private static final boolean useDriverStation = true;
+  private static final boolean useDriverStation = false;
 
   private static final AutoRoutine defaultRoutine =
       new AutoRoutine("Do Nothing", Commands.none());
