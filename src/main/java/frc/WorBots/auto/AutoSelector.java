@@ -147,9 +147,10 @@ public class AutoSelector extends SubsystemBase {
       if (selectedRoutine == null) {
         return;
       }
-      for (SwitchableChooser chooser : questionChoosers) {
-        chooser.periodic();
-      }
+      lastRoutine = selectedRoutine;
+      // for (SwitchableChooser chooser : questionChoosers) {
+      //   chooser.periodic();
+      // }
     }
       //StatusPage.reportStatus(StatusPage.ALL_AUTO_QUESTIONS, allQuestionsChosen);
     //StatusPage.reportStatus(StatusPage.AUTO_CHOSEN, lastRoutine != null);
