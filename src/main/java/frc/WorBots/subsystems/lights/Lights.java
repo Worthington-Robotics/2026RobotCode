@@ -95,7 +95,7 @@ public class Lights extends SubsystemBase {
     }
 
     private Lights(){
-        turretStrip = new LightStrip(0, 14);
+        turretStrip = new LightStrip(0, 13);
 
         StatusPage.reportStatus(StatusPage.LIGHTS_SUBSYSTEM, true);
     }
