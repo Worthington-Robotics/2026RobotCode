@@ -30,10 +30,10 @@ import java.util.Optional;
 public class DriveController {
   // Constants
   /** The percentage of the max drive speed that the robot will drive at */
-  public static final double DRIVE_SPEED_MULTIPLIER = 0.61;
+  public static final double DRIVE_SPEED_MULTIPLIER = 0.63; //0.61 normal // 0.21 slow
 
   /** The max rotational speed in radians per update that the robot will drive at */
-  public static final double ROTATIONAL_SPEED = 3.55 * 1.0; //Used to be 3.75, turned down on driver request
+  public static final double ROTATIONAL_SPEED = 3.55 * 1.05; //Used to be 3.75, turned down on driver request //1 normal //0.33 slow
 
   /** The amount of input deadband to apply */
   public static final double DEADBAND = 0.15;
