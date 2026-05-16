@@ -27,7 +27,7 @@ public class ShotCalculator {
   private final static boolean USE_TOF_TABLES = true;
   private final static double MANUAL_TOF_FACTOR = 1.0;
 
-  private final static double UNIVERSAL_FLYWHEEL_MOD = -0.5;
+  private final static double UNIVERSAL_FLYWHEEL_MOD = 0.5;
 
   /***
    * A class to represent all aspects of a shot
@@ -74,15 +74,14 @@ public class ShotCalculator {
         { 3.506, 0.1533, 191.9 + UNIVERSAL_FLYWHEEL_MOD, 1.30 }, // New TIF
         { 3.730, 0.163, 194.5 + UNIVERSAL_FLYWHEEL_MOD, 1.32 },
         { 3.989, 0.185881, 197.558 + UNIVERSAL_FLYWHEEL_MOD, 1.30 }, // Newer TIF
-        { 4.237, 0.190, 201 + UNIVERSAL_FLYWHEEL_MOD, 1.33 },
-        { 4.24, 0.210, 209 + UNIVERSAL_FLYWHEEL_MOD, 1.34 },
-        { 4.4464, 0.194, 208 + UNIVERSAL_FLYWHEEL_MOD, 1.35 }, // Newer TIF
-        { 4.595, 0.2102, 207.158 + UNIVERSAL_FLYWHEEL_MOD, 1.374 }, // new TIF
-        { 4.795, 0.230, 210.7 + UNIVERSAL_FLYWHEEL_MOD, 1.4 },
-        { 5.074, 0.23784, 221.2 + UNIVERSAL_FLYWHEEL_MOD, 1.36 }, // New TIF
-        { 5.475, 0.233, 232 + UNIVERSAL_FLYWHEEL_MOD, 1.38 }, // New
-        { 5.770, 0.238, 240 + UNIVERSAL_FLYWHEEL_MOD, 1.66 }, // New TIF
-        { 6.258, 0.248, 252 + UNIVERSAL_FLYWHEEL_MOD, 1.72 }
+        { 4.237, 0.190, 201 + UNIVERSAL_FLYWHEEL_MOD+10, 1.33 },
+        { 4.4464, 0.194, 208 + UNIVERSAL_FLYWHEEL_MOD+10, 1.35 }, // Newer TIF
+        { 4.595, 0.2102, 207.158 + UNIVERSAL_FLYWHEEL_MOD+10, 1.374 }, // new TIF
+        { 4.795, 0.230, 210.7 + UNIVERSAL_FLYWHEEL_MOD+10, 1.4 },
+        { 5.074, 0.23784, 221.2 + UNIVERSAL_FLYWHEEL_MOD+10, 1.36 }, // New TIF
+        { 5.475, 0.233, 232 + UNIVERSAL_FLYWHEEL_MOD+10, 1.38 }, // New
+        { 5.770, 0.238, 240 + UNIVERSAL_FLYWHEEL_MOD+10, 1.66 }, // New TIF
+        { 6.258, 0.248, 252 + UNIVERSAL_FLYWHEEL_MOD+10, 1.72 }
     };
 
     // Stored as distance (m), hood angle (radians), flywheel speed (m/sec), time of

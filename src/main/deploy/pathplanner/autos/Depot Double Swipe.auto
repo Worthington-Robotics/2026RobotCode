@@ -87,6 +87,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Top Second Swipe 1st Half"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Top Second Swipe"
           }
         },

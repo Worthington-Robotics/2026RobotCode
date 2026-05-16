@@ -4,56 +4,72 @@
     {
       "anchor": {
         "x": 6.0,
-        "y": 0.68
+        "y": 0.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.492696410189456,
-        "y": 0.6097414424324997
+        "x": 8.037351597749812,
+        "y": 3.348525354292275
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.6601141226818825,
-        "y": 0.5
+        "x": 7.623067047075606,
+        "y": 2.716
       },
       "prevControl": {
-        "x": 4.909106924822638,
-        "y": 0.4775816039357321
+        "x": 7.3074489861044745,
+        "y": 2.458529034209911
       },
       "nextControl": {
-        "x": 3.8743253171304457,
-        "y": 0.5707495337787382
+        "x": 7.878614160534068,
+        "y": 2.9244670373570214
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 0.5
+        "x": 6.92437945791726,
+        "y": 3.907
       },
       "prevControl": {
-        "x": 3.3040074279960523,
-        "y": 0.4064759587024197
+        "x": 7.198147997789705,
+        "y": 3.7367542260971636
       },
       "nextControl": {
-        "x": 2.7610515573391003,
-        "y": 0.5735094670769055
+        "x": 6.7120808446455875,
+        "y": 4.039020069697471
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.45,
-        "y": 0.75
+        "x": 6.160998573466475,
+        "y": 3.0063766048502147
       },
       "prevControl": {
-        "x": 2.8056077236396404,
-        "y": 0.6904610177832761
+        "x": 6.350168187207832,
+        "y": 3.8995025617873287
+      },
+      "nextControl": {
+        "x": 5.9176472840677,
+        "y": 1.857442857417998
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 0.68
+      },
+      "prevControl": {
+        "x": 6.4537238051801475,
+        "y": 1.076479073053744
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,15 +78,23 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2.0891338582677177,
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.5699916177703415,
+      "rotationDegrees": 135.0
+    },
+    {
+      "waypointRelativePos": 3.706621961441728,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 0.0,
+      "minWaypointRelativePos": 0.5002511300853814,
+      "maxWaypointRelativePos": 2.151682571572069,
       "constraints": {
         "maxVelocity": 1.75,
         "maxAcceleration": 7.5,
@@ -82,8 +106,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.3907882241215539,
-      "maxWaypointRelativePos": 3.0,
+      "minWaypointRelativePos": 4,
+      "maxWaypointRelativePos": 4.5,
       "constraints": {
         "maxVelocity": 6.096,
         "maxAcceleration": 3.5,
@@ -97,9 +121,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Hit The Deck",
-      "waypointRelativePos": 0.28442545109211714,
-      "endWaypointRelativePos": 5.560778727445392,
+      "name": "Mine Mine Mine",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -113,7 +137,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -14.999999999999998
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
