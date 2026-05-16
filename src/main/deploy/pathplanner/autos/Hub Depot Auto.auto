@@ -11,9 +11,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Sustained Fire"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 2.0
           }
         },
         {
