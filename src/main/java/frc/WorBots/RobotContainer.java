@@ -14,7 +14,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,7 +45,6 @@ import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
 import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
-import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.superstructure.Superstructure.SuperstructureControlMode;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIOSim;

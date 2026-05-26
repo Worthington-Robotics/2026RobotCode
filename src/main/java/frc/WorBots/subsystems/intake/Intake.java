@@ -1,3 +1,10 @@
+// Copyright (c) 2026 FRC 4145
+// https://github.com/Worthington-Robotics
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.WorBots.subsystems.intake;
 
 import edu.wpi.first.math.MathUtil;
@@ -9,7 +16,6 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.util.control.DerivativeFilter;
 import frc.WorBots.util.debug.NTLogger;

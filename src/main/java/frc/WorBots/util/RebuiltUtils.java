@@ -1,11 +1,16 @@
+// Copyright (c) 2026 FRC 4145
+// https://github.com/Worthington-Robotics
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.WorBots.util;
 
 import java.util.Optional;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-
-//TODO make some tool to standize the time data from DriverStation.getMatchTime() across all conditions
 
 public class RebuiltUtils {
   public RebuiltUtils() {

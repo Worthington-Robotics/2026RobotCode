@@ -1,3 +1,10 @@
+// Copyright (c) 2026 FRC 4145
+// https://github.com/Worthington-Robotics
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.WorBots.subsystems.intake;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -5,8 +12,6 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.WorBots.Constants;
-
-//import frc.WorBots.util.RobotSimulator;
 
 public class IntakeIOSim implements IntakeIO {
   // The Simulated Motors

@@ -1,3 +1,10 @@
+// Copyright (c) 2026 FRC 4145
+// https://github.com/Worthington-Robotics
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.WorBots.subsystems.superstructure.shooter;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -11,7 +18,6 @@ import frc.WorBots.FieldConstants;
 import frc.WorBots.util.debug.Logger;
 
 public class ShooterIOSim implements ShooterIO {
-  //TODO: Update Max angle(Hood), JKgMetersSquared(Fly), Gearing (Fly) to be the real value.
   public SingleJointedArmSim hood = 
    new SingleJointedArmSim(DCMotor.getKrakenX60(1), 79.6, 33.062, Units.inchesToMeters(9), 0, Units.degreesToRadians(90), false, 0);
   public FlywheelSim flyLeader =
