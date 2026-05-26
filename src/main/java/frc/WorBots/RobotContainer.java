@@ -14,6 +14,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,6 +47,8 @@ import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
 import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
+import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
+import frc.WorBots.subsystems.superstructure.Superstructure.SuperstructureControlMode;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIOSim;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIOTalon;
@@ -192,7 +195,9 @@ public class RobotContainer {
     // Force feed
     operator.leftBumper().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     // Spit intake Command
-    operator.b().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
+    // operator.b().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
+    // operator.b().debounce(0.02).whileTrue(new ShooterCommands().manualShot(superstructure, new ShootingParams(false, new Rotation2d(), 0, 0, 0), () -> false));
+    operator.b().debounce(0.02).whileTrue(Commands.runOnce(() -> superstructure.setControlMode(SuperstructureControlMode.Disabled)));
 
     operator.a().debounce(0.02).onTrue(new StartAutoAim(superstructure));
 

@@ -4,76 +4,12 @@
     {
       "anchor": {
         "x": 6.0,
-        "y": 0.55
+        "y": 0.48
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.037351597749812,
-        "y": 3.348525354292275
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.623067047075606,
-        "y": 2.716
-      },
-      "prevControl": {
-        "x": 7.3074489861044745,
-        "y": 2.458529034209911
-      },
-      "nextControl": {
-        "x": 7.878614160534068,
-        "y": 2.9244670373570214
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.92437945791726,
-        "y": 3.907
-      },
-      "prevControl": {
-        "x": 7.198147997789705,
-        "y": 3.7367542260971636
-      },
-      "nextControl": {
-        "x": 6.7120808446455875,
-        "y": 4.039020069697471
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.9,
-        "y": 3.066
-      },
-      "prevControl": {
-        "x": 6.089169613741357,
-        "y": 3.9591259569371138
-      },
-      "nextControl": {
-        "x": 5.656648710601225,
-        "y": 1.9170662525677828
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.0,
-        "y": 0.5
-      },
-      "prevControl": {
-        "x": 6.4537238051801475,
-        "y": 0.896479073053744
-      },
-      "nextControl": {
-        "x": 5.558357208951264,
-        "y": 0.11407772213682288
+        "x": 5.492696410189456,
+        "y": 0.40974144243249966
       },
       "isLocked": false,
       "linkedName": null
@@ -84,12 +20,12 @@
         "y": 0.5
       },
       "prevControl": {
-        "x": 4.900397476484899,
-        "y": 0.4309789170964837
+        "x": 4.909106924822638,
+        "y": 0.4775816039357321
       },
       "nextControl": {
-        "x": 4.10242625155214,
-        "y": 0.6601951203789463
+        "x": 3.8743253171304457,
+        "y": 0.5707495337787382
       },
       "isLocked": false,
       "linkedName": null
@@ -100,12 +36,12 @@
         "y": 0.5
       },
       "prevControl": {
-        "x": 3.5179007618767053,
-        "y": 0.47048098774530034
+        "x": 3.3040074279960523,
+        "y": 0.4064759587024197
       },
       "nextControl": {
-        "x": 2.696317812541681,
-        "y": 0.5173091041237939
+        "x": 2.7610515573391003,
+        "y": 0.5735094670769055
       },
       "isLocked": false,
       "linkedName": null
@@ -116,8 +52,8 @@
         "y": 0.75
       },
       "prevControl": {
-        "x": 2.6886470290929427,
-        "y": 0.6755178175325656
+        "x": 2.8056077236396404,
+        "y": 0.6904610177832761
       },
       "nextControl": null,
       "isLocked": false,
@@ -126,27 +62,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 2.5699916177703415,
-      "rotationDegrees": 135.0
-    },
-    {
-      "waypointRelativePos": 3.706621961441728,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 6,
+      "waypointRelativePos": 2.0891338582677177,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.5002511300853814,
-      "maxWaypointRelativePos": 2.151682571572069,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.0,
       "constraints": {
         "maxVelocity": 1.75,
         "maxAcceleration": 7.5,
@@ -158,8 +82,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 4.390788224121554,
-      "maxWaypointRelativePos": 7.0,
+      "minWaypointRelativePos": 0.3907882241215539,
+      "maxWaypointRelativePos": 3.0,
       "constraints": {
         "maxVelocity": 6.096,
         "maxAcceleration": 3.5,
@@ -173,14 +97,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Mine Mine Mine",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "Hit The Deck",
-      "waypointRelativePos": 4.284425451092117,
+      "waypointRelativePos": 0.28442545109211714,
       "endWaypointRelativePos": 5.560778727445392,
       "command": null
     }
@@ -200,7 +118,7 @@
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 1.0,
+    "velocity": 0.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

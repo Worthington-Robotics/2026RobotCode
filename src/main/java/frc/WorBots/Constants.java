@@ -75,8 +75,8 @@ public class Constants {
   public class SpindexerConstants {
     public static final double SPINDEXER_VOLTAGE = 9;
 
-    public static final double SPINDEXER_VELOCITY = 150.0;
-    public static final double KICKER_VELOCITY = SPINDEXER_VELOCITY * 4.2;
+    public static final double SPINDEXER_VELOCITY = 120.0;
+    public static final double KICKER_VELOCITY = SPINDEXER_VELOCITY * 4.6;
 
     public static final double SPINDEXER_MAX_TEMP = 80.0; // Celcius
     public static final double SPINDEXER_GEAR_RATIO = 1 / 6.0;

@@ -99,7 +99,7 @@ public class TagVision extends SubsystemBase {
   private static final TunableDouble LATENCY = new TunableDouble("Vision", "Tuning", "AprilTag Latency", 0.0);
 
   /** Detection weights for each camera */
-  private static final double[] CAMERA_WEIGHTS = new double[] { 1.0, 0.95, 1.0 };
+  private static final double[] CAMERA_WEIGHTS = new double[] { 1.0, 0.95, 0 };
 
   /**
    * How much influence XY data has on the robot pose. Smaller values increase
