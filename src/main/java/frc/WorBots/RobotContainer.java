@@ -48,6 +48,7 @@ import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
 import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
+import frc.WorBots.subsystems.superstructure.Superstructure.SuperstructureControlMode;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIOSim;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIOTalon;
@@ -195,7 +196,8 @@ public class RobotContainer {
     operator.leftBumper().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
     // Spit intake Command
     // operator.b().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
-    operator.b().debounce(0.02).whileTrue(new ShooterCommands().manualShot(superstructure, new ShootingParams(false, new Rotation2d(), 0, 0, 0), () -> false));
+    // operator.b().debounce(0.02).whileTrue(new ShooterCommands().manualShot(superstructure, new ShootingParams(false, new Rotation2d(), 0, 0, 0), () -> false));
+    operator.b().debounce(0.02).whileTrue(Commands.runOnce(() -> superstructure.setControlMode(SuperstructureControlMode.Disabled)));
 
     operator.a().debounce(0.02).onTrue(new StartAutoAim(superstructure));
 
