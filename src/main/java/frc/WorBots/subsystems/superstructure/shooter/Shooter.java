@@ -9,12 +9,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import frc.WorBots.Constants;
 import frc.WorBots.Constants.TurretShooterConstants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIO.ShooterIOInputs;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 
 public class Shooter {
   private ShooterIO io;

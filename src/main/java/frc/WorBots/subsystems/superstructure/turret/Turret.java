@@ -14,10 +14,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
 import frc.WorBots.subsystems.superstructure.turret.TurretIO.TurretIOInputs;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 
 /**
  * A class to represent the robot's turret

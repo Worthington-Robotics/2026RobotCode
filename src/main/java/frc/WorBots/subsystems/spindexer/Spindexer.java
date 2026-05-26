@@ -9,10 +9,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunablePIDController;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 
 public class Spindexer extends SubsystemBase{
   SpindexerIO io;

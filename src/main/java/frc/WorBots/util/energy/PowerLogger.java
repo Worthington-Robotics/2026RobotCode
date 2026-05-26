@@ -1,4 +1,4 @@
-package frc.WorBots.energy;
+package frc.WorBots.util.energy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

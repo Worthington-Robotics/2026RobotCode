@@ -12,7 +12,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.HardwareUtils.TalonSignals;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
@@ -23,6 +22,8 @@ import frc.WorBots.util.debug.RollingAverageLogger;
 import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunableTrapezoidConstraints;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
+
 import java.util.Queue;
 
 public class ModuleIOTalon implements ModuleIO {

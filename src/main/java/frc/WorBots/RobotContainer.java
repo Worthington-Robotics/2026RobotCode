@@ -28,7 +28,6 @@ import frc.WorBots.commands.HoodControlFudgeCommand;
 import frc.WorBots.commands.IntakeCommands;
 import frc.WorBots.commands.pathPlannerCommands.IntakeExtendNoRequirements;
 import frc.WorBots.commands.pathPlannerCommands.PathplannerIntakeCommands;
-import frc.WorBots.energy.PowerLogger;
 import frc.WorBots.commands.PitTest;
 import frc.WorBots.commands.StartAutoAim;
 import frc.WorBots.commands.ShooterCommands;
@@ -62,6 +61,7 @@ import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.control.DriveController;
 import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.energy.PowerLogger;
 
 public class RobotContainer {
   // Subsystems

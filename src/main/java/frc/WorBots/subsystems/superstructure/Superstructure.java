@@ -6,7 +6,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.Drive;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
@@ -17,6 +16,7 @@ import frc.WorBots.subsystems.superstructure.turret.Turret;
 import frc.WorBots.subsystems.superstructure.turret.TurretIO;
 import frc.WorBots.subsystems.superstructure.turret.Turret.TurretControlMode;
 import frc.WorBots.util.FireController;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.math.AllianceFlipUtil;
 
 /**

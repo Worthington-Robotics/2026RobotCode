@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.util.control.DerivativeFilter;
 import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.Constants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.intake.IntakeIO.IntakeIOInputs;
 
 public class Intake extends SubsystemBase {
