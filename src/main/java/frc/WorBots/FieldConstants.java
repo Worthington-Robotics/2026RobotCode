@@ -4,8 +4,6 @@ import static edu.wpi.first.apriltag.AprilTagFields.k2026RebuiltWelded;
 import edu.wpi.first.apriltag.*;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import java.io.IOException;
 
 public class FieldConstants {
@@ -38,7 +36,7 @@ public class FieldConstants {
 
 
   // Field Zones 
-  public static final double trenchMargin = Units.inchesToMeters(22);
+  public static final double trenchMargin = Units.inchesToMeters(25);
   public static final Translation2d[] blueZone = { new Translation2d(0,0),
     new Translation2d(Units.inchesToMeters(182.11), Units.inchesToMeters(317.69))};
 

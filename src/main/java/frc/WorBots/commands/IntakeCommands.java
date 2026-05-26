@@ -59,7 +59,6 @@ public class IntakeCommands {
     });
   }
 
-  // TODO make this also send it back down
   /**
    * Moves the intake to a half extended position
    * 
@@ -84,13 +83,5 @@ public class IntakeCommands {
         intake.extend();
       }
     });
-  }
-
-  public Command pulse(Intake intake){
-    return Commands.runOnce(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE));
-  }
-
-  public Command pulseTeleop(Intake intake){
-    return intake.startEnd(() -> intake.pulse(Constants.IntakeConstants.INTAKE_VOLTAGE), () -> intake.setVoltsIntake(0));
   }
 }

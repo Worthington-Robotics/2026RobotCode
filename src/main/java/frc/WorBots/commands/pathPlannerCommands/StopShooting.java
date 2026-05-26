@@ -3,15 +3,23 @@ package frc.WorBots.commands.pathPlannerCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 
-public class StopShooting extends Command{
+/**
+ * A command to stop firing
+ */
+public class StopShooting extends Command {
   Spindexer spin;
 
-  public StopShooting(Spindexer spin){
+  /**
+   * Stops firing by stopping running the spindexer
+   * 
+   * @param spin The spindexer to stop running
+   */
+  public StopShooting(Spindexer spin) {
     this.spin = spin;
   }
 
   @Override
-  public void initialize(){
+  public void initialize() {
     spin.stopSpindexer();
   }
 }

@@ -1,6 +1,7 @@
 package frc.WorBots.subsystems.drive;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -11,19 +12,25 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.CanIDs;
 import frc.WorBots.Constants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.HardwareUtils.TalonSignals;
 import frc.WorBots.util.HardwareUtils.TalonSignalsPositional;
 import frc.WorBots.util.OdometryThread;
+import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.TunablePIDController;
+import frc.WorBots.util.debug.RollingAverageLogger;
 import frc.WorBots.util.debug.TunablePIDController.TunablePIDGains;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunableTrapezoidConstraints;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
+
 import java.util.Queue;
 
 public class ModuleIOTalon implements ModuleIO {
   private ModuleIOInputs inputs;
+
+ private final RollingAverageLogger driveErrorRollingLog;
+  private final RollingAverageLogger turnErrorRollingLog;
 
   private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.18868, 2.3);
   private static final TunablePIDGains driveFeedbackGains =
@@ -52,153 +59,172 @@ public class ModuleIOTalon implements ModuleIO {
   private final Queue<Double> drivePositionQueue;
   private final Queue<Double> turnPositionQueue;
 
-  public ModuleIOTalon(int index) {
-    driveFeedbackGains.setGains(0.3, 0.000, 0.0);
-    turnFeedbackGains.setGains(5.0, 0.00, 0.0);
-    turnFeedback.pid.enableContinuousInput(-Math.PI, Math.PI);
-    turnFeedbackConstraints.setConstraints(360.0, 1500.0);
-
-    inputs = new ModuleIOInputs(index);
-
-    switch (index) {
-      case 0: // Front Left
-        driveMotor = new TalonFX(CanIDs.Swerve.FRONT_LEFT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
-        HardwareUtils.setInverted(driveMotor, true);
-        turnMotor = new TalonFX(CanIDs.Swerve.FRONT_LEFT_TURN_ID, CanIDs.Swerve.CAN_BUS);
-        absoluteEncoder =
-            new CANcoder(CanIDs.Swerve.FRONT_LEFT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        // encoderOffset =
-        //     new Rotation2d(
-        //         1.7840 - 0.03 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
-        wheelRadius = Units.inchesToMeters(1.856);
-        break;
-      case 1: // Front Right
-        driveMotor = new TalonFX(CanIDs.Swerve.FRONT_RIGHT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
-        HardwareUtils.setInverted(driveMotor, false);
-        turnMotor = new TalonFX(CanIDs.Swerve.FRONT_RIGHT_TURN_ID, CanIDs.Swerve.CAN_BUS);
-        absoluteEncoder =
-            new CANcoder(CanIDs.Swerve.FRONT_RIGHT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        //encoderOffset = new Rotation2d(0.2883 + 0.007);
-        wheelRadius = Units.inchesToMeters(1.873);
-        break;
-      case 2: // Back Left
-        driveMotor = new TalonFX(CanIDs.Swerve.BACK_LEFT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
-        HardwareUtils.setInverted(driveMotor, true);
-        turnMotor = new TalonFX(CanIDs.Swerve.BACK_LEFT_TURN_ID, CanIDs.Swerve.CAN_BUS);
-        absoluteEncoder =
-            new CANcoder(CanIDs.Swerve.BACK_LEFT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        //    new Rotation2d(-1.5942 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
-        wheelRadius = Units.inchesToMeters(1.867);
-        break;
-      case 3: // Back Right
-        driveMotor = new TalonFX(CanIDs.Swerve.BACK_RIGHT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
-        HardwareUtils.setInverted(driveMotor, true);
-        turnMotor = new TalonFX(CanIDs.Swerve.BACK_RIGHT_TURN_ID, CanIDs.Swerve.CAN_BUS);
-        absoluteEncoder =
-            new CANcoder(CanIDs.Swerve.BACK_RIGHT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
-        //encoderOffset = new Rotation2d(-1.1990 - 0.032 + Units.degreesToRadians(90.0));
-        wheelRadius = Units.inchesToMeters(1.867);
-        break;
-      default:
-        throw new RuntimeException("Invalid swerve module index");
-    }
-
-    id = index;
-
-    // Configure devices
-    HardwareUtils.setCurrentLimit(driveMotor, Constants.DriveConstants.DRIVE_CURRENT_LIMIT);
-    HardwareUtils.setCurrentLimit(turnMotor, Constants.DriveConstants.TURN_CURRENT_LIMIT);
-
-    driveMotor.setNeutralMode(NeutralModeValue.Brake);
-    turnMotor.setNeutralMode(NeutralModeValue.Brake);
-
-    HardwareUtils.setInverted(turnMotor, false);
-
-    driveMotor.setPosition(0.0);
-    turnMotor.setPosition(0.0);
-
-    // Signals
-    driveSignals = new TalonSignals(driveMotor);
-    turnSignals = new TalonSignalsPositional(turnMotor);
-    driveVelocitySignal = driveMotor.getVelocity();
-    driveVelocitySignal.setUpdateFrequency(Constants.RobotConstants.ROBOT_PERIOD);
-
-    // Odometry queues
-    final var driveDistanceSignal = driveMotor.getPosition();
-    final var turnAbsPosSignal = absoluteEncoder.getAbsolutePosition();
-
-    StatusSignal.setUpdateFrequencyForAll(
-        1.0 / OdometryThread.PERIOD, turnAbsPosSignal, driveDistanceSignal);
-    drivePositionQueue = OdometryThread.getInstance().registerSignal(driveDistanceSignal);
-    turnPositionQueue = OdometryThread.getInstance().registerSignal(turnAbsPosSignal);
-
-    driveMotor.optimizeBusUtilization();
-    turnMotor.optimizeBusUtilization();
-    absoluteEncoder.optimizeBusUtilization();
-  }
-
-  public void updateInputs() {
-    driveFeedback.update();
-    turnFeedback.update();
-
-    //TODO removed drive motor signal logging
-    driveSignals.update(inputs.drive, driveMotor);
-    turnSignals.update(inputs.turn, turnMotor);
-    driveVelocitySignal.refresh();
-
-    inputs.drive.positionRads /= Constants.DriveConstants.DRIVE_GEAR_RATIO;
-    inputs.drive.velocityRadsPerSec =
-        driveVelocitySignal.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond)
-            / Constants.DriveConstants.DRIVE_GEAR_RATIO;
-    inputs.driveVelocityMetersPerSec =
-        inputs.drive.velocityRadsPerSec * wheelRadius * Constants.DriveConstants.DRIVE_MULTIPLIER;
-
-    // Update odometry from signals into queues
-    inputs.driveDistanceUpdates.clear();
-    if (!drivePositionQueue.isEmpty()) {
-      while (drivePositionQueue.size() > 0) {
-        final double distance = drivePositionQueue.poll();
-        inputs.driveDistanceUpdates.add(
-            Units.rotationsToRadians(distance) / Constants.DriveConstants.DRIVE_GEAR_RATIO * wheelRadius * Constants.DriveConstants.DRIVE_MULTIPLIER);
+  private double driveGoalVelocity = 0.0;
+  
+    public ModuleIOTalon(int index) {
+      driveFeedbackGains.setGains(0.3, 0.000, 0.0);
+      turnFeedbackGains.setGains(5.0, 0.00, 0.0);
+      turnFeedback.pid.enableContinuousInput(-Math.PI, Math.PI);
+      turnFeedbackConstraints.setConstraints(360.0, 1500.0);
+  
+      inputs = new ModuleIOInputs(index);
+  
+      switch (index) {
+        case 0: // Front Left
+          driveErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Front Left Drive");
+          turnErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Front Left Turn");
+          driveMotor = new TalonFX(CanIDs.Swerve.FRONT_LEFT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+          HardwareUtils.setInverted(driveMotor, true);
+          turnMotor = new TalonFX(CanIDs.Swerve.FRONT_LEFT_TURN_ID, CanIDs.Swerve.CAN_BUS);
+          absoluteEncoder =
+              new CANcoder(CanIDs.Swerve.FRONT_LEFT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
+          // encoderOffset =
+          //     new Rotation2d(
+          //         1.7840 - 0.03 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
+          wheelRadius = Units.inchesToMeters(1.856);
+          break;
+        case 1: // Front Right
+          driveErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Front Right Drive");
+          turnErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Front Right Turn");
+          driveMotor = new TalonFX(CanIDs.Swerve.FRONT_RIGHT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+          HardwareUtils.setInverted(driveMotor, false);
+          turnMotor = new TalonFX(CanIDs.Swerve.FRONT_RIGHT_TURN_ID, CanIDs.Swerve.CAN_BUS);
+          absoluteEncoder =
+              new CANcoder(CanIDs.Swerve.FRONT_RIGHT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
+          //encoderOffset = new Rotation2d(0.2883 + 0.007);
+          wheelRadius = Units.inchesToMeters(1.873);
+          break;
+        case 2: // Back Left
+          driveErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Back Left Drive");
+          turnErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Back Left Turn");
+          driveMotor = new TalonFX(CanIDs.Swerve.BACK_LEFT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+          HardwareUtils.setInverted(driveMotor, true);
+          turnMotor = new TalonFX(CanIDs.Swerve.BACK_LEFT_TURN_ID, CanIDs.Swerve.CAN_BUS);
+          absoluteEncoder =
+              new CANcoder(CanIDs.Swerve.BACK_LEFT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
+          //    new Rotation2d(-1.5942 + Units.degreesToRadians(180.0) + Units.degreesToRadians(90.0));
+          wheelRadius = Units.inchesToMeters(1.867);
+          break;
+        case 3: // Back Right
+          driveErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Back Right Drive");
+          turnErrorRollingLog = new RollingAverageLogger("Drive/Errors", "Back Right Turn");
+          driveMotor = new TalonFX(CanIDs.Swerve.BACK_RIGHT_DRIVE_ID, CanIDs.Swerve.CAN_BUS);
+          HardwareUtils.setInverted(driveMotor, true);
+          turnMotor = new TalonFX(CanIDs.Swerve.BACK_RIGHT_TURN_ID, CanIDs.Swerve.CAN_BUS);
+          absoluteEncoder =
+              new CANcoder(CanIDs.Swerve.BACK_RIGHT_ENCODER_ID, CanIDs.Swerve.CAN_BUS);
+          //encoderOffset = new Rotation2d(-1.1990 - 0.032 + Units.degreesToRadians(90.0));
+          wheelRadius = Units.inchesToMeters(1.867);
+          break;
+        default:
+          throw new RuntimeException("Invalid swerve module index");
       }
-      final double lastUpdate =
-          inputs.driveDistanceUpdates.get(inputs.driveDistanceUpdates.size() - 1);
-      inputs.driveDistanceMeters = lastUpdate;
-      inputs.drive.positionRads = lastUpdate / wheelRadius / Constants.DriveConstants.DRIVE_MULTIPLIER;
+  
+      id = index;
+  
+      // Configure devices
+      HardwareUtils.setCurrentLimit(driveMotor, Constants.DriveConstants.DRIVE_CURRENT_LIMIT);
+      HardwareUtils.setCurrentLimit(turnMotor, Constants.DriveConstants.TURN_CURRENT_LIMIT);
+  
+      driveMotor.setNeutralMode(NeutralModeValue.Brake);
+      turnMotor.setNeutralMode(NeutralModeValue.Brake);
+  
+      HardwareUtils.setInverted(turnMotor, false);
+  
+      driveMotor.setPosition(0.0);
+      turnMotor.setPosition(0.0);
+  
+      // Signals
+      driveSignals = new TalonSignals(driveMotor);
+      turnSignals = new TalonSignalsPositional(turnMotor);
+      driveVelocitySignal = driveMotor.getVelocity();
+      driveVelocitySignal.setUpdateFrequency(Constants.RobotConstants.ROBOT_PERIOD);
+  
+      // Odometry queues
+      final var driveDistanceSignal = driveMotor.getPosition();
+      final var turnAbsPosSignal = absoluteEncoder.getAbsolutePosition();
+  
+      StatusSignal.setUpdateFrequencyForAll(
+          1.0 / OdometryThread.PERIOD, turnAbsPosSignal, driveDistanceSignal);
+      drivePositionQueue = OdometryThread.getInstance().registerSignal(driveDistanceSignal);
+      turnPositionQueue = OdometryThread.getInstance().registerSignal(turnAbsPosSignal);
+  
+      driveMotor.optimizeBusUtilization();
+      turnMotor.optimizeBusUtilization();
+      absoluteEncoder.optimizeBusUtilization();
+  
+      HardwareUtils.setMotorPidSlot0(driveMotor, 0.25, 0, 0, 0, 0, 0);
     }
-    inputs.turnPositionUpdates.clear();
-    if (!turnPositionQueue.isEmpty()) {
-      while (turnPositionQueue.size() > 0) {
-        final double angle = turnPositionQueue.poll();
-        inputs.turnPositionUpdates.add(
-            MathUtil.angleModulus(Units.rotationsToRadians(angle)));
-            // - encoderOffset.getRadians()
+  
+    public void updateInputs() {
+      driveFeedback.update();
+      turnFeedback.update();
+  
+      driveSignals.update(inputs.drive, driveMotor);
+      turnSignals.update(inputs.turn, turnMotor);
+      driveVelocitySignal.refresh();
+  
+      inputs.drive.positionRads /= Constants.DriveConstants.DRIVE_GEAR_RATIO;
+      inputs.drive.velocityRadsPerSec =
+          driveVelocitySignal.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond)
+              / Constants.DriveConstants.DRIVE_GEAR_RATIO;
+      inputs.driveVelocityMetersPerSec =
+          inputs.drive.velocityRadsPerSec * wheelRadius * Constants.DriveConstants.DRIVE_MULTIPLIER;
+  
+      // Update odometry from signals into queues
+      inputs.driveDistanceUpdates.clear();
+      if (!drivePositionQueue.isEmpty()) {
+        while (drivePositionQueue.size() > 0) {
+          final double distance = drivePositionQueue.poll();
+          inputs.driveDistanceUpdates.add(
+              Units.rotationsToRadians(distance) / Constants.DriveConstants.DRIVE_GEAR_RATIO * wheelRadius * Constants.DriveConstants.DRIVE_MULTIPLIER);
+        }
+        final double lastUpdate =
+            inputs.driveDistanceUpdates.get(inputs.driveDistanceUpdates.size() - 1);
+        inputs.driveDistanceMeters = lastUpdate;
+        inputs.drive.positionRads = lastUpdate / wheelRadius / Constants.DriveConstants.DRIVE_MULTIPLIER;
       }
-      inputs.turnAbsolutePositionRad =
-          inputs.turnPositionUpdates.get(inputs.turnPositionUpdates.size() - 1);
+      inputs.turnPositionUpdates.clear();
+      if (!turnPositionQueue.isEmpty()) {
+        while (turnPositionQueue.size() > 0) {
+          final double angle = turnPositionQueue.poll();
+          inputs.turnPositionUpdates.add(
+              MathUtil.angleModulus(Units.rotationsToRadians(angle)));
+              // - encoderOffset.getRadians()
+        }
+        inputs.turnAbsolutePositionRad =
+            inputs.turnPositionUpdates.get(inputs.turnPositionUpdates.size() - 1);
+      }
+  
+      if (id == 0) {
+        SmartDashboard.putNumberArray(
+            "Drive Angles", inputs.turnPositionUpdates.toArray(new Double[0]));
+      }
+  
+      inputs.turnAbsoluteVelocityRadsPerSec = inputs.turn.velocityRadsPerSec * Constants.DriveConstants.TURN_GEAR_RATIO;
+  
+      inputs.turnPositionErrorRad = turnFeedback.pid.getPositionError();
+  
+      inputs.isConnected = inputs.turn.isConnected && inputs.drive.isConnected;
+      turnErrorRollingLog.addValue(Math.abs(turnFeedback.pid.getPositionError()));
+      driveErrorRollingLog.addValue(Math.abs(inputs.driveVelocityMetersPerSec - driveGoalVelocity));
     }
-
-    if (id == 0) {
-      SmartDashboard.putNumberArray(
-          "Drive Angles", inputs.turnPositionUpdates.toArray(new Double[0]));
+  
+    public ModuleIOInputs getInputs() {
+      return this.inputs;
     }
-
-    inputs.turnAbsoluteVelocityRadsPerSec = inputs.turn.velocityRadsPerSec * Constants.DriveConstants.TURN_GEAR_RATIO;
-
-    inputs.turnPositionErrorRad = turnFeedback.pid.getPositionError();
-
-    inputs.isConnected = inputs.turn.isConnected && inputs.drive.isConnected;
-  }
-
-  public ModuleIOInputs getInputs() {
-    return this.inputs;
-  }
-
-  public void setDriveSpeed(double speedMetersPerSecond) {
-    final double driveVolts =
-        driveFeedforward.calculate(speedMetersPerSecond)
-            + driveFeedback.pid.calculate(inputs.driveVelocityMetersPerSec, speedMetersPerSecond);
-    setDriveVoltage(driveVolts);
+  
+    public void setDriveSpeed(double speedMetersPerSecond) {
+      driveGoalVelocity = speedMetersPerSecond;
+    final double feedforward = driveFeedforward.calculate(speedMetersPerSecond);
+    // final double driveVolts =
+    //     driveFeedforward.calculate(speedMetersPerSecond)
+    //         + driveFeedback.pid.calculate(inputs.driveVelocityMetersPerSec, speedMetersPerSecond);
+    // setDriveVoltage(driveVolts);
+    final VelocityVoltage request  = new VelocityVoltage(0).withSlot(0);
+    NTLogger.putNumber("Debug", "Commanded rps", speedMetersPerSecond/(2 * Math.PI * wheelRadius));
+    driveMotor.setControl(request.withVelocity(Constants.DriveConstants.DRIVE_GEAR_RATIO * speedMetersPerSecond/(2 * Math.PI * wheelRadius)).withFeedForward(feedforward));
+    // driveMotor.setVoltage(feedforward);
   }
 
   public void setAngle(double angleRadians) {

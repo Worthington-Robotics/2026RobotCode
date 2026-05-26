@@ -31,24 +31,21 @@ public class ShooterIOTalon implements ShooterIO {
   private final double kv = 0.020;
 
   public ShooterIOTalon(){
-    //TODO set motor PID values
     leader.setNeutralMode(NeutralModeValue.Coast);
     follower.setNeutralMode(NeutralModeValue.Coast);
     hood.setNeutralMode(NeutralModeValue.Brake);
 
 
     HardwareUtils.setInverted(leader, true);
-    //TODO: Make sure that they actually are aligned 
     follower.setControl(new Follower(CanIDs.SuperStructure.LEADER_ID, MotorAlignmentValue.Opposed));
 
     leaderSignals = new TalonSignals(leader);
     followerSignals = new TalonSignals(follower);
     hoodSignals = new TalonSignalsPositional(hood);
 
-    //TODO: Actually set these values
     HardwareUtils.setCurrentLimit(leader, Constants.TurretShooterConstants.FLYWHEEL_CURRENT_LIMIT);
     HardwareUtils.setCurrentLimit(follower, Constants.TurretShooterConstants.FLYWHEEL_CURRENT_LIMIT);
-    // HardwareUtils.setCurrentLimit(hood, Constants.TurretShooterConstants.HOOD_CURRENT_LIMIT);
+    HardwareUtils.setCurrentLimit(hood, Constants.TurretShooterConstants.HOOD_CURRENT_LIMIT);
 
     hood.setPosition(0.0);
     leader.setPosition(0);

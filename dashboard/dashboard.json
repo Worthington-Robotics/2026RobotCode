@@ -1,0 +1,919 @@
+{
+  "version": 1,
+  "dashboardId": "f37fa24c-a6bb-4374-b2d9-db31bde33110",
+  "dashboards": {
+    "auto": {
+      "id": "auto",
+      "widgets": []
+    },
+    "teleop": {
+      "id": "teleop",
+      "viewport": {
+        "x": 377.1228080004411,
+        "y": 320.55438680037497,
+        "scale": 0.7856725166675858
+      },
+      "widgets": [
+        {
+          "id": "7e62ff4e-67c0-4f40-a2fb-56232208de59",
+          "type": "fms",
+          "layout": {
+            "left": 48,
+            "top": 5,
+            "width": 10,
+            "height": 9
+          },
+          "constraints": {
+            "width": {
+              "min": 9
+            },
+            "height": {
+              "min": 7
+            }
+          },
+          "slot": "nt:/FMSInfo/*",
+          "props": {}
+        },
+        {
+          "id": "62ea4b2a-b03d-419c-aad6-86ce863a8806",
+          "type": "value",
+          "layout": {
+            "left": 18,
+            "top": 5,
+            "width": 29,
+            "height": 4
+          },
+          "constraints": {
+            "width": {
+              "min": 4
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "slot": "nt:/SmartDashboard/SysFaultCause",
+          "props": {
+            "title": "System Fault Cause",
+            "valueFormat": {
+              "maximumFractionDigits": 2
+            },
+            "alignment": "start",
+            "size": "lg",
+            "mono": false
+          }
+        },
+        {
+          "id": "73283ab8-4de3-4af4-9521-abec3738578e",
+          "type": "color",
+          "layout": {
+            "left": -20,
+            "top": 9,
+            "width": 13,
+            "height": 5
+          },
+          "constraints": {
+            "width": {
+              "min": 4
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "slot": "nt:Vision/Camera Status/Cam2",
+          "props": {
+            "boolean": {
+              "true": "#000000",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "c294b90d-74c4-4be6-8eef-26321fb236ad",
+          "type": "color",
+          "layout": {
+            "left": -13,
+            "top": 1,
+            "width": 6,
+            "height": 7
+          },
+          "constraints": {
+            "width": {
+              "min": 4
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "slot": "nt:Vision/Camera Status/Cam1",
+          "props": {
+            "boolean": {
+              "true": "#000000",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "0645382e-b096-47ff-bf12-d4e9e88082de",
+          "type": "color",
+          "layout": {
+            "left": 25,
+            "top": 53,
+            "width": 6,
+            "height": 6
+          },
+          "constraints": {
+            "width": {
+              "min": 4
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "props": {
+            "boolean": {
+              "true": "#00c951",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "2cc3dafd-1474-417b-b447-91d74346e41a",
+          "type": "color",
+          "layout": {
+            "left": -20,
+            "top": 1,
+            "width": 6,
+            "height": 7
+          },
+          "constraints": {
+            "width": {
+              "min": 4
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "slot": "nt:Vision/Camera Status/Cam0",
+          "props": {
+            "boolean": {
+              "true": "#000000",
+              "false": "#fb2c36"
+            }
+          }
+        },
+        {
+          "id": "2ab1b3ff-afd5-4021-9077-610962556ae9",
+          "type": "match.time",
+          "layout": {
+            "left": 6,
+            "top": 1,
+            "width": 11,
+            "height": 6
+          },
+          "constraints": {
+            "width": {
+              "min": 9
+            },
+            "height": {
+              "min": 6
+            }
+          },
+          "slot": "nt:Dashboard/Match Time",
+          "props": {
+            "title": "Match Time",
+            "gameDataVisible": true,
+            "attention": 5,
+            "cautionAt": 30,
+            "dangerAt": 10
+          }
+        },
+        {
+          "id": "7fe07dc3-aebd-42e6-8055-c1875cf424b6",
+          "type": "match.time",
+          "layout": {
+            "left": 6,
+            "top": 8,
+            "width": 11,
+            "height": 6
+          },
+          "constraints": {
+            "width": {
+              "min": 9
+            },
+            "height": {
+              "min": 6
+            }
+          },
+          "slot": "nt:Dashboard/Time Until Switch",
+          "props": {
+            "title": "Hub Time",
+            "gameDataVisible": true,
+            "attention": 5,
+            "cautionAt": 30,
+            "dangerAt": 10
+          }
+        },
+        {
+          "id": "8da79866-8baf-4ca3-9778-b13a83594fe4",
+          "type": "chooser",
+          "layout": {
+            "left": 9,
+            "top": 31,
+            "width": 10,
+            "height": 5
+          },
+          "constraints": {
+            "width": {
+              "min": 6
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "props": {
+            "interactive": true
+          }
+        },
+        {
+          "id": "5a5a5813-8154-4f8a-ab2e-6b52e94a6477",
+          "type": "chooser",
+          "layout": {
+            "left": 0,
+            "top": 55,
+            "width": 10,
+            "height": 5
+          },
+          "constraints": {
+            "width": {
+              "min": 6
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "props": {
+            "interactive": true
+          }
+        },
+        {
+          "id": "ac3df94b-2b49-4de2-bb6b-f4944134295c",
+          "type": "chooser",
+          "layout": {
+            "left": 2,
+            "top": 66,
+            "width": 10,
+            "height": 5
+          },
+          "constraints": {
+            "width": {
+              "min": 6
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "props": {
+            "interactive": true
+          }
+        },
+        {
+          "id": "06d0aea1-58d5-4fed-95fa-7a63e60db99a",
+          "type": "chooser",
+          "layout": {
+            "left": 18,
+            "top": 10,
+            "width": 29,
+            "height": 4
+          },
+          "constraints": {
+            "width": {
+              "min": 6
+            },
+            "height": {
+              "min": 4
+            }
+          },
+          "slot": "nt:/SmartDashboard/Auto Selector 2/*",
+          "props": {
+            "title": "Auto Selector",
+            "interactive": true
+          }
+        },
+        {
+          "id": "7efdad9d-8138-4717-827f-f94dcd54ce1c",
+          "type": "swerve",
+          "layout": {
+            "left": -6,
+            "top": 1,
+            "width": 11,
+            "height": 13
+          },
+          "constraints": {
+            "width": {
+              "min": 5
+            },
+            "height": {
+              "min": 6
+            }
+          },
+          "props": {
+            "chassisRotation": true,
+            "chassisSpeedsVisible": true,
+            "maxLinearSpeed": 5,
+            "maxAngularSpeed": 360
+          }
+        }
+      ]
+    },
+    "custom": [
+      {
+        "id": "97fd5b75-1098-4d20-b56f-bcf079453af3",
+        "viewport": {
+          "x": 493.99913985456936,
+          "y": 151.9997353398675,
+          "scale": 0.7916652882284766
+        },
+        "widgets": [
+          {
+            "id": "ac490710-937c-4f9b-9132-515cffad7362",
+            "type": "color",
+            "layout": {
+              "left": -26,
+              "top": -8,
+              "width": 37,
+              "height": 17
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Has Active Detect",
+            "props": {
+              "boolean": {
+                "true": "#00c951",
+                "false": "#fb2c36"
+              }
+            }
+          },
+          {
+            "id": "5e51cfb4-cc71-4be7-bc67-cfadd7815d86",
+            "type": "color",
+            "layout": {
+              "left": -26,
+              "top": 18,
+              "width": 13,
+              "height": 5
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Camera Status/Cam2",
+            "props": {
+              "boolean": {
+                "true": "000000",
+                "false": "#fb2c36"
+              },
+              "title": "Back Cam"
+            }
+          },
+          {
+            "id": "9a37eca8-708e-48ec-9d5a-d35b6f7be85b",
+            "type": "color",
+            "layout": {
+              "left": -26,
+              "top": 10,
+              "width": 6,
+              "height": 7
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Camera Status/Cam0",
+            "props": {
+              "boolean": {
+                "true": "000000",
+                "false": "#fb2c36"
+              },
+              "title": "Left Cam"
+            }
+          },
+          {
+            "id": "b0f6fa59-a44a-4f96-955f-40775f0bdd22",
+            "type": "color",
+            "layout": {
+              "left": -19,
+              "top": 10,
+              "width": 6,
+              "height": 7
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Camera Status/Cam1",
+            "props": {
+              "boolean": {
+                "true": "000000",
+                "false": "#fb2c36"
+              },
+              "title": "Right Cam"
+            }
+          },
+          {
+            "id": "4267efa2-45c1-402a-8a61-d6197e3693c5",
+            "type": "match.time",
+            "layout": {
+              "left": 1,
+              "top": 17,
+              "width": 10,
+              "height": 6
+            },
+            "constraints": {
+              "width": {
+                "min": 9
+              },
+              "height": {
+                "min": 6
+              }
+            },
+            "slot": "nt:Dashboard/Time Until Switch",
+            "props": {
+              "gameDataVisible": true,
+              "attention": 5,
+              "cautionAt": 30,
+              "dangerAt": 10,
+              "title": "Time Until Hub Switch"
+            }
+          },
+          {
+            "id": "85542d55-99df-471a-aa06-b193a4fe5793",
+            "type": "match.time",
+            "layout": {
+              "left": 1,
+              "top": 10,
+              "width": 10,
+              "height": 6
+            },
+            "constraints": {
+              "width": {
+                "min": 9
+              },
+              "height": {
+                "min": 6
+              }
+            },
+            "slot": "nt:Dashboard/Match Time",
+            "props": {
+              "gameDataVisible": true,
+              "attention": 5,
+              "cautionAt": 30,
+              "dangerAt": 10,
+              "title": "Match Time"
+            }
+          },
+          {
+            "id": "923de635-ea11-4ac8-b465-b849dbe3de24",
+            "type": "chooser",
+            "layout": {
+              "left": 12,
+              "top": 19,
+              "width": 29,
+              "height": 4
+            },
+            "constraints": {
+              "width": {
+                "min": 6
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:/SmartDashboard/Auto Selector 2/*",
+            "props": {
+              "interactive": true
+            }
+          },
+          {
+            "id": "de926dcc-3ea9-4d55-818d-fc711284d00a",
+            "type": "value",
+            "layout": {
+              "left": 12,
+              "top": 14,
+              "width": 29,
+              "height": 4
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:/SmartDashboard/SysFaultCause",
+            "props": {
+              "alignment": "center",
+              "size": "lg",
+              "mono": false,
+              "valueFormat": {
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          {
+            "id": "a9947f52-6b90-4c5a-9a3c-ec1a912cccfa",
+            "type": "field2d",
+            "layout": {
+              "left": 12,
+              "top": -8,
+              "width": 39,
+              "height": 21
+            },
+            "constraints": {
+              "width": {
+                "min": 6
+              },
+              "height": {
+                "min": 11
+              }
+            },
+            "slot": "nt:/Drive/Pose",
+            "lookback": 5,
+            "props": {
+              "style": "default",
+              "orientation": "180",
+              "bumperSizeInch": 32
+            }
+          },
+          {
+            "id": "bffe68a8-b5fe-41e4-b068-5eed6643ec95",
+            "type": "fms",
+            "layout": {
+              "left": 42,
+              "top": 14,
+              "width": 9,
+              "height": 9
+            },
+            "constraints": {
+              "width": {
+                "min": 9
+              },
+              "height": {
+                "min": 7
+              }
+            },
+            "slot": "nt:/FMSInfo/*",
+            "props": {}
+          },
+          {
+            "id": "5a69e4d8-7060-42a4-87da-5ccec398a841",
+            "type": "gyro",
+            "layout": {
+              "left": -12,
+              "top": 10,
+              "width": 12,
+              "height": 13
+            },
+            "constraints": {
+              "width": {
+                "min": 5
+              },
+              "height": {
+                "min": 6
+              }
+            },
+            "slot": "nt:/Drive/Gyro Yaw",
+            "props": {
+              "variant": "yaw",
+              "yawClockwise": false,
+              "yawSymmetric": false
+            }
+          }
+        ]
+      },
+      {
+        "id": "f37fa24c-a6bb-4374-b2d9-db31bde33110",
+        "viewport": {
+          "x": 113.60834508275482,
+          "y": 94.6736209022957,
+          "scale": 0.7889468408524641
+        },
+        "widgets": [
+          {
+            "id": "75bdd1b4-4b4a-4c9f-bd6c-72f16a07878b",
+            "type": "color",
+            "layout": {
+              "left": 65,
+              "top": 13,
+              "width": 7,
+              "height": 7
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Camera Status/Cam1",
+            "props": {
+              "boolean": {
+                "true": "000000",
+                "false": "#fb2c36"
+              },
+              "title": "Right Cam"
+            }
+          },
+          {
+            "id": "b911a0dc-27f8-4d98-8254-f1e2f09ee366",
+            "type": "color",
+            "layout": {
+              "left": 34,
+              "top": -5,
+              "width": 38,
+              "height": 17
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Has Active Detect",
+            "props": {
+              "boolean": {
+                "true": "#00c951",
+                "false": "#fb2c36"
+              }
+            }
+          },
+          {
+            "id": "d4b47094-3c08-4f11-a229-02fc41e7a01f",
+            "type": "color",
+            "layout": {
+              "left": 57,
+              "top": 13,
+              "width": 7,
+              "height": 7
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Camera Status/Cam0",
+            "props": {
+              "boolean": {
+                "true": "000000",
+                "false": "#fb2c36"
+              },
+              "title": "Left Cam"
+            }
+          },
+          {
+            "id": "be95a4a8-0284-49e1-b172-21f0678628cb",
+            "type": "color",
+            "layout": {
+              "left": 57,
+              "top": 21,
+              "width": 15,
+              "height": 5
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:Vision/Camera Status/Cam2",
+            "props": {
+              "boolean": {
+                "true": "000000",
+                "false": "#fb2c36"
+              },
+              "title": "Back Cam"
+            }
+          },
+          {
+            "id": "e1384a50-488c-446f-a0f7-46d1794a0dd9",
+            "type": "field2d",
+            "layout": {
+              "left": -6,
+              "top": -5,
+              "width": 39,
+              "height": 21
+            },
+            "constraints": {
+              "width": {
+                "min": 6
+              },
+              "height": {
+                "min": 11
+              }
+            },
+            "slot": "nt:/Drive/Pose",
+            "lookback": 5,
+            "props": {
+              "style": "default",
+              "orientation": "180",
+              "bumperSizeInch": 32
+            }
+          },
+          {
+            "id": "4c8900f9-0bed-4db3-acb3-4ac3937a4684",
+            "type": "fms",
+            "layout": {
+              "left": -6,
+              "top": 17,
+              "width": 9,
+              "height": 9
+            },
+            "constraints": {
+              "width": {
+                "min": 9
+              },
+              "height": {
+                "min": 7
+              }
+            },
+            "slot": "nt:/FMSInfo/*",
+            "props": {}
+          },
+          {
+            "id": "eb76f68f-ccbd-4855-bcf8-80e8eb4ec4a7",
+            "type": "match.time",
+            "layout": {
+              "left": 34,
+              "top": 20,
+              "width": 10,
+              "height": 6
+            },
+            "constraints": {
+              "width": {
+                "min": 9
+              },
+              "height": {
+                "min": 6
+              }
+            },
+            "slot": "nt:Dashboard/Time Until Switch",
+            "props": {
+              "gameDataVisible": true,
+              "attention": 5,
+              "cautionAt": 30,
+              "dangerAt": 10,
+              "title": "Time Until Hub Switch"
+            }
+          },
+          {
+            "id": "78deffa1-a7dd-42d2-a5e8-8c3a53a87db3",
+            "type": "match.time",
+            "layout": {
+              "left": 34,
+              "top": 13,
+              "width": 10,
+              "height": 6
+            },
+            "constraints": {
+              "width": {
+                "min": 9
+              },
+              "height": {
+                "min": 6
+              }
+            },
+            "slot": "nt:Dashboard/Match Time",
+            "props": {
+              "gameDataVisible": true,
+              "attention": 5,
+              "cautionAt": 30,
+              "dangerAt": 10,
+              "title": "Match Time"
+            }
+          },
+          {
+            "id": "0e7e8599-cbc9-4fc7-b662-9538353da122",
+            "type": "gyro",
+            "layout": {
+              "left": 45,
+              "top": 13,
+              "width": 11,
+              "height": 13
+            },
+            "constraints": {
+              "width": {
+                "min": 5
+              },
+              "height": {
+                "min": 6
+              }
+            },
+            "slot": "nt:/Drive/Gyro Yaw",
+            "props": {
+              "variant": "yaw",
+              "yawClockwise": false,
+              "yawSymmetric": false
+            }
+          },
+          {
+            "id": "cd03bb4b-1222-4ba0-bbf2-b24361880020",
+            "type": "chooser",
+            "layout": {
+              "left": 12,
+              "top": 40,
+              "width": 10,
+              "height": 5
+            },
+            "constraints": {
+              "width": {
+                "min": 6
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "props": {
+              "interactive": true
+            }
+          },
+          {
+            "id": "8e232303-1327-423e-84f6-5f92fc5bd763",
+            "type": "value",
+            "layout": {
+              "left": 4,
+              "top": 17,
+              "width": 29,
+              "height": 4
+            },
+            "constraints": {
+              "width": {
+                "min": 4
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:/SmartDashboard/SysFaultCause",
+            "props": {
+              "alignment": "center",
+              "size": "lg",
+              "mono": false,
+              "valueFormat": {
+                "maximumFractionDigits": 2
+              }
+            }
+          },
+          {
+            "id": "efc9625c-7f5b-4b8f-a734-696c9a561c54",
+            "type": "chooser",
+            "layout": {
+              "left": 4,
+              "top": 22,
+              "width": 29,
+              "height": 4
+            },
+            "constraints": {
+              "width": {
+                "min": 6
+              },
+              "height": {
+                "min": 4
+              }
+            },
+            "slot": "nt:/SmartDashboard/Auto Selector 2/*",
+            "props": {
+              "interactive": true,
+              "title": "Auto Selector"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

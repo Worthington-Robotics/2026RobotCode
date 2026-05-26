@@ -7,16 +7,14 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.Constants.TurretShooterConstants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.Drive;
-import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIO.ShooterIOInputs;
 import frc.WorBots.util.debug.StatusPage;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.debug.TunablePIDController.TunableProfiledPIDController;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 
 public class Shooter {
   private ShooterIO io;
@@ -71,9 +69,6 @@ public class Shooter {
   private final DoublePublisher flywheelRequestedPub = shooter.getDoubleTopic("Flywheel Requested Voltage").publish();
   private final DoublePublisher hoodRequestedPub = shooter.getDoubleTopic("Hood Requested Voltage").publish();
 
-  // a
-
-  // TODO: tune the PIDs, setting the tolerances and feedforward values too.
   /**
    * Creates a Shooter object alongside its respective PIDs.
    * 
@@ -127,10 +122,6 @@ public class Shooter {
     FlywheelFudgePub.set(leaderFudgeFactor);
 
     StatusPage.reportStatus(StatusPage.SHOOTER_SUBSYSTEM, inputs.leader.isConnected && inputs.follower.isConnected);
-    //TODO remove eventually
-    SmartDashboard.putBoolean("Near Trench", drive.nearTrench());
-    SmartDashboard.putBoolean("Near Blue trench", drive.approachingBlueTrench(.25));
-    SmartDashboard.putBoolean("Near Red Trench", drive.approachingRedTrench(.25));
     if (drive.nearTrench()) {
       setpointPosition = 0;
       setHoodPose(setpointPosition);

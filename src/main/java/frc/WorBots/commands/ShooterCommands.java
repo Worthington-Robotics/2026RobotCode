@@ -102,30 +102,40 @@ public class ShooterCommands {
     });
   }
 
-  public Command enableAutoPassing(Superstructure superstructure) {
-    return Commands.runOnce(() -> {
-      superstructure.setAutoPassing(true);
-    });
-  }
-
-  public Command disableAutoPassing(Superstructure superstructure) {
-    return Commands.runOnce(() -> {
-      superstructure.setAutoPassing(false);
-    });
-  }
-
+  /**
+   * Sends the hood down
+   * 
+   * @param superstructure The superstructure containing the hood to command
+   */
   public Command hoodDown(Superstructure superstructure) {
     return Commands.startEnd(() -> superstructure.setHoodDown(true), () -> superstructure.setHoodDown(false));
   }
 
+  /**
+   * Runs a setpoint shot without requirements
+   * 
+   * @param superstructure
+   * @param params
+   * @return
+   */
   public Command autoSetpointShot(Superstructure superstructure, ShootingParams params) {
     return Commands.runOnce(() -> superstructure.runShot(params));
   }
 
+  /**
+   * Runs a "super pass" by passing with the shooter while ejecting balls out of
+   * the intake
+   * 
+   * @param superstructure The superstructure to command
+   * @param intake         The intake to command
+   * @param drive          The drive, used for determining when the robot is ready
+   *                       to fire
+   * @param spin           The spindexer to command
+   */
   public Command superPass(Superstructure superstructure, Intake intake, Drive drive, Spindexer spin) {
     return Commands.parallel(
         new IntakeCommands().spit(intake),
-        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE),
+        new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE),
         new SuperPassLights());
   }
 }

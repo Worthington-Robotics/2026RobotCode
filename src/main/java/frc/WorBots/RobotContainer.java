@@ -14,7 +14,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -29,8 +28,6 @@ import frc.WorBots.commands.HoodControlFudgeCommand;
 import frc.WorBots.commands.IntakeCommands;
 import frc.WorBots.commands.pathPlannerCommands.IntakeExtendNoRequirements;
 import frc.WorBots.commands.pathPlannerCommands.PathplannerIntakeCommands;
-import frc.WorBots.commands.pathPlannerCommands.StopShooting;
-import frc.WorBots.energy.PowerLogger;
 import frc.WorBots.commands.PitTest;
 import frc.WorBots.commands.StartAutoAim;
 import frc.WorBots.commands.ShooterCommands;
@@ -49,6 +46,8 @@ import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.subsystems.spindexer.Spindexer;
 import frc.WorBots.subsystems.spindexer.SpindexerIOSim;
 import frc.WorBots.subsystems.spindexer.SpindexerIOTalon;
+import frc.WorBots.subsystems.superstructure.ShotCalculator.ShootingParams;
+import frc.WorBots.subsystems.superstructure.Superstructure.SuperstructureControlMode;
 import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIOSim;
 import frc.WorBots.subsystems.superstructure.shooter.ShooterIOTalon;
@@ -57,9 +56,12 @@ import frc.WorBots.subsystems.superstructure.turret.TurretIOTalon;
 import frc.WorBots.subsystems.vision.apriltags.TagVision;
 import frc.WorBots.subsystems.vision.apriltags.TagVisionIONew;
 import frc.WorBots.util.FireController;
+import frc.WorBots.util.MatchTime;
+import frc.WorBots.util.RebuiltUtils;
 import frc.WorBots.util.control.DriveController;
+import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.StatusPage;
-import frc.WorBots.util.math.AllianceFlipUtil;
+import frc.WorBots.util.energy.PowerLogger;
 
 public class RobotContainer {
   // Subsystems
@@ -116,10 +118,7 @@ public class RobotContainer {
     vision.setDataInterfaces(drive::addVisionUpdate, () -> drive.getRotation(),
         () -> drive.getFieldRelativeSetpointSpeeds());
 
-    FireController fireController = new FireController(superstructure, drive, spin);
-
-    // TODO make the subsystems target on their own, this means this constructor
-    // needs
+    new FireController(superstructure, drive, spin);
 
     AutoBuilder.configure(
         () -> drive.getPose(), // Get Pose Command
@@ -165,24 +164,20 @@ public class RobotContainer {
     // B activates gyro lock
     drive.setDefaultCommand(
         new DriveWithJoysticks(
-            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(),
-            () -> {
-              return false;
-            }, () -> driver.x().getAsBoolean()));
-    // A Key = Extend or retract intake
-    // TODO: check if written correctly
+            drive, () -> -driver.getLeftX(), () -> driver.getLeftY(), () -> -driver.getRightX(), 
+            () -> driver.x().getAsBoolean()));
+    // Toggle intake up and down
     driver.rightBumper().debounce(0.02).onTrue(new IntakeCommands().togglePose(intake));
-    // TODO: RT for spin intake, see if that is written correctly
+    //Intake
     driver.rightTrigger().debounce(0.02).whileTrue(new IntakeCommands().intake(intake));
-    // TODO: hood down
+    //Hood down
     driver.a().debounce(0.02).onTrue(new ShooterCommands().setHoodPose(superstructure, 0));
-    // TODO: intake spit
+    //Intake spit
     driver.leftBumper().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
-    // Reset Heading with y button
+    //Reset the robot's heading
     driver.y().debounce(0.02).onTrue(new DriveCommands().resetHeading(drive));
-
+    //Superpass
     driver.povUp().debounce(0.02).whileTrue(new ShooterCommands().superPass(superstructure, intake, drive, spin));
-
   }
 
   /*
@@ -193,16 +188,16 @@ public class RobotContainer {
   public void configureOperatorRealBindings() {
     // RT = Command to shoot
     operator.rightTrigger().debounce(0.02).whileTrue(
-        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+        new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     // operator.leftTrigger().debounce(0.02).whileTrue(new
     // ShooterCommands().forceFeedShooter(spin));
     operator.leftTrigger().debounce(0.02).whileTrue(new RunSpindexer(spin, -8));
     // Force feed
     operator.leftBumper().debounce(0.02).whileTrue(new ShooterCommands().forceFeedShooter(spin));
-    // Climber command is going to be up Dpad
-    // TODO: Add driver-assist manual disable
     // Spit intake Command
-    operator.b().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
+    // operator.b().debounce(0.02).whileTrue(new IntakeCommands().spit(intake));
+    // operator.b().debounce(0.02).whileTrue(new ShooterCommands().manualShot(superstructure, new ShootingParams(false, new Rotation2d(), 0, 0, 0), () -> false));
+    operator.b().debounce(0.02).whileTrue(Commands.runOnce(() -> superstructure.setControlMode(SuperstructureControlMode.Disabled)));
 
     operator.a().debounce(0.02).onTrue(new StartAutoAim(superstructure));
 
@@ -280,7 +275,7 @@ public class RobotContainer {
     new EventTrigger("Deploy Intake").onTrue(new IntakeCommands().extend(intake));
     new EventTrigger("Retract Intake").onTrue(new IntakeCommands().agitate(intake));
     new EventTrigger("Sustained Fire").onTrue(
-        new ConditionalFireCommand(drive, spin, superstructure, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
+        new ConditionalFireCommand(drive, spin, Constants.SpindexerConstants.SPINDEXER_VOLTAGE));
     new EventTrigger("Use the Force").onTrue(new StartAutoAim(superstructure));
 
     // Fetchs all of the autos from Path Planner
@@ -324,5 +319,10 @@ public class RobotContainer {
     powerlogger.integrateLog(superstructure.getTurretPowerLog());
     powerlogger.integrateLog(spin.getPowerLog());
     powerlogger.publishLogs();
+  }
+
+  public void logTime(){
+    NTLogger.putNumber("Dashboard", "Match Time", MatchTime.getInstance().getTimeRemaining());
+    NTLogger.putNumber("Dashboard", "Time Until Switch", RebuiltUtils.timeToAcivationSwitch());
   }
 }

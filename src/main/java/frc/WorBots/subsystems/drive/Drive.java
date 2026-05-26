@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,18 +21,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
 import frc.WorBots.RobotContainer;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.control.DriveFilter;
 import frc.WorBots.util.debug.Logger;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.math.AllianceFlipUtil;
 import frc.WorBots.util.math.GeomUtil;
 import frc.WorBots.util.math.PoseEstimator;
@@ -43,9 +41,6 @@ public class Drive extends SubsystemBase {
   private final Module[] modules = new Module[4];
   private final GyroIO gyroIO;
   private final GyroIOInputs gyroIOInputs = new GyroIOInputs();
-
-  //TODO remove
-  LinearFilter timeFilter = LinearFilter.movingAverage(10000);
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private DriveFilter filter = new DriveFilter(Constants.DriveConstants.DRIVE_MAX_VELOCITY,
@@ -154,8 +149,6 @@ public class Drive extends SubsystemBase {
       filter.reset();
     } else {
       if (isStopped()) {
-        // TODO when polishing maybe change this so that the robot doesn't hard stop
-        // avery time
         setpointStates = setStop();
         forceModules = true;
       } else {
@@ -271,7 +264,6 @@ public class Drive extends SubsystemBase {
    * Passes new drive information to the Odometry threat and pose estimator
    */
   public void updateOdometry() {
-    final double startTime = Timer.getFPGATimestamp();
     SwerveModuleState[] measuredStates = new SwerveModuleState[4];
 
     for (int i = 0; i < 4; i++) {
@@ -570,5 +562,15 @@ public class Drive extends SubsystemBase {
               blLog.motorVolts()[1], brLog.motorVolts()[0], brLog.motorVolts()[1]}, 
                 new double[]{flLog.motorCurrents()[0], flLog.motorCurrents()[1], frLog.motorCurrents()[0], frLog.motorCurrents()[1], blLog.motorCurrents()[0],
                   blLog.motorCurrents()[1], brLog.motorCurrents()[0], brLog.motorCurrents()[1]});
+  }
+
+  public void lowerMaxAcceleration(){
+    if((Constants.DriveConstants.DO_SHOOTING_ACCEL_LIMIT_IN_AUTO || !DriverStation.isAutonomous()) && inOurAllianceZone()){
+      filter.setLimits(Constants.DriveConstants.DRIVE_MAX_VELOCITY, Constants.DriveConstants.DRIVE_MAX_ACCELERATION_SHOOTING, Constants.DriveConstants.DRIVE_MAX_ROTATION_VELOCITY_SHOOTING, Constants.DriveConstants.DRIVE_MAX_ROTATION_ACCELERATION);
+    }
+  }
+  
+  public void resetMaxAcceleration(){
+    filter.setLimits(Constants.DriveConstants.DRIVE_MAX_VELOCITY, Constants.DriveConstants.DRIVE_MAX_ACCELERATION, Constants.DriveConstants.DRIVE_MAX_ROTATIONAL_VELOCITY, Constants.DriveConstants.DRIVE_MAX_ROTATION_ACCELERATION);
   }
 }

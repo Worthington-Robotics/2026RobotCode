@@ -16,8 +16,11 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.subsystems.lights.Lights;
 import frc.WorBots.util.BuildConstants;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /** A utility class which shows the status of systems on the robot to NetworkTables */
@@ -25,6 +28,7 @@ public class StatusPage {
   private ShuffleboardTab tab = Shuffleboard.getTab("Status");
   private HashMap<String, GenericEntry> entries = new HashMap<>();
   private static boolean hasBeenStarted = false;
+  private static ArrayList<String> sysFaultReport = new ArrayList<>();
 
   // System name constants
   public static final String AUTOS = "Autos";
@@ -109,7 +113,8 @@ public class StatusPage {
     SPINDEXER_SUBSYSTEM,
     TURRET_SUBSYSTEM,
     SHOOTER_SUBSYSTEM,
-    NOT_ESTOPPED
+    NOT_ESTOPPED,
+    GYROSCOPE
   };
 
   private StatusPage() {
@@ -156,13 +161,16 @@ public class StatusPage {
   }
 
   public static boolean sysFault(){
+    sysFaultReport = new ArrayList<>();
     boolean allClear = true;
     for(String system : CRITICAL_SYSTEMS){
       boolean status = getStatus(system);
       if(!status){
         allClear = false;
+        sysFaultReport.add(system);
       }
     }
+    SmartDashboard.putString("SysFaultCause", sysFaultReport.toString());
     return !allClear;
   }
 
@@ -217,6 +225,11 @@ public class StatusPage {
     Lights.getInstance().addSpinStatus(StatusPage.getStatus(SPINDEXER_JAM));
     Lights.getInstance().addVisionStatus(StatusPage.getStatus(TAG_VISION_SUBSUBSYSTEM));
     Lights.getInstance().addShotStatus(shotReady());
+
+    //Log Values for dashboard
+    NTLogger.putBoolean("Vision", "Camera Status/Cam0", getStatus("Cam0"));
+    NTLogger.putBoolean("Vision", "Camera Status/Cam1", getStatus("Cam1"));
+    NTLogger.putBoolean("Vision", "Camera Status/Cam2", getStatus("Cam2"));
   }
 
   /** Report metadata for AdvantageScope to use. Also starts the WPILib DataLog */

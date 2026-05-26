@@ -19,6 +19,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import frc.WorBots.Constants;
 import frc.WorBots.FieldConstants;
+import frc.WorBots.util.debug.NTLogger;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -48,6 +50,8 @@ public class PoseEstimator {
   private final Matrix<N3, N1> q = new Matrix<>(Nat.N3(), Nat.N1());
 
   private boolean enableVisionUpdates = true;
+
+  private int cyclesSinceVision = 0;
 
   /**
    * Create a PoseEstimator with standard deviation noise
@@ -113,8 +117,13 @@ public class PoseEstimator {
    */
   public void addVisionData(List<TimestampedVisionUpdate> visionData) {
     if (!enableVisionUpdates || visionData.isEmpty()) {
+      cyclesSinceVision++;
+      NTLogger.putBoolean("Vision", "Has Active Detect", cyclesSinceVision > 5 ? false : true);
       return;
     }
+    //Log if we have active vision updates to inform driver
+    NTLogger.putBoolean("Vision", "Has Active Detect", true);
+    cyclesSinceVision = 0;
 
     for (TimestampedVisionUpdate timestampedVisionUpdate : visionData) {
       final double timestamp = timestampedVisionUpdate.timestamp();

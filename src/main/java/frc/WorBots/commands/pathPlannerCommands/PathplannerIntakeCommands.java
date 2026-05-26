@@ -5,13 +5,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.WorBots.subsystems.intake.Intake;
 
 public class PathplannerIntakeCommands {
-  public Command startIntakeAuto(Intake intake){
-    return Commands.runOnce(() ->{
+  /**
+   * A command to start running the intake without requirements
+   * 
+   * @param intake The intake to start running
+   */
+  public Command startIntakeAuto(Intake intake) {
+    return Commands.runOnce(() -> {
       intake.setVoltsIntake(8);
     });
   }
 
-  public Command stopIntakeAuto(Intake intake){
+  /**
+   * A command to stop running the intake without requirement
+   * 
+   * @param intake The intake to stop running
+   */
+  public Command stopIntakeAuto(Intake intake) {
     return Commands.runOnce(() -> {
       intake.setVoltsIntake(0);
     });

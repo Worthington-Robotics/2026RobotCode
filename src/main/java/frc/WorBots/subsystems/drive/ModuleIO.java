@@ -1,7 +1,8 @@
 package frc.WorBots.subsystems.drive;
 
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.HardwareUtils.TalonInputsPositional;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
+
 import java.util.ArrayList;
 
 public interface ModuleIO {

@@ -9,28 +9,22 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.WorBots.subsystems.lights.Lights;
-import frc.WorBots.util.HardwareUtils;
 import frc.WorBots.util.MatchTime;
 import frc.WorBots.util.OdometryThread;
 import frc.WorBots.util.cache.Cache.TimeCache;
 import frc.WorBots.util.debug.StatusPage;
-import frc.WorBots.util.math.GeneralMath;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
 
-  private boolean useDebugBindings = false;
-
   public Robot() {
     m_robotContainer = new RobotContainer();
     // Set robot period
-    SmartDashboard.putBoolean("DebugBindingsEnabed", false);
     this.addPeriodic(this::realRobotPeriodic, Constants.RobotConstants.ROBOT_PERIOD);
 
     // Silences Joystick warning in SIM
@@ -46,24 +40,22 @@ public class Robot extends TimedRobot {
   }
 
   public void realRobotPeriodic() {
-    boolean temp = SmartDashboard.getBoolean("DebugBindingsEnabed", false);
-    if (temp != useDebugBindings) {
-      if (temp) {
-      } else {
-      }
-    }
     CommandScheduler.getInstance().run();
     Lights.getInstance().periodic();
     TimeCache.getInstance().update();
     StatusPage.periodic();
+    //Update power logging
     m_robotContainer.updatePowerLogs();
+    m_robotContainer.logTime();
   }
 
   @Override
   public void robotInit(){
+    //Start logging
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
     super.robotInit();
+    //Enable automatic capture of usb cameras
     CameraServer.startAutomaticCapture();
   }
 

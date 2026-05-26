@@ -14,7 +14,6 @@ import frc.WorBots.subsystems.superstructure.Superstructure;
 import frc.WorBots.subsystems.vision.apriltags.TagVision;
 import frc.WorBots.util.UtilCommands;
 
-//TODO implement check vision test and implement lights tests
 /** A class containing commands to be used to perform pit tests. */
 public class PitTest {
   // The amount to wait in between steps
@@ -112,7 +111,8 @@ public class PitTest {
         Commands.waitSeconds(2.0),
 
         // Test Spindexer and take a test shot
-        spindexer.runOnce(() -> spindexer.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY, Constants.SpindexerConstants.KICKER_VELOCITY)).withTimeout(2.0),
+        spindexer.runOnce(() -> spindexer.setVelocity(Constants.SpindexerConstants.SPINDEXER_VELOCITY,
+            Constants.SpindexerConstants.KICKER_VELOCITY)).withTimeout(2.0),
         Commands.waitSeconds(wait),
         spindexer.runOnce(() -> spindexer.stopSpindexer()).withTimeout(1.0),
         superstructure.runOnce(() -> superstructure.setFlyWheelSpeed(0)).withTimeout(3.0),
@@ -147,6 +147,7 @@ public class PitTest {
   }
 
   public Command testVision(TagVision vision) {
+    // TODO currently doesn't wait
     return Commands.waitUntil(() -> vision.canSeeTag());
   }
 }

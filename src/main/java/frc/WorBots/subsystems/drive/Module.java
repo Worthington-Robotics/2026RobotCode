@@ -3,8 +3,8 @@ package frc.WorBots.subsystems.drive;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.WorBots.Constants;
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.debug.StatusPage;
+import frc.WorBots.util.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.math.GeneralMath;
 import java.util.ArrayList;
 

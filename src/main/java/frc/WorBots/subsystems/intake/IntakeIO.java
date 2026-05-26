@@ -1,6 +1,5 @@
 package frc.WorBots.subsystems.intake;
 
-import frc.WorBots.energy.PowerLogger.SubsystemLog;
 import frc.WorBots.util.HardwareUtils.TalonInputsPositional;
 
 public interface IntakeIO {

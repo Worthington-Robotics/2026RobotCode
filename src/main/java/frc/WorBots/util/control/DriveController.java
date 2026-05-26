@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.WorBots.Constants;
 import frc.WorBots.subsystems.drive.Drive;
+import frc.WorBots.util.debug.NTLogger;
 import frc.WorBots.util.debug.TunableDouble;
 import frc.WorBots.util.debug.TunablePIDController;
 import frc.WorBots.util.math.AllianceFlipUtil;
@@ -29,10 +30,10 @@ import java.util.Optional;
 public class DriveController {
   // Constants
   /** The percentage of the max drive speed that the robot will drive at */
-  public static final double DRIVE_SPEED_MULTIPLIER = 0.61;
+  public static final double DRIVE_SPEED_MULTIPLIER = 0.63; //0.61 normal // 0.21 slow
 
   /** The max rotational speed in radians per update that the robot will drive at */
-  public static final double ROTATIONAL_SPEED = 3.55; //Used to be 3.75, turned down on driver request
+  public static final double ROTATIONAL_SPEED = 3.55 * 1.05; //Used to be 3.75, turned down on driver request //1 normal //0.33 slow
 
   /** The amount of input deadband to apply */
   public static final double DEADBAND = 0.15;
@@ -41,7 +42,7 @@ public class DriveController {
   public static final double MINIMUM_SPEED = 1e-3;
 
   /** The amount of curving to apply to the drive inputs */
-  public static final double DRIVE_CURVE_AMOUNT = 2.0;
+  public static final double DRIVE_CURVE_AMOUNT = 0.9;
 
   /** The amount of curving to apply to the turn input */
   public static final double TURN_CURVE_AMOUNT = 2.0;
@@ -57,13 +58,14 @@ public class DriveController {
    * How much to multiply the rotational velocity by before adding it to the steady-state rotation.
    * This is done to predict where the driver will end up turning before they get there
    */
-  public static final double TURN_PREDICTION_FACTOR = 20.0;
+  public static final double TURN_PREDICTION_FACTOR = 11.0;
 
-  private static final LinearFilter driveFilter = LinearFilter.movingAverage(5);
-  private static final LinearFilter xFilter = LinearFilter.movingAverage(10);
-  private static final LinearFilter yFilter = LinearFilter.movingAverage(10);
-  private static final LinearFilter turnFilter = LinearFilter.movingAverage(6);
-  private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(24);
+  //TODO make these scale with frequency
+  private static final LinearFilter driveFilter = LinearFilter.movingAverage(2);
+  private static final LinearFilter xFilter = LinearFilter.movingAverage(2);
+  private static final LinearFilter yFilter = LinearFilter.movingAverage(2);
+  private static final LinearFilter turnFilter = LinearFilter.movingAverage(2);
+  private static final LinearFilter maxSpeedFilter = LinearFilter.movingAverage(5);
 
   private final TunablePIDController turnController =
       new TunablePIDController("Drive/Gains", "Drive Heading", 5.0, 0.0, 0.0);
@@ -84,6 +86,7 @@ public class DriveController {
   public DriveController() {
     stopTimer.restart();
     turnController.pid.enableContinuousInput(0.0, 2 * Math.PI);
+    turnController.pid.setTolerance(Units.degreesToRadians(.5));
   }
 
   /**
@@ -219,14 +222,16 @@ public class DriveController {
       }
       lastYaw = Optional.of(Rotation2d.fromRadians(predicted));
     } else {
+      if(lastYaw.isEmpty()){
+        lastYaw = Optional.of(robotRotation);
+      }
       if (lastYaw.isPresent()
           && (speeds.vxMetersPerSecond != 0.0 || speeds.vyMetersPerSecond != 0.0)) {
         turnController.update();
         speeds.omegaRadiansPerSecond +=
             turnController.pid.calculate(robotRotation.getRadians(), lastYaw.get().getRadians());
       }
-      lastYaw = Optional.of(robotRotation);
-    }
+      }
 
     // Convert to field relative based on the alliance
     final var driveRotation = new Rotation2d(MathUtil.angleModulus(robotRotation.getRadians() + rotationOffset.getRadians()));
