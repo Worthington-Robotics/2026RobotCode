@@ -69,8 +69,8 @@ public class ModuleIOTalon implements ModuleIO {
   private double driveGoalVelocity = 0.0;
   
     public ModuleIOTalon(int index) {
-      driveFeedbackGains.setGains(0.3, 0.000, 0.0);
-      turnFeedbackGains.setGains(5.0, 0.00, 0.0);
+      driveFeedbackGains.setGains(0.6, 0.000, 0.1); //0.6, 0.1
+      turnFeedbackGains.setGains(5.0, 0.00, 0.0); //5.0, 0
       turnFeedback.pid.enableContinuousInput(-Math.PI, Math.PI);
       turnFeedbackConstraints.setConstraints(360.0, 1500.0);
   
