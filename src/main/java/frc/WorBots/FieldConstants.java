@@ -37,7 +37,7 @@ public class FieldConstants {
   public static final double passExclusionMargin = Units.inchesToMeters(1);
   public static final Translation2d[] passExclusionZone = { new Translation2d(Units.inchesToMeters(182.11-22.0) - passExclusionMargin, Units.inchesToMeters(158.84 - 22.0) - passExclusionMargin),
       new Translation2d(Units.inchesToMeters(182.11+25.0) + passExclusionMargin, Units.inchesToMeters(158.84 + 25.0) + passExclusionMargin) };
-  public static final Translation2d passTarget = new Translation2d(1.0, 1.0);
+  public static final Translation2d passTarget = new Translation2d(1.0, 2.0);
   public static final Translation2d[] allianceZone = { new Translation2d(0.0, 0.0),
       new Translation2d(Units.inchesToMeters(182.11-23.5), fieldWidth) };
 
